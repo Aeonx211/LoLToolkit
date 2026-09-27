@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LoL Insight Toolkit</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<header>
+  <div class="brand">LoL Insight <span>Toolkit</span></div>
+  <nav id="tabs">
+    <button data-tab="games" class="active">Game Analysis</button>
+    <button data-tab="advisor">Live Advisor</button>
+    <button data-tab="sim">Build Sim</button>
+    <button data-tab="tuning">Tuning</button>
+  </nav>
+</header>
+
+<main>
+  <section id="tab-games" class="tab active">
+    <form id="games-form" class="toolbar">
+      <label>Riot ID <input name="riot_id" placeholder="Name#TAG" required></label>
+      <label>Games <input name="count" type="number" min="1" max="50" value="10" class="narrow"></label>
+      <label>Queue <select name="queue"><option value="">All queues</option></select></label>
+      <button type="submit" class="primary">Analyze</button>
+      <span class="spacer"></span>
+      <label>Match ID <input name="match_id" placeholder="NA1_..."></label>
+      <button type="button" id="match-open">Open match</button>
+    </form>
+    <div id="games-status" class="status"></div>
+    <div id="games-summary"></div>
+    <div id="games-list" class="list"></div>
+  </section>
+
+  <section id="tab-advisor" class="tab">
+    <form id="advisor-form" class="toolbar">
+      <label>Riot ID <input name="riot_id" placeholder="Name#TAG" required></label>
+      <label>Games per player <input name="depth" type="number" min="1" max="30" value="8" class="narrow"></label>
+      <label class="check"><input name="allies" type="checkbox"> Include my team</label>
+      <label>Replay match <input name="replay" placeholder="blank = live game"></label>
+      <button type="submit" class="primary">Run advisor</button>
+    </form>
+    <p class="hint">Leave "Replay match" blank while you're in a game. Replays only use history from before that match.</p>
+    <div id="advisor-status" class="status"></div>
+    <div id="advisor-out"></div>
+  </section>
+
+  <section id="tab-sim" class="tab">
+    <div class="toolbar">
+      <label>Load example <select id="sim-example"><option value="">Choose...</option></select></label>
+      <label>Window (s) <input id="sim-window" type="number" min="0.5" step="0.5" placeholder="none" class="narrow"></label>
+    </div>
+    <div class="grid2">
+      <div class="card" id="sim-attacker"></div>
+      <div class="card" id="sim-target"></div>
+    </div>
+    <div class="toolbar">
+      <button id="sim-run" class="primary">Simulate</button>
+      <button id="sim-bp">Find breakpoints</button>
+      <button id="sim-cmp">Compare with build B</button>
+    </div>
+    <details class="card" id="sim-b-wrap">
+      <summary>Build B (for Compare): same attacker, different items/keystone</summary>
+      <div id="sim-b"></div>
+    </details>
+    <div id="sim-status" class="status"></div>
+    <div id="sim-out"></div>
+  </section>
+
+  <section id="tab-tuning" class="tab">
+    <p class="hint">Changes are saved to <code>tuning.json</code> and used by both the web UI and the CLIs. Changing Tool 1 values re-analyzes stored games next time you open them, with no extra API calls.</p>
+    <div id="tuning-out"></div>
+    <div class="savebar">
+      <span id="tuning-status" class="status"></span>
+      <button id="tuning-reset">Reset all to defaults</button>
+      <button id="tuning-save" class="primary">Save changes</button>
+    </div>
+  </section>
+</main>
+
+<dialog id="match-dialog"><div id="match-detail"></div></dialog>
+<datalist id="items-list"></datalist>
+<script src="/static/app.js"></script>
+</body>
+</html>

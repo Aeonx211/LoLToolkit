@@ -1,0 +1,11 @@
+{
+  "attacker": {
+    "champion": "Lillia",
+    "level": 13,
+    "skill_order": "QWE",
+    "items": ["Liandry's Torment", "Sorcerer's Shoes", "Riftmaker", "Rabadon's Deathcap"],
+    "runes": {"keystone": "Conqueror", "minor": ["Coup de Grace"], "shards": ["adaptive", "adaptive", "scaling_health"]},
+    "rotation": ["Q", "E", "AA", "W", "Q", "AA", "R", "Q"]
+  },
+  "target": {"dummy": {"hp": 2400, "armor": 90, "mr": 60}}
+}

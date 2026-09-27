@@ -1,0 +1,19 @@
+{
+  "window": 6,
+  "attacker": {
+    "champion": "Velkoz",
+    "level": 11,
+    "skill_order": "QEW",
+    "items": ["Luden's Echo", "Sorcerer's Shoes", "Shadowflame"],
+    "runes": {"keystone": "Electrocute", "minor": ["Cut Down"], "shards": ["adaptive", "adaptive", "health"]},
+    "rotation": ["E", "W", "Q", "W", "R"]
+  },
+  "target": {
+    "champion": "Garen",
+    "level": 11,
+    "skill_order": "EQW",
+    "items": ["Stridebreaker", "Plated Steelcaps", "Spirit Visage"],
+    "runes": {"keystone": "Conqueror", "shards": ["adaptive", "attack_speed", "health"]},
+    "rotation": ["Q", "AA", "W", "E", "R"]
+  }
+}
