@@ -1,0 +1,98 @@
+
+user:Aeoen#NA1
+
+General:
+Rate Limits 20 requests every 1 seconds
+100 requests every 2 minutes 
+
+ LoL Insight Toolkit has access to 39 methods
+summoner-v4
+Method 	Rate Limits
+GET /lol/summoner/v4/summoners/by-puuid/{encryptedPUUID} 	1600 requests every 1 minutes
+league-v4
+Method 	Rate Limits
+GET /lol/league/v4/challengerleagues/by-queue/{queue} 	30 requests every 10 seconds
+500 requests every 10 minutes
+GET /lol/league/v4/masterleagues/by-queue/{queue} 	30 requests every 10 seconds
+500 requests every 10 minutes
+GET /lol/league/v4/grandmasterleagues/by-queue/{queue} 	30 requests every 10 seconds
+500 requests every 10 minutes
+GET /lol/league/v4/entries/{queue}/{tier}/{division} 	50 requests every 10 seconds
+GET /lol/league/v4/entries/by-puuid/{encryptedPUUID} 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+league-exp-v4
+Method 	Rate Limits
+GET /lol/league-exp/v4/entries/{queue}/{tier}/{division} 	50 requests every 10 seconds
+clash-v1
+Method 	Rate Limits
+GET /lol/clash/v1/teams/{teamId} 	200 requests every 1 minutes
+GET /lol/clash/v1/tournaments/{tournamentId} 	10 requests every 1 minutes
+GET /lol/clash/v1/tournaments/by-team/{teamId} 	200 requests every 1 minutes
+GET /lol/clash/v1/tournaments 	10 requests every 1 minutes
+GET /lol/clash/v1/players/by-puuid/{puuid} 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+account-v1
+Method 	Rate Limits
+GET /riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine} 	1000 requests every 1 minutes
+GET /riot/account/v1/accounts/by-puuid/{puuid} 	1000 requests every 1 minutes
+GET /riot/account/v1/accounts/by-puuid/{puuid} 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+GET /riot/account/v1/accounts/by-riot-id/{gameName}/{tagLine} 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+GET /riot/account/v1/region/by-game/{game}/by-puuid/{puuid} 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+lol-status-v4
+Method 	Rate Limits
+GET /lol/status/v4/platform-data 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+match-v5
+Method 	Rate Limits
+GET /lol/match/v5/matches/{matchId} 	2000 requests every 10 seconds
+GET /lol/match/v5/matches/by-puuid/{puuid}/ids 	2000 requests every 10 seconds
+GET /lol/match/v5/matches/{matchId}/timeline 	2000 requests every 10 seconds
+GET /lol/match/v5/matches/by-puuid/{puuid}/replays 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+lol-challenges-v1
+Method 	Rate Limits
+GET /lol/challenges/v1/challenges/percentiles 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+GET /lol/challenges/v1/challenges/{challengeId}/leaderboards/by-level/{level} 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+GET /lol/challenges/v1/challenges/{challengeId}/percentiles 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+GET /lol/challenges/v1/challenges/{challengeId}/config 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+GET /lol/challenges/v1/player-data/{puuid} 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+GET /lol/challenges/v1/challenges/config 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+champion-mastery-v4
+Method 	Rate Limits
+GET /lol/champion-mastery/v4/champion-masteries/by-puuid/{encryptedPUUID} 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+GET /lol/champion-mastery/v4/champion-masteries/by-puuid/{encryptedPUUID}/by-champion/{championId} 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+GET /lol/champion-mastery/v4/scores/by-puuid/{encryptedPUUID} 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+GET /lol/champion-mastery/v4/champion-masteries/by-puuid/{encryptedPUUID}/top 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+tournament-stub-v5
+Method 	Rate Limits
+POST /lol/tournament-stub/v5/codes 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+GET /lol/tournament-stub/v5/lobby-events/by-code/{tournamentCode} 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+GET /lol/tournament-stub/v5/codes/{tournamentCode} 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+POST /lol/tournament-stub/v5/providers 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+POST /lol/tournament-stub/v5/tournaments 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
+spectator-v5
+Method 	Rate Limits
+GET /lol/spectator/v5/active-games/by-summoner/{encryptedPUUID} 	3000 requests every 10 seconds
+180000 requests every 10 minutes
+champion-v3
+Method 	Rate Limits
+GET /lol/platform/v3/champion-rotations 	20000 requests every 10 seconds
+1200000 requests every 10 minutes
