@@ -131,7 +131,8 @@ def _snowballed_on(pm: ParsedMatch, gold, peaks, th: Thresholds):
     for pid in pm.team_pids(W):
         window = impact(shares_between(pm, f_peak, f_end, pid))
         before = impact(shares_between(pm, None, f_peak, pid))
-        kills = f_end.kills[pid] - f_peak.kills[pid]
+        kills = f_end.kills[pid] - f_peak.kills[pid]  # solo kills gotten, not KP: this is about the player
+        # personally starting to get picks/kills, which is a different signal from being present for them
         if (window >= th.snowball_window_share
                 and window >= th.snowball_ratio * max(before, 0.1)
                 and kills >= th.snowball_min_kills

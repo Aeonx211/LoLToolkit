@@ -12,7 +12,7 @@ from typing import Any, Callable
 
 from build_sim import effects
 from causal_analysis import archetypes, metrics
-from live_advisor import build_predict, counters, threat
+from live_advisor import build_predict, counters, healing, onetrick, threat
 
 TUNING_FILE = Path(__file__).resolve().parent.parent / "tuning.json"
 
@@ -88,15 +88,31 @@ SETTINGS = [
     _threshold("fight_gap_s", "Fight grouping gap (s)", "Kills/objectives closer than this form one moment."),
     _threshold("rolling_window_s", "Rolling impact window (s)", ""),
     *[
-        _dict_entry("Tool 1: role baselines (kill, damage, gold share)", f"causal_analysis.ROLE_BASELINE.{role}",
-                    metrics.ROLE_BASELINE, role, role.title(), "Typical share of team kills, damage, gold.")
+        _dict_entry("Tool 1: role baselines (KP, damage, gold share)", f"causal_analysis.ROLE_BASELINE.{role}",
+                    metrics.ROLE_BASELINE, role, role.title(),
+                    "Typical kill participation, damage share, gold share. KP isn't exclusive (several "
+                    "players can be credited per kill), so it runs ~45-65% rather than an even split.")
         for role in list(metrics.ROLE_BASELINE)
     ],
     _module(G2, threat, "MIN_WINS_TO_FLAG", "Carry flag: min recent wins"),
     _module(G2, threat, "CARRY_RATE_TO_FLAG", "Carry flag: carried-win rate", "0-1"),
     _module(G2, threat, "FULL_CONFIDENCE_WINS", "Carry score: wins for full confidence"),
-    _module(G2, counters, "HEALER_PERCENTILE", "Healer percentile", "Self-heal/min percentile that counts as a healer."),
-    _module(G2, counters, "HEAVY_HEALER_PERCENTILE", "Heavy healer percentile", "Makes Grievous Wounds high priority."),
+    _module(G2, healing, "KIT_ABILITY_WEIGHT", "Grievous Wounds: points per healing ability",
+            "Each of an enemy's abilities that heals (self or allies) adds this."),
+    _module(G2, healing, "KIT_ABILITY_CAP", "Grievous Wounds: max points from abilities",
+            "Cap for a champion who isn't a core healer."),
+    _module(G2, healing, "CORE_HEALER_WEIGHT", "Grievous Wounds: core healer points",
+            "Champions like Soraka or Aatrox, where healing is the point of the kit."),
+    _module(G2, healing, "ITEM_WEIGHT", "Grievous Wounds: points per healing item",
+            "Times how often they build it (100% if they already own it)."),
+    _module(G2, healing, "ITEM_CAP", "Grievous Wounds: max points from items"),
+    _module(G2, healing, "GW_CONSIDER", "Grievous Wounds: 'consider' at total points",
+            "Enemy team's points add up; at or above this it's worth considering."),
+    _module(G2, healing, "GW_HIGH", "Grievous Wounds: 'high priority' at total points"),
+    _module(G2, onetrick, "POOL_GAMES", "One-trick: games checked", "Most recent games in the same queue."),
+    _module(G2, onetrick, "ONE_TRICK_GAMES", "One-trick: games on one champion",
+            "Out of the games checked. With fewer games on record, the same share is used."),
+    _module(G2, onetrick, "MIN_POOL_GAMES", "One-trick: min games on record"),
     _module(G2, counters, "RESIST_SPLIT", "Resist advice: damage share", "Magic or physical share that means 'build that resist'."),
     _module(G2, counters, "EARLY_LANE_GOLD", "Tempo: 'strong early' lane gold @14"),
     _module(G2, counters, "SCALING_SHARE_GAIN", "Tempo: 'scales late' gold-share gain"),

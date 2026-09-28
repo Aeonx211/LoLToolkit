@@ -40,6 +40,13 @@ CREATE TABLE IF NOT EXISTS participants (
 );
 CREATE INDEX IF NOT EXISTS participants_puuid ON participants (puuid, champion_name);
 
+CREATE TABLE IF NOT EXISTS picks (
+    match_id TEXT NOT NULL,
+    puuid TEXT NOT NULL,
+    champion_name TEXT,
+    PRIMARY KEY (match_id, puuid)
+);
+
 CREATE TABLE IF NOT EXISTS analyses (
     match_id TEXT PRIMARY KEY,
     version INTEGER NOT NULL,
@@ -130,6 +137,22 @@ class Store:
                     for p in info["participants"]
                 ],
             )
+
+    def save_picks(self, match):
+        """Who played what in a match fetched without its timeline (much cheaper than a full save)."""
+        match_id = match["metadata"]["matchId"]
+        with self._lock, self._db:
+            self._db.executemany(
+                "INSERT OR REPLACE INTO picks VALUES (?, ?, ?)",
+                [(match_id, p["puuid"], p.get("championName")) for p in match["info"]["participants"]])
+
+    def get_pick(self, match_id, puuid):
+        with self._lock:
+            row = self._db.execute(
+                "SELECT champion_name FROM picks WHERE match_id=? AND puuid=? UNION "
+                "SELECT champion_name FROM participants WHERE match_id=? AND puuid=?",
+                (match_id, puuid, match_id, puuid)).fetchone()
+        return row[0] if row else None
 
     def player_match_ids(self, puuid, champion=None, before_ms=None, limit=50):
         """Stored matches for a player, newest first, optionally only on one champion / before a timestamp."""

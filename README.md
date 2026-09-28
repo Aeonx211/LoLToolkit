@@ -9,6 +9,24 @@ Three League of Legends tools on one shared Riot API layer. See [Spec.md](Spec.m
 | `live_advisor/` (Tool 2) | Focus target from Tool 1 carry tags, counter-itemization, and opponent build prediction for your current game |
 | `build_sim/` (Tool 3) | Combat simulator for combos and trades, with A/B build comparison and item/keystone breakpoints |
 
+## Quickstart
+
+1. **Requires Python 3.11+.** No third-party packages to install.
+2. Get a Riot API key from the [Riot Developer Portal](https://developer.riotgames.com/) and copy it.
+3. In this folder, set up your `.env`:
+   ```
+   cp .env.example .env
+   ```
+   Open `.env` and paste your key as `RIOT_API_KEY=...`. If you play on a region other than NA, also set `RIOT_PLATFORM` (see [data_layer/config.py](data_layer/config.py) for the list, e.g. `euw1`, `kr`).
+4. Start the web UI:
+   ```
+   python -m webui --open
+   ```
+   This opens `http://127.0.0.1:8765` in your browser. Enter your Riot ID (e.g. `Name#TAG`) on the **Game Analysis** tab and click Analyze.
+5. Stop the server with Ctrl+C in the terminal when you're done. Nothing needs installing or building — the same command starts it again next time.
+
+Everything the server fetches is cached in `data/toolkit.db` (server-side, permanent) and, for whatever you last looked at per tab, in your browser's local storage (instant reload, no re-fetch). See [Web UI](#web-ui) below for what each tab does, and [CLI usage](#cli-usage) if you'd rather run the tools from a terminal.
+
 ## Setup
 
 Requires Python 3.11+. There are no third-party dependencies.
@@ -32,6 +50,8 @@ The UI has one tab per tool plus a **Tuning** tab:
 - **Tuning:** edit every threshold and hand-entered number. Saved values go to `tuning.json`, which the CLIs also read. Delete that file or use "Reset all" to go back to the defaults.
 
 The server only listens on localhost and rejects requests addressed to any other hostname.
+
+**Browser caching:** each tab remembers your last query (results included) in your browser's local storage, so reopening the page or switching tabs shows it instantly with no server round-trip — you'll see "Showing N cached games from ... Click Analyze to refresh." Click Analyze / Run advisor again whenever you want fresh data. This is separate from (and in front of) the server-side `data/toolkit.db` cache, which is what actually avoids re-hitting the Riot API.
 
 ## CLI usage
 
@@ -92,7 +112,7 @@ These are also marked `TODO` in the code.
 - **Tool 1:**
   - Calibrate the archetype thresholds (`causal_analysis/archetypes.py`) against a larger sample.
   - The turning-point heuristic works from 60s timeline frames.
-  - Carry baselines are per role; per-champion baselines would stop damage supports like Vel'Koz from inflating.
+  - Carry baselines are per role (kill participation + damage + gold share); per-champion baselines would stop damage supports like Vel'Koz from inflating, and the KP baselines are rough estimates, not computed from data yet.
 - **Tool 2:**
   - Calibrate the carry-flag and counter-itemization cutoffs.
   - Champion-specific stats only see games already in the store.

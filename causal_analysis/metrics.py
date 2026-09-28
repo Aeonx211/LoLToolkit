@@ -4,18 +4,21 @@ from itertools import pairwise
 
 from .parse import TEAM_NAMES, TEAMS, Frame, ParsedMatch, other_team
 
-# Typical (kill, damage, gold) share of team totals by role; used to judge "vastly exceeds their role".
-# TODO: role-level baselines overrate damage-heavy picks in low-resource roles (e.g. Vel'Koz/Brand support
-#  score ~2x a "typical" support). Replace with per-champion (or per champion+role) baselines computed from
-#  stored matches once there's enough data, and scale by game length as the spec suggests.
+# Typical (kill participation, damage, gold) share of team totals by role; used to judge "vastly exceeds their role".
+# Unlike damage/gold, KP isn't exclusive: several players can be credited on the same kill, so a role's KP is
+# typically 45-65% rather than the ~20% you'd expect from an even split, and the column doesn't sum to 1 across
+# the team. TODO: these are rough, commonly-cited averages, not computed from real data. Also role-level
+# baselines overrate damage-heavy picks in low-resource roles (e.g. Vel'Koz/Brand support score ~2x a "typical"
+# support on damage). Replace with per-champion (or per champion+role) baselines computed from stored matches
+# once there's enough data, and scale by game length as the spec suggests.
 ROLE_BASELINE = {
-    "TOP": (0.20, 0.22, 0.21),
-    "JUNGLE": (0.22, 0.17, 0.19),
-    "MIDDLE": (0.25, 0.26, 0.22),
-    "BOTTOM": (0.28, 0.26, 0.25),
-    "UTILITY": (0.07, 0.09, 0.13),
+    "TOP": (0.45, 0.22, 0.21),
+    "JUNGLE": (0.65, 0.17, 0.19),
+    "MIDDLE": (0.60, 0.26, 0.22),
+    "BOTTOM": (0.55, 0.26, 0.25),
+    "UTILITY": (0.65, 0.09, 0.13),
 }
-DEFAULT_BASELINE = (0.20, 0.20, 0.20)
+DEFAULT_BASELINE = (0.55, 0.20, 0.20)
 
 
 def lead_for(value, team):
@@ -73,11 +76,22 @@ def _share(values, pid, team_pids):
     return values.get(pid, 0) / total if total > 0 else 0.0
 
 
+def _kp_share(pm: ParsedMatch, team, pid, end_kills, start_kills, end_kp, start_kp):
+    """Player's (kills+assists) in the window, over the team's actual kills in that window (not a plain _share:
+    several players can be credited on the same kill, so this doesn't sum to 1 across the team)."""
+    team_kills = sum(end_kills.get(p, 0) - start_kills.get(p, 0) for p in team)
+    if team_kills <= 0:
+        return 0.0
+    return (end_kp.get(pid, 0) - start_kp.get(pid, 0)) / team_kills
+
+
 def shares_between(pm: ParsedMatch, f0: Frame | None, f1: Frame, pid):
-    """(kill, damage, gold) share of the player's team gains between two frames (f0=None means game start)."""
+    """(kill participation, damage, gold) share of the player's team gains between two frames (f0=None means
+    game start)."""
     team = pm.team_pids(pm.players[pid].team_id)
-    out = []
-    for metric in ("kills", "damage", "gold"):
+    kp = _kp_share(pm, team, pid, f1.kills, f0.kills if f0 else {}, f1.kp, f0.kp if f0 else {})
+    out = [kp]
+    for metric in ("damage", "gold"):
         end = f1.get(metric)
         start = f0.get(metric) if f0 else {}
         deltas = {p: end.get(p, 0) - start.get(p, 0) for p in team}
@@ -90,10 +104,13 @@ def impact(shares):
 
 
 def final_shares(pm: ParsedMatch, pid):
+    """(kill participation, damage, gold) share of the player's team totals over the whole game."""
     player = pm.players[pid]
     team = [pm.players[p] for p in pm.team_pids(player.team_id)]
-    out = []
-    for attr in ("kills", "damage", "gold"):
+    team_kills = sum(p.kills for p in team)
+    kp = (player.kills + player.assists) / team_kills if team_kills else 0.0
+    out = [kp]
+    for attr in ("damage", "gold"):
         total = sum(getattr(p, attr) for p in team)
         out.append(getattr(player, attr) / total if total else 0.0)
     return tuple(out)
@@ -124,7 +141,7 @@ def player_impacts(pm: ParsedMatch):
             "win": p.win,
             "kda": [p.kills, p.deaths, p.assists],
             "items": p.items,
-            "shares": {"kills": round(shares[0], 3), "damage": round(shares[1], 3), "gold": round(shares[2], 3)},
+            "shares": {"kp": round(shares[0], 3), "damage": round(shares[1], 3), "gold": round(shares[2], 3)},
             "impact": round(value, 3),
             "impact_ratio": round(value / baseline, 3),
             "carried": False,

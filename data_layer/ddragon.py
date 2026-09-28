@@ -42,6 +42,17 @@ class DataDragon:
         path.write_text(json.dumps(data), encoding="utf-8")
         return data
 
+    def derived(self, name, build):
+        """A table computed from Data Dragon, cached beside the raw files so it's rebuilt once per patch."""
+        version = self.latest_version()
+        path = self._dir / version / self._locale / name
+        if path.exists():
+            return json.loads(path.read_text(encoding="utf-8"))
+        data = build(version)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(json.dumps(data), encoding="utf-8")
+        return data
+
     def champions(self, version=None):
         return self._cached(version, "champion.json")["data"]
 

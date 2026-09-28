@@ -12,11 +12,13 @@ def _pct(x):
     return f"{round(x * 100)}%"
 
 
-def print_report(report):
+def print_report(report, names=None):
+    names = names or {}
+    name = lambda champion: names.get(champion, champion)
     print(f"Live advisor ({report['source']})\n")
     focus = report["focus_target"]
     if focus:
-        print(f"FOCUS: {focus['champion']} ({focus['riot_id']}): tagged as the carry in "
+        print(f"FOCUS: {name(focus['champion'])} ({focus['riot_id']}): tagged as the carry in "
               f"{focus['carried_wins']}/{focus['wins']} recent wins ({_pct(focus['carry_rate'])})\n")
     else:
         print("No enemy has a consistent carry record in their recent wins.\n")
@@ -25,32 +27,36 @@ def print_report(report):
     for t in report["carry_threats"]:
         impact = f"{t['avg_impact']:.2f}x" if t["avg_impact"] is not None else "n/a"
         mark = "  <- flagged" if t["flagged"] else ""
-        print(f"  {t['champion']:<13} carried {t['carried_wins']}/{t['wins']} wins, avg impact {impact} over "
+        print(f"  {name(t['champion']):<13} carried {t['carried_wins']}/{t['wins']} wins, avg impact {impact} over "
               f"{t['games']} games{mark}   {t['riot_id']}")
     for a in report.get("ally_carries", []):
         if a is report["ally_carries"][0]:
             print("\nYour team's likely carries:")
-        print(f"  {a['champion']:<13} carried {a['carried_wins']}/{a['wins']} wins   {a['riot_id']}")
+        print(f"  {name(a['champion']):<13} carried {a['carried_wins']}/{a['wins']} wins   {a['riot_id']}")
 
     c = report["counters"]
     s = c["damage_split"]
     print(f"\nEnemy damage: {_pct(s['physical'])} physical / {_pct(s['magic'])} magic / {_pct(s['true'])} true")
     print(f"  {c['resist_advice']}")
     gw = c["grievous_wounds"]
-    if gw["healers"]:
-        names = ", ".join(f"{h['champion']} ({h['self_heal_per_min']}/min, top {_pct(1 - h['percentile'])})"
-                          for h in gw["healers"])
-        print(f"  Grievous Wounds: {gw['urgency']} priority, {gw['timing']}. Healers: {names}")
+    if gw["sources"]:
+        timing = f", {gw['timing']}" if gw["timing"] else ""
+        print(f"  Grievous Wounds: {gw['urgency']} priority{timing}")
+        for src in gw["sources"]:
+            print(f"    {name(src['champion'])}: {'; '.join(src['reasons']) or 'some healing'}")
     else:
-        print("  Grievous Wounds: low priority (no heavy self-healers)")
-    print(f"  (healing compared against {report['heal_baseline_sample']} stored player-games)")
+        print("  Grievous Wounds: low priority (no enemy healing found)")
 
     print("\nEnemies:")
     for e in report["enemies"]:
         p = e["profile"]
         tempo = ", ".join(p["tempo"]) or "no clear tempo"
         lane = f", lane gold @14 {p['lane_gold_diff_14']:+d}" if p.get("lane_gold_diff_14") is not None else ""
-        print(f"  {e['champion']} ({e['riot_id']}): {tempo}{lane}  [{p['games']} {p['source']}]")
+        print(f"  {name(e['champion'])} ({e['riot_id']}): {tempo}{lane}  [{p['games']} {p['source']}]")
+        pool = e["pool"]
+        if pool and pool["one_trick"]:
+            on_it = "" if pool["on_it"] else " (not playing it now)"
+            print(f"    ONE-TRICK: {name(pool['champion'])}, {pool['games']} of their last {pool['total']} games{on_it}")
         b = e["build_prediction"]
         if b:
             build = " > ".join(f"{i['item']} {_pct(i['rate'])}" for i in b["modal_build"])
@@ -86,7 +92,7 @@ def main(argv=None):
     if args.json:
         print(json.dumps(report, indent=2))
     else:
-        print_report(report)
+        print_report(report, {c["id"]: c["name"] for c in dd.champions().values()})
 
 
 if __name__ == "__main__":

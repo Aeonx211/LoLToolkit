@@ -57,7 +57,7 @@ def build_verdict(pm: ParsedMatch, gold, tags, moments):
         s = d["shares"]
         role = d["position"].lower() or "player"
         sentences.append(
-            f"{d['champion']} ({d['riot_id']}) carried {W}: {_pct(s['kills'])} of kills, {_pct(s['damage'])} "
+            f"{d['champion']} ({d['riot_id']}) carried {W}: {_pct(s['kp'])} kill participation, {_pct(s['damage'])} "
             f"of damage, {_pct(s['gold'])} of gold ({d['impact_ratio']:.1f}x a typical {role})."
         )
     return " ".join(sentences)

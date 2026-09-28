@@ -40,13 +40,32 @@ const mmss = (sec) => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).pa
 const kfmt = (v) => (Math.abs(v) >= 1000 ? `${(Math.abs(v) / 1000).toFixed(1)}k` : `${Math.round(Math.abs(v))}`);
 const pct = (x) => `${Math.round(x * 100)}%`;
 const signed = (v) => (v > 0 ? "+" : "") + Math.round(v);
+const champName = (id) => (META && META.champions[id]) || id;
 const queueName = (id) => (META && META.queues[id]) || `Queue ${id}`;
+const ROLE_LABELS = { utility: "support" };
+const roleLabel = (position) => ROLE_LABELS[position.toLowerCase()] || position.toLowerCase() || "no role";
 let META = null;
 let clipSeq = 0;
+
+const DEFAULT_RIOT_ID = "Aeoen#NA1";
 
 const saved = {
   get(k, d) { try { return localStorage.getItem(k) ?? d; } catch { return d; } },
   set(k, v) { try { localStorage.setItem(k, v); } catch { /* storage unavailable */ } },
+};
+
+// Caches the last query's full result per tool, so reopening the page or switching tabs shows it instantly
+// with no server round-trip. The server/DB cache (data/toolkit.db) is what avoids re-hitting the Riot API;
+// this is just about not re-running that lookup at all when nothing's changed.
+const cache = {
+  get(k) { try { return JSON.parse(localStorage.getItem(`cache:${k}`)); } catch { return null; } },
+  set(k, v) { try { localStorage.setItem(`cache:${k}`, JSON.stringify({ ...v, savedAt: Date.now() })); } catch { /* full or unavailable */ } },
+};
+const timeAgo = (ms) => {
+  const mins = Math.round((Date.now() - ms) / 60000);
+  if (mins < 1) return "just now";
+  if (mins < 60) return `${mins}m ago`;
+  return `${Math.round(mins / 60)}h ago`;
 };
 
 async function api(path, body) {
@@ -140,10 +159,10 @@ function perspective(tag, me) {
     case "Stomp": return mine ? ["We stomped", "good"] : ["Got stomped", "bad"];
     case "Comeback": return mine ? ["Came back", "good"] : ["Enemy came back", "bad"];
     case "Thrown": return mine ? ["We threw", "bad"] : ["Enemy threw", "good"];
-    case "Snowballed-on": return mine ? [`Snowballed on by ${d.champion}`, "bad"] : [`${d.champion} snowballed`, "good"];
+    case "Snowballed-on": return mine ? [`Snowballed on by ${champName(d.champion)}`, "bad"] : [`${champName(d.champion)} snowballed`, "good"];
     case "Carried":
       if (d.participant_id === me.participant_id) return ["You carried", "gold"];
-      return mine ? [`${d.champion} carried us`, "good"] : [`${d.champion} carried them`, "bad"];
+      return mine ? [`${champName(d.champion)} carried us`, "good"] : [`${champName(d.champion)} carried them`, "bad"];
     case "Even-then-decided": return ["Even, then decided", ""];
     default: return [tag.archetype, ""];
   }
@@ -151,7 +170,7 @@ function perspective(tag, me) {
 
 function neutralTag(tag) {
   const d = tag.detail;
-  if (d.champion) return `${tag.archetype}: ${d.champion}`;
+  if (d.champion) return `${tag.archetype}: ${champName(d.champion)}`;
   return tag.team ? `${tag.archetype} (${TEAM[tag.team]})` : tag.archetype;
 }
 
@@ -180,11 +199,11 @@ function gameCard(r, puuid) {
     h("div", { class: "body" },
       h("div", { class: "title" },
         h("span", { class: "result" }, me.win ? "Victory" : "Defeat"),
-        h("span", { class: "champ" }, me.champion),
+        h("span", { class: "champ" }, champName(me.champion)),
         h("span", { class: "muted" },
-          `${me.position.toLowerCase() || "no role"} · ${me.kda.join("/")} · ${queueName(r.queue_id)} · `
+          `${roleLabel(me.position)} · ${me.kda.join("/")} · ${queueName(r.queue_id)} · `
           + `${mmss(r.duration_s)} · ${new Date(r.game_start).toLocaleDateString()}`),
-        h("span", { class: "muted" }, `impact ${me.impact_ratio.toFixed(2)}x`)),
+        h("span", { class: "muted", title: "Average of KP/damage/gold share, divided by a typical share for this role. 1x = typical." }, `impact ${me.impact_ratio.toFixed(2)}x`)),
       h("div", { class: "chips" }, tags.length ? tags : h("span", { class: "chip" }, "No archetype")),
       h("p", { class: "verdict" }, r.verdict)),
     h("div", { class: "side" },
@@ -214,18 +233,34 @@ function gamesSummary(results, puuid, rollup) {
     rollup ? stat(`${rollup.carried_wins}/${rollup.wins}`, `Carried (all ${rollup.games} stored games)`) : null);
 }
 
+function renderGames(results, puuid, rollup) {
+  $("#games-list").replaceChildren(...results.map((r) => gameCard(r, puuid)));
+  $("#games-summary").replaceChildren(gamesSummary(results, puuid, rollup));
+}
+
+function loadCachedGames() {
+  const c = cache.get("games");
+  if (!c) return false;
+  $("#games-form").riot_id.value = c.riotId;
+  $("#games-form").count.value = c.count;
+  $("#games-form").queue.value = c.queue || "";
+  renderGames(c.results, c.puuid, c.rollup);
+  setStatus($("#games-status"), `Showing ${c.results.length} cached games for ${c.riotId} from ${timeAgo(c.savedAt)}. Click Analyze to refresh.`);
+  return true;
+}
+
 async function analyzeGames(form) {
   const status = $("#games-status");
   const list = $("#games-list");
   const riotId = form.riot_id.value.trim();
+  const count = form.count.value, queue = form.queue.value || null;
   saved.set("riot_id", riotId);
   list.replaceChildren();
   $("#games-summary").replaceChildren();
   setStatus(status, `Looking up ${riotId}...`, { busy: true });
   let puuid = null;
   try {
-    const params = { riot_id: riotId, count: form.count.value, queue: form.queue.value || null };
-    const res = await runJob("player", params, {
+    const res = await runJob("player", { riot_id: riotId, count, queue }, {
       statusEl: status,
       onPartial: (items) => {
         for (const r of items) {
@@ -236,6 +271,7 @@ async function analyzeGames(form) {
     });
     $("#games-summary").replaceChildren(gamesSummary(res.results, res.puuid, res.rollup));
     setStatus(status, `${res.results.length} games analyzed.`);
+    cache.set("games", { riotId, count, queue, puuid: res.puuid, results: res.results, rollup: res.rollup });
   } catch (e) {
     setStatus(status, e.message, { error: true });
   }
@@ -275,11 +311,11 @@ function matchDetail(r, puuid) {
   const peaks = r.leads.gold_peaks;
   const teamTable = (team) => {
     const rows = r.players.filter((p) => p.team_id === team).map((p) => h("tr", { class: p.puuid === puuid ? "me" : null },
-      h("td", null, p.champion, p.carried ? h("span", { class: "chip gold", style: "margin-left:6px" }, "carried") : null),
+      h("td", null, champName(p.champion), p.carried ? h("span", { class: "chip gold", style: "margin-left:6px" }, "carried") : null),
       h("td", { class: "muted" }, p.riot_id),
-      h("td", null, p.position.toLowerCase()),
+      h("td", null, roleLabel(p.position)),
       h("td", { class: "num" }, p.kda.join("/")),
-      h("td", { class: "num" }, pct(p.shares.kills)),
+      h("td", { class: "num", title: "Kill participation: this player's kills+assists, over the team's kills in the game" }, pct(p.shares.kp)),
       h("td", { class: "num" }, pct(p.shares.damage)),
       h("td", { class: "num" }, pct(p.shares.gold)),
       h("td", { class: "num" }, `${p.impact_ratio.toFixed(2)}x`)));
@@ -288,8 +324,9 @@ function matchDetail(r, puuid) {
         h("th", { class: team === 100 ? "team-blue" : "team-red" },
           `${TEAM[team]} ${r.winner === team ? "(won)" : "(lost)"}`),
         h("th", null, "Player"), h("th", null, "Role"), h("th", { class: "num" }, "KDA"),
-        h("th", { class: "num" }, "Kills"), h("th", { class: "num" }, "Damage"), h("th", { class: "num" }, "Gold"),
-        h("th", { class: "num" }, "Impact"))),
+        h("th", { class: "num", title: "Kill participation (kills+assists, not exclusive — can add up to more than 100% across the team)" }, "KP"),
+        h("th", { class: "num" }, "Damage"), h("th", { class: "num" }, "Gold"),
+        h("th", { class: "num", title: "Average of KP/damage/gold share, divided by a typical share for this player's role. Above 1x means they contributed more than a typical player in that role would; well above (~1.35x+) can tag them as the game's Carried player." }, "Impact"))),
       h("tbody", null, rows)));
   };
   return h("div", null,
@@ -318,19 +355,32 @@ function replayAdvisor(matchId) {
   form.requestSubmit();
 }
 
+function loadCachedAdvisor() {
+  const c = cache.get("advisor");
+  if (!c || !c.report.counters.grievous_wounds.sources) return false;
+  const form = $("#advisor-form");
+  form.riot_id.value = c.riotId;
+  form.depth.value = c.depth;
+  form.allies.checked = c.allies;
+  form.replay.value = c.replay || "";
+  renderAdvisor(c.report);
+  setStatus($("#advisor-status"), `Showing cached report (${c.report.source}) from ${timeAgo(c.savedAt)}. Click Run advisor to refresh.`);
+  return true;
+}
+
 async function runAdvisor(form) {
   const status = $("#advisor-status");
   const out = $("#advisor-out");
-  saved.set("riot_id", form.riot_id.value.trim());
+  const riotId = form.riot_id.value.trim(), depth = form.depth.value, allies = form.allies.checked;
+  const replay = form.replay.value.trim() || null;
+  saved.set("riot_id", riotId);
   out.replaceChildren();
   setStatus(status, "Finding the game...", { busy: true });
   try {
-    const rep = await runJob("advisor", {
-      riot_id: form.riot_id.value.trim(), depth: form.depth.value, allies: form.allies.checked,
-      replay: form.replay.value.trim() || null,
-    }, { statusEl: status, interval: 800 });
+    const rep = await runJob("advisor", { riot_id: riotId, depth, allies, replay }, { statusEl: status, interval: 800 });
     renderAdvisor(rep);
     setStatus(status, `Done (${rep.source}).`);
+    cache.set("advisor", { riotId, depth, allies, replay, report: rep });
   } catch (e) {
     setStatus(status, e.message, { error: true });
   }
@@ -342,7 +392,7 @@ function threatTable(rows, title) {
       h("th", { class: "num" }, "Carried wins"), h("th", { class: "num" }, "Avg impact"), h("th", { class: "num" }, "Games"),
       h("th", null, ""))),
     h("tbody", null, rows.map((t) => h("tr", null,
-      h("td", null, t.champion), h("td", { class: "muted" }, t.riot_id),
+      h("td", null, champName(t.champion)), h("td", { class: "muted" }, t.riot_id),
       h("td", { class: "num" }, `${t.carried_wins}/${t.wins}`),
       h("td", { class: "num" }, t.avg_impact == null ? "n/a" : `${t.avg_impact.toFixed(2)}x`),
       h("td", { class: "num" }, t.games),
@@ -364,11 +414,14 @@ function damageBar(split) {
 function enemyCard(e) {
   const p = e.profile, b = e.build_prediction;
   return h("div", { class: "card" },
-    h("h3", null, e.champion, " ", h("span", { class: "muted", style: "font-weight:400" }, e.riot_id)),
+    h("h3", null, champName(e.champion), " ", h("span", { class: "muted", style: "font-weight:400" }, e.riot_id)),
     h("div", { class: "chips" },
       (p.tempo.length ? p.tempo : ["no clear tempo"]).map((t) => h("span", { class: "chip" }, t)),
+      e.pool && e.pool.one_trick ? h("span", { class: "chip gold", title: e.pool.on_it ? "Playing their main" : `Not playing it this game` },
+        `One-trick: ${champName(e.pool.champion)} (${e.pool.games}/${e.pool.total} games)`) : null,
       p.lane_gold_diff_14 != null ? h("span", { class: "chip" }, `lane gold @14 ${signed(p.lane_gold_diff_14)}`) : null,
-      p.heal_percentile != null && p.heal_percentile >= 0.8 ? h("span", { class: "chip bad" }, "healer") : null),
+      e.healing.score > 0 ? h("span", { class: "chip", title: e.healing.reasons.join("; ") },
+        e.healing.reasons.every((r) => r.startsWith("builds")) ? "healing items" : "heals") : null),
     h("div", { class: "muted", style: "margin-top:6px;font-size:12px" }, `Based on ${p.games} ${p.source}`),
     b ? h("div", null,
       h("h4", null, `Predicted build · ${b.games} games · ${pct(b.confidence)} confidence`),
@@ -380,7 +433,7 @@ function enemyCard(e) {
         `First item ${b.first_item.item} (${pct(b.first_item.rate)})`,
         b.boots ? ` · ${b.boots.item}` : "",
         b.item_spikes_s.length ? ` · item spikes ${b.item_spikes_s.map(mmss).join(", ")}` : ""))
-      : h("p", { class: "muted" }, `No stored games on ${e.champion} to predict a build from.`),
+      : h("p", { class: "muted" }, `No stored games on ${champName(e.champion)} to predict a build from.`),
     e.live ? h("div", null, h("h4", null, `Now: level ${e.live.level}`), h("div", { class: "muted" }, e.live.items.join(", ") || "no items")) : null);
 }
 
@@ -390,7 +443,7 @@ function renderAdvisor(rep) {
   const c = rep.counters, gw = c.grievous_wounds;
   fill(out,
     f ? h("div", { class: "banner" }, h("div", { class: "muted" }, "Focus target"),
-      h("div", { class: "big" }, `${f.champion}`),
+      h("div", { class: "big" }, champName(f.champion)),
       h("div", null, `${f.riot_id}: tagged as the carry in ${f.carried_wins}/${f.wins} recent wins (${pct(f.carry_rate)})`))
       : h("div", { class: "card muted" }, "No enemy has a consistent carry record in their recent wins."),
     h("div", { class: "grid2" },
@@ -398,11 +451,10 @@ function renderAdvisor(rep) {
       h("div", { class: "card" }, h("h3", null, "Counter-itemization"),
         damageBar(c.damage_split),
         h("p", null, c.resist_advice),
-        h("p", null, gw.healers.length
-          ? [h("strong", null, `Grievous Wounds: ${gw.urgency} priority`), `, ${gw.timing}. Healers: `,
-            gw.healers.map((x) => `${x.champion} (${x.self_heal_per_min}/min, top ${pct(1 - x.percentile)})`).join(", ")]
-          : "Grievous Wounds: low priority (no heavy self-healers)."),
-        h("div", { class: "muted", style: "font-size:12px" }, `Healing compared against ${rep.heal_baseline_sample} stored player-games.`))),
+        h("p", null, h("strong", null, `Grievous Wounds: ${gw.urgency} priority`), gw.timing ? `, ${gw.timing}` : "",
+          gw.sources.length ? "" : ". No enemy healing found."),
+        gw.sources.length ? h("ul", { style: "margin:0;padding-left:18px" }, gw.sources.map((x) =>
+          h("li", null, h("strong", null, champName(x.champion)), `: ${x.reasons.join("; ") || "some healing"}`))) : null)),
     h("div", { class: "grid3" }, rep.enemies.map(enemyCard)),
     rep.ally_carries ? threatTable(rep.ally_carries, "Your team's likely carries") : null);
 }
@@ -687,7 +739,7 @@ async function resetTuning() {
 // ---------- init --------------------------------------------------------------------------------------------
 async function init() {
   $$("#tabs button").forEach((b) => b.addEventListener("click", () => showTab(b.dataset.tab)));
-  const riotId = saved.get("riot_id", "");
+  const riotId = saved.get("riot_id", DEFAULT_RIOT_ID);
   $("#games-form").riot_id.value = riotId;
   $("#advisor-form").riot_id.value = riotId;
 
@@ -715,6 +767,8 @@ async function init() {
     const queue = $("#games-form").queue;
     for (const [id, name] of Object.entries(META.queues)) queue.append(h("option", { value: id }, name));
     $("#items-list").replaceChildren(...META.sim.items.map((name) => h("option", { value: name })));
+    loadCachedGames();
+    loadCachedAdvisor();
     setupSim();
     setStatus(status, "");
   } catch (e) {

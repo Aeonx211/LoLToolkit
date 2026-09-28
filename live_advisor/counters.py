@@ -1,4 +1,3 @@
-from bisect import bisect_left
 from statistics import mean
 
 from causal_analysis.metrics import frame_at_or_before
@@ -8,8 +7,6 @@ from data_layer import DataLayer
 from .history import PlayerHistory
 
 # TODO: first-guess cutoffs for the counter-itemization calls below; tune against stored games.
-HEALER_PERCENTILE = 0.80
-HEAVY_HEALER_PERCENTILE = 0.90
 RESIST_SPLIT = 0.60
 EARLY_LANE_GOLD = 400
 SCALING_SHARE_GAIN = 0.02
@@ -28,10 +25,6 @@ def _minutes(match):
     return max(duration / 60, 1)
 
 
-def _self_heal_per_min(p, minutes):
-    return max(0, p.get("totalHeal", 0) - p.get("totalHealsOnTeammates", 0)) / minutes
-
-
 def game_stats(match, timeline, puuid):
     p = _participant(match, puuid)
     if p is None:
@@ -43,7 +36,6 @@ def game_stats(match, timeline, puuid):
             "magic": p.get("magicDamageDealtToChampions", 0) / minutes,
             "true": p.get("trueDamageDealtToChampions", 0) / minutes,
         },
-        "self_heal_per_min": _self_heal_per_min(p, minutes),
         "lane_gold_diff_14": None,
         "gold_share_gain": None,
     }
@@ -67,22 +59,7 @@ def game_stats(match, timeline, puuid):
     return stats
 
 
-def self_heal_baseline(layer: DataLayer, limit=200):
-    """Sorted self-heal/min of every participant in recently stored matches, used to judge 'a lot of healing'."""
-    values = []
-    for match in layer.store.recent_matches(limit):
-        minutes = _minutes(match)
-        values.extend(_self_heal_per_min(p, minutes) for p in match["info"]["participants"])
-    return sorted(values)
-
-
-def percentile(sorted_values, value):
-    if not sorted_values:
-        return None
-    return bisect_left(sorted_values, value) / len(sorted_values)
-
-
-def enemy_profile(layer: DataLayer, champions, history: PlayerHistory, heal_baseline):
+def enemy_profile(layer: DataLayer, champions, history: PlayerHistory):
     entry = history.entry
     if history.champion_match_ids:
         ids, source = history.champion_match_ids[:MAX_GAMES], f"{entry.champion} games"
@@ -103,11 +80,10 @@ def enemy_profile(layer: DataLayer, champions, history: PlayerHistory, heal_base
             profile["damage_per_min"] = {"physical": info["attack"] / total, "magic": info["magic"] / total, "true": 0}
         else:
             profile["damage_per_min"] = {"physical": 0.5, "magic": 0.5, "true": 0}
-        profile.update(source="champion data (no history)", self_heal_per_min=None, heal_percentile=None, tempo=[])
+        profile.update(source="champion data (no history)", tempo=[])
         return profile
 
     damage = {k: mean(g["damage_per_min"][k] for g in games) for k in ("physical", "magic", "true")}
-    heal = mean(g["self_heal_per_min"] for g in games)
     lane = [g["lane_gold_diff_14"] for g in games if g["lane_gold_diff_14"] is not None]
     trend = [g["gold_share_gain"] for g in games if g["gold_share_gain"] is not None]
     # TODO: tempo is a rough proxy (lane gold @14 and gold-share growth); a better signal would be win rate by
@@ -119,8 +95,6 @@ def enemy_profile(layer: DataLayer, champions, history: PlayerHistory, heal_base
         tempo.append("scales late")
     profile.update(
         damage_per_min={k: round(v) for k, v in damage.items()},
-        self_heal_per_min=round(heal),
-        heal_percentile=percentile(heal_baseline, heal),
         lane_gold_diff_14=round(mean(lane)) if lane else None,
         tempo=tempo,
     )
@@ -137,26 +111,4 @@ def counter_itemization(profiles):
         resist = "Armor first: enemy damage is mostly physical"
     else:
         resist = "Mixed damage: build resists against whoever is ahead"
-
-    healers = [p for p in profiles if (p.get("heal_percentile") or 0) >= HEALER_PERCENTILE]
-    heavy = [p for p in healers if p["heal_percentile"] >= HEAVY_HEALER_PERCENTILE]
-    if heavy or len(healers) >= 2:
-        urgency = "high"
-    elif healers:
-        urgency = "consider"
-    else:
-        urgency = "low"
-    timing = None
-    if healers:
-        early = any("strong early" in p["tempo"] for p in healers)
-        timing = "by your first or second item" if early else "by your third item"
-    return {
-        "damage_split": split,
-        "resist_advice": resist,
-        "grievous_wounds": {
-            "urgency": urgency,
-            "timing": timing,
-            "healers": [{"champion": p["champion"], "self_heal_per_min": p["self_heal_per_min"],
-                         "percentile": round(p["heal_percentile"], 2)} for p in healers],
-        },
-    }
+    return {"damage_split": split, "resist_advice": resist}

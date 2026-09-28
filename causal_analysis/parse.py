@@ -43,7 +43,8 @@ class Frame:
     gold: dict[int, int]
     xp: dict[int, int]
     damage: dict[int, int]
-    kills: dict[int, int] = field(default_factory=dict)
+    kills: dict[int, int] = field(default_factory=dict)  # running kill count credited to the killer only
+    kp: dict[int, int] = field(default_factory=dict)  # running count of team kills each player killed OR assisted
 
     def get(self, metric):
         return getattr(self, metric)
@@ -55,6 +56,7 @@ class Kill:
     killer: int
     victim: int
     team: int
+    assists: list[int] = field(default_factory=list)
 
 
 @dataclass
@@ -128,7 +130,8 @@ def parse_match(match, timeline) -> ParsedMatch:
             if victim not in team_of:
                 continue
             killer = e.get("killerId", 0)
-            kills.append(Kill(t, killer if killer in team_of else 0, victim, other_team(team_of[victim])))
+            assists = [pid for pid in e.get("assistingParticipantIds", []) if pid in team_of]
+            kills.append(Kill(t, killer if killer in team_of else 0, victim, other_team(team_of[victim]), assists))
         elif kind == "ELITE_MONSTER_KILL":
             team = e.get("killerTeamId") or team_of.get(e.get("killerId"), 0)
             if team not in TEAMS:
@@ -155,13 +158,18 @@ def parse_match(match, timeline) -> ParsedMatch:
         frames.append(Frame(f["timestamp"] / 1000, gold, xp, damage))
 
     running = {pid: 0 for pid in players}
+    running_kp = {pid: 0 for pid in players}
     i = 0
     for frame in frames:
         while i < len(kills) and kills[i].t <= frame.t:
             if kills[i].killer:
                 running[kills[i].killer] += 1
+                running_kp[kills[i].killer] += 1
+            for assist in kills[i].assists:
+                running_kp[assist] += 1
             i += 1
         frame.kills = dict(running)
+        frame.kp = dict(running_kp)
 
     duration = info.get("gameDuration", 0)
     if "gameEndTimestamp" not in info:

@@ -15,7 +15,7 @@ from .parse import UnsupportedMatch, parse_match
 from .verdict import build_verdict
 
 # Bump when analysis logic changes so cached results are recomputed.
-ANALYSIS_VERSION = 2
+ANALYSIS_VERSION = 3
 
 
 def analysis_version():

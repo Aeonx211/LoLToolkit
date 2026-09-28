@@ -34,6 +34,17 @@ class DataLayer:
         return self.client.match_ids(puuid, count=min(count, 100), start=start, queue=queue, end_time=end_time,
                                      priority=priority)
 
+    def champion_picked(self, match_id, puuid, priority=BULK):
+        """The champion a player used in a match. Fetches the match without its timeline, and remembers everyone's pick."""
+        pick = self.store.get_pick(match_id, puuid)
+        if pick:
+            return pick
+        match = self.client.match(match_id, priority)
+        if match is None:
+            return None
+        self.store.save_picks(match)
+        return self.store.get_pick(match_id, puuid)
+
     def match_with_timeline(self, match_id, priority=BULK):
         cached = self.store.get_match(match_id)
         if cached:

@@ -11,6 +11,11 @@ from .service import analyze_match_id, analyze_player
 
 QUEUES = {400: "Draft", 420: "Ranked Solo", 430: "Blind", 440: "Ranked Flex", 450: "ARAM", 490: "Quickplay",
           700: "Clash", 900: "URF", 1700: "Arena", 1900: "URF"}
+ROLE_LABELS = {"utility": "support"}
+
+
+def role_label(position):
+    return ROLE_LABELS.get(position.lower(), position.lower())
 
 
 def _tag_labels(result):
@@ -32,7 +37,7 @@ def print_player_line(result, puuid):
     queue = QUEUES.get(result["queue_id"], f"queue {result['queue_id']}")
     k, d, a = me["kda"]
     print(f"{result['match_id']}  {when}  {queue:<11}  {mmss(result['duration_s'])}  "
-          f"{'WIN ' if me['win'] else 'LOSS'}  {me['champion']} {me['position'].lower()} "
+          f"{'WIN ' if me['win'] else 'LOSS'}  {me['champion']} {role_label(me['position'])} "
           f"({TEAM_NAMES[me['team_id']]}) {k}/{d}/{a}  impact {me['impact_ratio']:.2f}x")
     print(f"  [{_tag_labels(result)}]")
     print(f"  {result['verdict']}\n")
@@ -57,8 +62,8 @@ def print_match_detail(result):
     for p in result["players"]:
         s = p["shares"]
         flag = "  <- carried" if p["carried"] else ""
-        print(f"  {TEAM_NAMES[p['team_id']]:<4} {p['champion']:<13} {p['position'].lower():<8} "
-              f"kills {s['kills']:.0%}  dmg {s['damage']:.0%}  gold {s['gold']:.0%}  "
+        print(f"  {TEAM_NAMES[p['team_id']]:<4} {p['champion']:<13} {role_label(p['position']):<8} "
+              f"KP {s['kp']:.0%}  dmg {s['damage']:.0%}  gold {s['gold']:.0%}  "
               f"impact {p['impact_ratio']:.2f}x  {p['riot_id']}{flag}")
 
 

@@ -24,14 +24,6 @@ MAX_BODY = 1_000_000
 JOB_TTL_S = 3600
 
 
-def _slim(result):
-    """Drop the per-player rolling impact series from list views; the match detail view fetches the full result."""
-    if "timeline" not in result:
-        return result
-    timeline = {k: v for k, v in result["timeline"].items() if k != "rolling_impact"}
-    return {**result, "timeline": timeline}
-
-
 class App:
     def __init__(self):
         tuning.apply()
@@ -97,7 +89,10 @@ class App:
         puuid = self.layer.resolve_riot_id(riot_id)
 
         def on_result(result):
-            job["partial"].append(_slim(result))
+            # TODO: sends the full analysis (~9KB/game incl. rolling-impact timeline) to the browser and into its
+            #  cache; slimming only saved ~2KB/game (measured), so not worth the complexity while thresholds are
+            #  still being tuned. Revisit if the browser cache (5-10MB/origin) becomes a real constraint.
+            job["partial"].append(result)
             job["progress"].append(f"Analyzed {result['match_id']} ({len(job['partial'])}/{count})")
 
         analyze_puuid(self.layer, puuid, count, queue, on_result=on_result)
@@ -135,11 +130,19 @@ class App:
 
     # --- metadata ------------------------------------------------------------------------------------------
 
+    def champion_names(self):
+        """Riot's internal champion ids to display names (MonkeyKing -> Wukong). Empty if Data Dragon is unreachable."""
+        try:
+            return {c["id"]: c["name"] for c in self.dd.champions().values()}
+        except OSError:
+            return {}
+
     def meta(self):
         examples = {p.stem: json.loads(p.read_text(encoding="utf-8")) for p in sorted(EXAMPLES.glob("*.json"))
                     if "attacker" in p.read_text(encoding="utf-8")}
         return {
             "queues": {str(k): v for k, v in QUEUES.items()},
+            "champions": self.champion_names(),
             "sim": {
                 "champions": {name: list(kit.abilities) for name, kit in KITS.items()},
                 "keystones": sorted(k for k in KEYSTONES if k),
