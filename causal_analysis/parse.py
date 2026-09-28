@@ -34,6 +34,7 @@ class Player:
     assists: int
     damage: int
     gold: int
+    objective_damage: int
     items: list[int]
 
 
@@ -115,6 +116,7 @@ def parse_match(match, timeline) -> ParsedMatch:
             assists=p.get("assists", 0),
             damage=p.get("totalDamageDealtToChampions", 0),
             gold=p.get("goldEarned", 0),
+            objective_damage=p.get("damageDealtToObjectives", 0),  # towers, dragons, herald, baron combined
             items=[i for i in items if i],
         )
     team_of = {pid: p.team_id for pid, p in players.items()}

@@ -22,6 +22,7 @@ STATIC = Path(__file__).resolve().parent / "static"
 EXAMPLES = Path(__file__).resolve().parent.parent / "build_sim" / "builds"
 MAX_BODY = 1_000_000
 JOB_TTL_S = 3600
+PREDICTION_DEPTH = 5  # earlier games per player used (and fetched if missing) for the pre-game impact prediction
 
 
 class App:
@@ -30,6 +31,7 @@ class App:
         settings = load_settings()
         self.layer = DataLayer.from_env()
         self.dd = DataDragon(settings.cache_dir)
+        self.platform = settings.platform
         self.game = GameData(settings.cache_dir)
         self.jobs = {}
         self._lock = threading.Lock()
@@ -103,7 +105,23 @@ class App:
         result = analyze_match_id(self.layer, match_id)
         if result is None:
             raise LookupError(f"Match {match_id} not found")
-        return result
+        if "skipped" in result:
+            return result
+        # Predicted impact: what each player's earlier games say they'd average. Not part of the cached analysis.
+        # Only uses what's stored, unless the user asked to load history (a slow one-time fetch per match).
+        load = bool(params.get("load_history"))
+        players = []
+        for i, p in enumerate(result["players"], 1):
+            avg, games = self.layer.store.prior_impact(p["puuid"], result["game_start"], PREDICTION_DEPTH)
+            if load and games < PREDICTION_DEPTH:
+                job["progress"].append(f"Loading earlier games for {p['riot_id']} ({i}/{len(result['players'])})")
+                try:
+                    analyze_puuid(self.layer, p["puuid"], PREDICTION_DEPTH, end_time=result["game_start"] // 1000 - 1)
+                except RiotApiError as e:
+                    job["progress"].append(f"Couldn't load history for {p['riot_id']}: {e}")
+                avg, games = self.layer.store.prior_impact(p["puuid"], result["game_start"], PREDICTION_DEPTH)
+            players.append({**p, "predicted_impact": None if avg is None else {"value": round(avg, 2), "games": games}})
+        return {**result, "players": players, "prediction_depth": PREDICTION_DEPTH}
 
     def run_advisor(self, params, job):
         riot_id = str(params.get("riot_id", "")).strip()
@@ -141,6 +159,7 @@ class App:
         examples = {p.stem: json.loads(p.read_text(encoding="utf-8")) for p in sorted(EXAMPLES.glob("*.json"))
                     if "attacker" in p.read_text(encoding="utf-8")}
         return {
+            "platform": self.platform,
             "queues": {str(k): v for k, v in QUEUES.items()},
             "champions": self.champion_names(),
             "sim": {

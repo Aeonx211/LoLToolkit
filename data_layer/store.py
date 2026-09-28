@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS picks (
     match_id TEXT NOT NULL,
     puuid TEXT NOT NULL,
     champion_name TEXT,
+    position TEXT,
     PRIMARY KEY (match_id, puuid)
 );
 
@@ -84,6 +85,8 @@ class Store:
             Path(path).parent.mkdir(parents=True, exist_ok=True)
         self._db = sqlite3.connect(str(path), check_same_thread=False)
         self._db.executescript(SCHEMA)
+        if "position" not in {r[1] for r in self._db.execute("PRAGMA table_info(picks)")}:
+            self._db.execute("ALTER TABLE picks ADD COLUMN position TEXT")  # picks saved before roles were tracked
         self._lock = threading.RLock()
 
     def close(self):
@@ -143,8 +146,9 @@ class Store:
         match_id = match["metadata"]["matchId"]
         with self._lock, self._db:
             self._db.executemany(
-                "INSERT OR REPLACE INTO picks VALUES (?, ?, ?)",
-                [(match_id, p["puuid"], p.get("championName")) for p in match["info"]["participants"]])
+                "INSERT OR REPLACE INTO picks VALUES (?, ?, ?, ?)",
+                [(match_id, p["puuid"], p.get("championName"), p.get("teamPosition") or "")
+                 for p in match["info"]["participants"]])
 
     def get_pick(self, match_id, puuid):
         with self._lock:
@@ -153,6 +157,16 @@ class Store:
                 "SELECT champion_name FROM participants WHERE match_id=? AND puuid=?",
                 (match_id, puuid, match_id, puuid)).fetchone()
         return row[0] if row else None
+
+    def get_pick_info(self, match_id, puuid):
+        """(champion, role) a player had in a match, or None. Role is "" in modes without roles. Picks stored before
+        roles were tracked count as unknown so they get re-fetched."""
+        with self._lock:
+            row = self._db.execute(
+                "SELECT champion_name, position FROM picks WHERE match_id=? AND puuid=? AND position IS NOT NULL UNION "
+                "SELECT champion_name, position FROM participants WHERE match_id=? AND puuid=?",
+                (match_id, puuid, match_id, puuid)).fetchone()
+        return (row[0], row[1] or "") if row else None
 
     def player_match_ids(self, puuid, champion=None, before_ms=None, limit=50):
         """Stored matches for a player, newest first, optionally only on one champion / before a timestamp."""
@@ -169,6 +183,15 @@ class Store:
         args.append(limit)
         with self._lock:
             return [row[0] for row in self._db.execute(sql, args).fetchall()]
+
+    def prior_impact(self, puuid, before_ms, limit=10):
+        """(average impact ratio, games) over the player's stored, analyzed games before a timestamp."""
+        with self._lock:
+            rows = self._db.execute(
+                "SELECT i.impact_ratio FROM player_match_impact i JOIN matches m ON m.match_id = i.match_id "
+                "WHERE i.puuid = ? AND m.game_start < ? AND i.impact_ratio IS NOT NULL "
+                "ORDER BY m.game_start DESC LIMIT ?", (puuid, before_ms, limit)).fetchall()
+        return (sum(r[0] for r in rows) / len(rows), len(rows)) if rows else (None, 0)
 
     def recent_matches(self, limit=200):
         with self._lock:

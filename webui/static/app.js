@@ -45,6 +45,20 @@ const queueName = (id) => (META && META.queues[id]) || `Queue ${id}`;
 const ROLE_LABELS = { utility: "support" };
 const roleLabel = (position) => ROLE_LABELS[position.toLowerCase()] || position.toLowerCase() || "no role";
 let META = null;
+
+// op.gg's region slugs where they differ from Riot's platform ids.
+const OPGG_REGIONS = { na1: "na", br1: "br", la1: "lan", la2: "las", euw1: "euw", eun1: "eune", tr1: "tr", me1: "me",
+  jp1: "jp", oc1: "oc", sg2: "sg", tw2: "tw", vn2: "vn" };
+// A player's name as a link to their op.gg profile.
+function playerLink(riotId, attrs) {
+  const i = riotId.lastIndexOf("#");
+  if (i < 1) return h("span", attrs, riotId);
+  const platform = (META && META.platform) || "na1";
+  const region = OPGG_REGIONS[platform] || platform;
+  const href = `https://www.op.gg/lol/summoners/${region}/${encodeURIComponent(riotId.slice(0, i))}-${encodeURIComponent(riotId.slice(i + 1))}`;
+  return h("a", { ...attrs, class: `player-link ${(attrs && attrs.class) || ""}`.trim(), href, target: "_blank", rel: "noopener noreferrer",
+    title: "Open on op.gg" }, riotId);
+}
 let clipSeq = 0;
 
 const DEFAULT_RIOT_ID = "Aeoen#NA1";
@@ -203,7 +217,7 @@ function gameCard(r, puuid) {
         h("span", { class: "muted" },
           `${roleLabel(me.position)} · ${me.kda.join("/")} · ${queueName(r.queue_id)} · `
           + `${mmss(r.duration_s)} · ${new Date(r.game_start).toLocaleDateString()}`),
-        h("span", { class: "muted", title: "Average of KP/damage/gold share, divided by a typical share for this role. 1x = typical." }, `impact ${me.impact_ratio.toFixed(2)}x`)),
+        h("span", { class: "muted", title: "Weighted average of KP/damage/gold share and objective damage share, divided by a typical mix for this role. 1x = typical." }, `impact ${me.impact_ratio.toFixed(2)}x`)),
       h("div", { class: "chips" }, tags.length ? tags : h("span", { class: "chip" }, "No archetype")),
       h("p", { class: "verdict" }, r.verdict)),
     h("div", { class: "side" },
@@ -312,21 +326,34 @@ function matchDetail(r, puuid) {
   const teamTable = (team) => {
     const rows = r.players.filter((p) => p.team_id === team).map((p) => h("tr", { class: p.puuid === puuid ? "me" : null },
       h("td", null, champName(p.champion), p.carried ? h("span", { class: "chip gold", style: "margin-left:6px" }, "carried") : null),
-      h("td", { class: "muted" }, p.riot_id),
+      h("td", { class: "muted" }, playerLink(p.riot_id)),
       h("td", null, roleLabel(p.position)),
       h("td", { class: "num" }, p.kda.join("/")),
       h("td", { class: "num", title: "Kill participation: this player's kills+assists, over the team's kills in the game" }, pct(p.shares.kp)),
       h("td", { class: "num" }, pct(p.shares.damage)),
       h("td", { class: "num" }, pct(p.shares.gold)),
-      h("td", { class: "num" }, `${p.impact_ratio.toFixed(2)}x`)));
+      h("td", { class: "num", title: "Share of the team's tower/dragon/herald/baron damage" }, pct(p.shares.objectives)),
+      h("td", { class: "num" }, `${p.impact_ratio.toFixed(2)}x`),
+      h("td", { class: "num muted", title: p.predicted_impact ? `Average impact over their ${p.predicted_impact.games} earlier stored game(s)` : "No earlier stored games for this player" },
+        p.predicted_impact ? `${p.predicted_impact.value.toFixed(2)}x` : "n/a"),
+      (() => {
+        const d = p.predicted_impact ? p.impact_ratio - p.predicted_impact.value : null;
+        if (d == null) return h("td", { class: "num muted" }, "n/a");
+        const big = Math.abs(d) >= 0.15;
+        return h("td", { class: `num ${big ? (d > 0 ? "win-text" : "loss-text") : "muted"}`,
+          title: "Actual impact minus predicted. Positive means they had more impact than their history suggested." },
+          `${d > 0 ? "+" : ""}${d.toFixed(2)}`);
+      })()));
     return h("div", { class: "table-wrap" }, h("table", null,
       h("thead", null, h("tr", null,
         h("th", { class: team === 100 ? "team-blue" : "team-red" },
           `${TEAM[team]} ${r.winner === team ? "(won)" : "(lost)"}`),
         h("th", null, "Player"), h("th", null, "Role"), h("th", { class: "num" }, "KDA"),
         h("th", { class: "num", title: "Kill participation (kills+assists, not exclusive — can add up to more than 100% across the team)" }, "KP"),
-        h("th", { class: "num" }, "Damage"), h("th", { class: "num" }, "Gold"),
-        h("th", { class: "num", title: "Average of KP/damage/gold share, divided by a typical share for this player's role. Above 1x means they contributed more than a typical player in that role would; well above (~1.35x+) can tag them as the game's Carried player." }, "Impact"))),
+        h("th", { class: "num" }, "Damage"), h("th", { class: "num" }, "Gold"), h("th", { class: "num" }, "Obj"),
+        h("th", { class: "num", title: "Weighted average of KP/damage/gold share (85%) and objective damage share (15%), divided by the same mix for a typical player in this role. Above 1x means they contributed more than a typical player in that role would; well above (~1.35x+) can tag them as the game's Carried player." }, "Impact"),
+        h("th", { class: "num", title: "Predicted impact: the player's average impact over their earlier stored games, before this one. Compare with the actual Impact." }, "Predicted"),
+        h("th", { class: "num", title: "Actual impact minus predicted: who over- or under-performed their expectation this game." }, "Δ"))),
       h("tbody", null, rows)));
   };
   return h("div", null,
@@ -343,7 +370,26 @@ function matchDetail(r, puuid) {
         r.leads.gold_flips.length ? h("span", null, `Lead changed hands at ${r.leads.gold_flips.map(mmss).join(", ")}`) : null)),
     h("div", { class: "card" }, h("h4", { style: "margin-top:0" }, "Key moments"),
       h("ul", { style: "margin:0;padding-left:18px" }, r.key_moments.map((m) => h("li", null, describeMoment(m))))),
-    h("div", { class: "card" }, teamTable(100), h("div", { style: "height:10px" }), teamTable(200)));
+    h("div", { class: "card" }, historyLoader(r, puuid), teamTable(100), h("div", { style: "height:10px" }), teamTable(200)));
+}
+
+// Predictions only use stored games; this fetches missing earlier games on request (slow: many API calls).
+function historyLoader(r, puuid) {
+  const missing = r.players.filter((p) => !p.predicted_impact || p.predicted_impact.games < r.prediction_depth);
+  if (!missing.length) return null;
+  const status = h("span", { class: "status" });
+  const button = h("button", { class: "small" }, "Load prediction history");
+  button.onclick = () => withButton(button, async () => {
+    setStatus(status, "Starting...", { busy: true });
+    try {
+      const updated = await runJob("match", { match_id: r.match_id, load_history: true }, { statusEl: status, interval: 300 });
+      $("#match-detail").replaceChildren(matchDetail(updated, puuid));
+    } catch (e) {
+      setStatus(status, e.message, { error: true });
+    }
+  });
+  return h("div", { class: "row", style: "margin-bottom:10px;align-items:center;gap:10px" }, button, status,
+    h("span", { class: "muted" }, `${missing.length} player(s) have fewer than ${r.prediction_depth} earlier stored games. Loading fetches them from Riot (can take a while).`));
 }
 
 // ---------- Tool 2: live advisor ---------------------------------------------------------------------------
@@ -392,7 +438,7 @@ function threatTable(rows, title) {
       h("th", { class: "num" }, "Carried wins"), h("th", { class: "num" }, "Avg impact"), h("th", { class: "num" }, "Games"),
       h("th", null, ""))),
     h("tbody", null, rows.map((t) => h("tr", null,
-      h("td", null, champName(t.champion)), h("td", { class: "muted" }, t.riot_id),
+      h("td", null, champName(t.champion)), h("td", { class: "muted" }, playerLink(t.riot_id)),
       h("td", { class: "num" }, `${t.carried_wins}/${t.wins}`),
       h("td", { class: "num" }, t.avg_impact == null ? "n/a" : `${t.avg_impact.toFixed(2)}x`),
       h("td", { class: "num" }, t.games),
@@ -414,11 +460,16 @@ function damageBar(split) {
 function enemyCard(e) {
   const p = e.profile, b = e.build_prediction;
   return h("div", { class: "card" },
-    h("h3", null, champName(e.champion), " ", h("span", { class: "muted", style: "font-weight:400" }, e.riot_id)),
+    h("h3", null, champName(e.champion), " ", h("span", { class: "muted", style: "font-weight:400" }, playerLink(e.riot_id))),
     h("div", { class: "chips" },
       (p.tempo.length ? p.tempo : ["no clear tempo"]).map((t) => h("span", { class: "chip" }, t)),
       e.pool && e.pool.one_trick ? h("span", { class: "chip gold", title: e.pool.on_it ? "Playing their main" : `Not playing it this game` },
         `One-trick: ${champName(e.pool.champion)} (${e.pool.games}/${e.pool.total} games)`) : null,
+      e.pool ? h("span", { class: `chip ${e.pool.off_champion ? "bad" : ""}`, title: `Their last ${e.pool.total} games in this queue` },
+        `${e.pool.off_champion ? "Off-pick" : "On-pick"}: ${e.pool.on_champion_games}/${e.pool.total} on ${champName(e.champion)}`) : null,
+      e.pool && e.pool.role ? h("span", { class: `chip ${e.pool.role.off_role ? "bad" : ""}`,
+        title: e.pool.role.playing ? `Playing ${roleLabel(e.pool.role.playing)} this game` : "Their role this game isn't known from the live feed" },
+        `${e.pool.role.off_role ? "Off-role" : "Usually"} ${roleLabel(e.pool.role.role)} (${e.pool.role.games}/${e.pool.role.total})`) : null,
       p.lane_gold_diff_14 != null ? h("span", { class: "chip" }, `lane gold @14 ${signed(p.lane_gold_diff_14)}`) : null,
       e.healing.score > 0 ? h("span", { class: "chip", title: e.healing.reasons.join("; ") },
         e.healing.reasons.every((r) => r.startsWith("builds")) ? "healing items" : "heals") : null),
@@ -444,7 +495,7 @@ function renderAdvisor(rep) {
   fill(out,
     f ? h("div", { class: "banner" }, h("div", { class: "muted" }, "Focus target"),
       h("div", { class: "big" }, champName(f.champion)),
-      h("div", null, `${f.riot_id}: tagged as the carry in ${f.carried_wins}/${f.wins} recent wins (${pct(f.carry_rate)})`))
+      h("div", null, playerLink(f.riot_id), `: tagged as the carry in ${f.carried_wins}/${f.wins} recent wins (${pct(f.carry_rate)})`))
       : h("div", { class: "card muted" }, "No enemy has a consistent carry record in their recent wins."),
     h("div", { class: "grid2" },
       threatTable(rep.carry_threats, "Enemy carry threats"),

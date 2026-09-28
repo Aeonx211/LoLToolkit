@@ -10,22 +10,40 @@ from .roster import RosterEntry
 POOL_GAMES = 20
 ONE_TRICK_GAMES = 15
 MIN_POOL_GAMES = 10
+# TODO: first-guess cutoffs for "off-pick" (under 15% of their recent games on the champion) and "off-role" (under 30%
+#  of them in the role); calibrate against how often they show up.
+OFF_CHAMPION_SHARE = 0.15
+OFF_ROLE_SHARE = 0.30
 LOOKUP_THREADS = 6  # the client's rate limiter still caps the real request rate
 
 
 def champion_pool(layer: DataLayer, entry: RosterEntry, queue_id, before_ms):
-    """Their most-played champion over their last POOL_GAMES games in this queue before this game, or None."""
+    """Their champion and role habits over their last POOL_GAMES games in this queue before this game, or None."""
     ids = layer.recent_match_ids(entry.puuid, POOL_GAMES, queue_id or None, end_time=before_ms // 1000 - 1,
                                  priority=LIVE)
     with ThreadPoolExecutor(max_workers=LOOKUP_THREADS) as pool:
-        picks = [p for p in pool.map(lambda i: layer.champion_picked(i, entry.puuid, LIVE), ids) if p]
+        picks = [p for p in pool.map(lambda i: layer.game_pick(i, entry.puuid, LIVE), ids) if p]
     if not picks:
         return None
-    champion, games = Counter(picks).most_common(1)[0]
+    champions = Counter(champion for champion, _ in picks)
+    champion, games = champions.most_common(1)[0]
+    on_games = champions[entry.champion]
+    roles = Counter(role for _, role in picks if role)
+    role = None
+    if roles:
+        top, role_games = roles.most_common(1)[0]
+        # The live game feed doesn't say who is in which role, so on_role is only known when replaying a match.
+        role = {"role": top, "games": role_games, "total": sum(roles.values()),
+                "playing": entry.position or None,
+                "on_role": (entry.position == top) if entry.position else None,
+                "off_role": bool(entry.position) and roles[entry.position] / sum(roles.values()) < OFF_ROLE_SHARE}
     return {
         "champion": champion,
         "games": games,
         "total": len(picks),
         "one_trick": len(picks) >= MIN_POOL_GAMES and games / len(picks) >= ONE_TRICK_GAMES / POOL_GAMES,
         "on_it": champion == entry.champion,
+        "on_champion_games": on_games,
+        "off_champion": on_games / len(picks) < OFF_CHAMPION_SHARE,
+        "role": role,
     }

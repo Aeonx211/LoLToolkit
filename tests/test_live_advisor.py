@@ -164,12 +164,13 @@ class OneTrickTests(unittest.TestCase):
             self.asked = {"count": count, "queue": queue, "end_time": end_time}
             return [f"NA1_{i}" for i in range(len(self.picks))]
 
-        def champion_picked(self, match_id, puuid, priority):
-            return self.picks[int(match_id.split("_")[1])]
+        def game_pick(self, match_id, puuid, priority):
+            pick = self.picks[int(match_id.split("_")[1])]
+            return pick if isinstance(pick, tuple) else (pick, "")
 
-    def pool(self, picks, playing="Draven"):
+    def pool(self, picks, playing="Draven", position=""):
         layer = self.Layer(picks)
-        entry = RosterEntry("p", "p#NA1", 200, playing)
+        entry = RosterEntry("p", "p#NA1", 200, playing, position)
         return champion_pool(layer, entry, 420, 5_000_000), layer
 
     def test_fifteen_of_twenty_is_a_one_trick(self):
@@ -187,6 +188,25 @@ class OneTrickTests(unittest.TestCase):
         self.assertFalse(self.pool(["Draven"] * 4)[0]["one_trick"])
         self.assertFalse(self.pool(["Draven"] * 9 + ["Jinx"] * 3, playing="Jinx")[0]["on_it"])
 
+    def test_share_of_recent_games_on_the_current_champion(self):
+        pool, _ = self.pool(["Draven"] * 10 + ["Jinx"] * 9 + ["Ashe"], playing="Jinx")
+        self.assertEqual(pool["on_champion_games"], 9)
+        self.assertFalse(pool["off_champion"])
+        self.assertTrue(self.pool(["Draven"] * 19 + ["Jinx"], playing="Jinx")[0]["off_champion"])
+
+    def test_preferred_role(self):
+        picks = [("Draven", "BOTTOM")] * 14 + [("Jinx", "MIDDLE")] * 4 + [("Ashe", "UTILITY")] * 2
+        role = self.pool(picks, position="BOTTOM")[0]["role"]
+        self.assertEqual((role["role"], role["games"], role["total"], role["on_role"], role["off_role"]),
+                         ("BOTTOM", 14, 20, True, False))
+        off = self.pool(picks, position="TOP")[0]["role"]
+        self.assertEqual((off["on_role"], off["off_role"]), (False, True))
+        live = self.pool(picks)[0]["role"]  # live feed: current role unknown
+        self.assertEqual((live["role"], live["on_role"], live["off_role"]), ("BOTTOM", None, False))
+
+    def test_no_role_data_in_roleless_modes(self):
+        self.assertIsNone(self.pool(["Draven"] * 5)[0]["role"])
+
     def test_store_remembers_picks_from_a_match_without_timeline(self):
         store = Store(":memory:")
         self.addCleanup(store.close)
@@ -194,6 +214,13 @@ class OneTrickTests(unittest.TestCase):
         store.save_picks(match)
         self.assertEqual(store.get_pick("NA1_77", "puuid-3"), "Champ3")
         self.assertIsNone(store.get_pick("NA1_78", "puuid-3"))
+        self.assertEqual(store.get_pick_info("NA1_77", "puuid-3")[0], "Champ3")
+
+    def test_picks_saved_without_a_role_are_treated_as_unknown(self):
+        store = Store(":memory:")
+        self.addCleanup(store.close)
+        store._db.execute("INSERT INTO picks (match_id, puuid, champion_name) VALUES ('NA1_5', 'p', 'Jinx')")
+        self.assertIsNone(store.get_pick_info("NA1_5", "p"))
 
 
 class RosterTests(unittest.TestCase):

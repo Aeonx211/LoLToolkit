@@ -39,9 +39,21 @@ Optional `.env` settings: `RIOT_PLATFORM` (default `na1`) and `TOOLKIT_DATA_DIR`
 
 ## Web UI
 
+**Starting the server:** run this from the repo root (the folder containing `webui/`):
+
 ```
 python -m webui --open        # http://127.0.0.1:8765
 ```
+
+`--open` launches your browser; leave it off to just start the server. Use `--port 9000` to change the port from the default `8765`.
+
+**Stopping the server:** press Ctrl+C in the terminal it's running in. If you've lost that terminal (or it's still answering at `http://127.0.0.1:8765` after you closed it), stop it by port in PowerShell:
+
+```powershell
+Stop-Process -Id (Get-NetTCPConnection -LocalPort 8765 -State Listen).OwningProcess
+```
+
+Use your `--port` value instead of `8765` if you started it with a different one.
 
 The UI has one tab per tool plus a **Tuning** tab:
 - **Game Analysis:** recent games with perspective tags such as "We threw" or "You carried". Click a game for its gold chart, key moments and players.

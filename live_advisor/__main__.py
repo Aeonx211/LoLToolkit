@@ -57,6 +57,14 @@ def print_report(report, names=None):
         if pool and pool["one_trick"]:
             on_it = "" if pool["on_it"] else " (not playing it now)"
             print(f"    ONE-TRICK: {name(pool['champion'])}, {pool['games']} of their last {pool['total']} games{on_it}")
+        if pool:
+            flag = "OFF-PICK" if pool["off_champion"] else "on-pick"
+            line = f"    {flag}: {pool['on_champion_games']} of their last {pool['total']} games on {name(e['champion'])}"
+            role = pool["role"]
+            if role:
+                flag = "OFF-ROLE" if role["off_role"] else "usually"
+                line += f"; {flag} {role['role']} ({role['games']}/{role['total']})"
+            print(line)
         b = e["build_prediction"]
         if b:
             build = " > ".join(f"{i['item']} {_pct(i['rate'])}" for i in b["modal_build"])

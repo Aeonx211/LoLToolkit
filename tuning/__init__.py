@@ -88,12 +88,17 @@ SETTINGS = [
     _threshold("fight_gap_s", "Fight grouping gap (s)", "Kills/objectives closer than this form one moment."),
     _threshold("rolling_window_s", "Rolling impact window (s)", ""),
     *[
-        _dict_entry("Tool 1: role baselines (KP, damage, gold share)", f"causal_analysis.ROLE_BASELINE.{role}",
-                    metrics.ROLE_BASELINE, role, role.title(),
-                    "Typical kill participation, damage share, gold share. KP isn't exclusive (several "
-                    "players can be credited per kill), so it runs ~45-65% rather than an even split.")
+        _dict_entry("Tool 1: role baselines (KP, damage, gold, objective damage share)",
+                    f"causal_analysis.ROLE_BASELINE.{role}", metrics.ROLE_BASELINE, role, role.title(),
+                    "Typical kill participation, damage share, gold share, objective (tower/dragon/herald/baron) "
+                    "damage share. KP isn't exclusive (several players can be credited per kill), so it runs "
+                    "~45-65% rather than an even split.")
         for role in list(metrics.ROLE_BASELINE)
     ],
+    _module("Tool 1: role baselines (KP, damage, gold, objective damage share)", metrics, "OBJECTIVE_WEIGHT",
+            "Impact: objective damage weight",
+            "How much objective damage share counts toward Impact, alongside KP/damage/gold (which always split "
+            "the rest evenly). 0 ignores objectives entirely; 1 makes Impact only objective damage."),
     _module(G2, threat, "MIN_WINS_TO_FLAG", "Carry flag: min recent wins"),
     _module(G2, threat, "CARRY_RATE_TO_FLAG", "Carry flag: carried-win rate", "0-1"),
     _module(G2, threat, "FULL_CONFIDENCE_WINS", "Carry score: wins for full confidence"),

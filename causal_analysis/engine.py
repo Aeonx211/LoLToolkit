@@ -15,12 +15,12 @@ from .parse import UnsupportedMatch, parse_match
 from .verdict import build_verdict
 
 # Bump when analysis logic changes so cached results are recomputed.
-ANALYSIS_VERSION = 3
+ANALYSIS_VERSION = 4
 
 
 def analysis_version():
     """Cache key for stored analyses: the logic version plus a hash of the current tuning values."""
-    tuned = repr((archetypes.DEFAULT_THRESHOLDS, sorted(metrics.ROLE_BASELINE.items())))
+    tuned = repr((archetypes.DEFAULT_THRESHOLDS, sorted(metrics.ROLE_BASELINE.items()), metrics.OBJECTIVE_WEIGHT))
     return f"{ANALYSIS_VERSION}:{hashlib.sha1(tuned.encode()).hexdigest()[:8]}"
 
 
