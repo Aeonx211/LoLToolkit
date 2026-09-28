@@ -2,6 +2,8 @@ from data_layer import BULK, DataLayer
 
 from .engine import analysis_version, analyze
 
+RANKED_QUEUES = (420, 440)  # solo/duo, flex
+
 
 def _player_rows(result):
     if "skipped" in result:
@@ -33,8 +35,9 @@ def analyze_match_id(layer: DataLayer, match_id, priority=BULK):
     return result
 
 
-def analyze_puuid(layer: DataLayer, puuid, count=10, queue=None, priority=BULK, on_result=None, end_time=None):
-    """Analyze a player's `count` most recent real games; remakes and unsupported modes are skipped and don't count."""
+def analyze_puuid(layer: DataLayer, puuid, count=10, queue=RANKED_QUEUES, priority=BULK, on_result=None, end_time=None):
+    """Analyze a player's `count` most recent real games; remakes and unsupported modes are skipped and don't count.
+    Defaults to ranked solo/duo and flex only; pass a specific queue id (or None for all queues) to override."""
     results = []
     start = 0
     while len(results) < count:
@@ -52,6 +55,6 @@ def analyze_puuid(layer: DataLayer, puuid, count=10, queue=None, priority=BULK, 
     return results
 
 
-def analyze_player(layer: DataLayer, riot_id, count=10, queue=None, priority=BULK, on_result=None):
+def analyze_player(layer: DataLayer, riot_id, count=10, queue=RANKED_QUEUES, priority=BULK, on_result=None):
     puuid = layer.resolve_riot_id(riot_id)
     return puuid, analyze_puuid(layer, puuid, count, queue, priority, on_result)

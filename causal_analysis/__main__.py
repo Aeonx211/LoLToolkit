@@ -7,7 +7,7 @@ from data_layer import DataLayer
 
 from .metrics import describe_moment, fmt_gold, mmss
 from .parse import TEAM_NAMES
-from .service import analyze_match_id, analyze_player
+from .service import RANKED_QUEUES, analyze_match_id, analyze_player
 
 QUEUES = {400: "Draft", 420: "Ranked Solo", 430: "Blind", 440: "Ranked Flex", 450: "ARAM", 490: "Quickplay",
           700: "Clash", 900: "URF", 1700: "Arena", 1900: "URF"}
@@ -75,7 +75,9 @@ def main(argv=None):
     p_player = sub.add_parser("player", help="analyze a player's recent matches")
     p_player.add_argument("riot_id", help="e.g. Aeoen#NA1")
     p_player.add_argument("-n", "--count", type=int, default=10)
-    p_player.add_argument("-q", "--queue", type=int, help="queue id filter, e.g. 420 for ranked solo")
+    p_player.add_argument("-q", "--queue", type=int,
+                          help="queue id filter, e.g. 420 for ranked solo; default is ranked solo/duo + flex. "
+                               "Pass -q 0 for all queues")
     p_player.add_argument("--json", action="store_true")
     p_match = sub.add_parser("match", help="analyze one match in detail")
     p_match.add_argument("match_id", help="e.g. NA1_5123456789")
@@ -93,12 +95,13 @@ def main(argv=None):
             print_match_detail(result)
         return
 
+    queue = RANKED_QUEUES if args.queue is None else (None if args.queue == 0 else args.queue)
     puuid = layer.resolve_riot_id(args.riot_id)
     if args.json:
-        _, results = analyze_player(layer, args.riot_id, args.count, args.queue)
+        _, results = analyze_player(layer, args.riot_id, args.count, queue)
         print(json.dumps(results, indent=2))
         return
-    analyze_player(layer, args.riot_id, args.count, args.queue,
+    analyze_player(layer, args.riot_id, args.count, queue,
                    on_result=lambda r: print_player_line(r, puuid))
     rollup = layer.store.get_rollup(puuid)
     if rollup and rollup["wins"]:

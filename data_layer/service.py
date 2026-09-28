@@ -30,7 +30,15 @@ class DataLayer:
         return account["puuid"]
 
     def recent_match_ids(self, puuid, count=20, queue=None, start=0, end_time=None, priority=BULK):
-        """end_time is epoch seconds; only matches that started before it are returned."""
+        """end_time is epoch seconds; only matches that started before it are returned. `queue` may be a single
+        queue id or an iterable of ids: results are merged and sorted most-recent-first (match ids are
+        monotonically increasing per platform shard, so a plain sort orders them correctly)."""
+        if queue is not None and not isinstance(queue, int):
+            merged = set()
+            for q in queue:
+                merged.update(self.client.match_ids(puuid, count=min(start + count, 100), start=0, queue=q,
+                                                      end_time=end_time, priority=priority))
+            return sorted(merged, reverse=True)[start:start + count]
         return self.client.match_ids(puuid, count=min(count, 100), start=start, queue=queue, end_time=end_time,
                                      priority=priority)
 

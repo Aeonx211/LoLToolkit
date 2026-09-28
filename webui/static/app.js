@@ -92,9 +92,20 @@ async function api(path, body) {
   return data;
 }
 
-async function runJob(tool, params, { statusEl, onPartial, interval = 600 } = {}) {
-  const { id } = await api("/api/jobs", { tool, params });
-  let seen = 0;
+// Jobs run server-side in a daemon thread, independent of whether anything is still polling them — but a plain
+// page reload or tab close drops the JS loop below that was watching one. `persistKey` remembers the job id in
+// localStorage so `resumeJob` can reattach and keep showing progress instead of the run looking like it "stopped".
+function saveRunningJob(key, id, meta) {
+  try { localStorage.setItem(`job:${key}`, JSON.stringify({ id, meta })); } catch { /* storage unavailable */ }
+}
+function clearRunningJob(key) {
+  try { localStorage.removeItem(`job:${key}`); } catch { /* storage unavailable */ }
+}
+function getRunningJob(key) {
+  try { return JSON.parse(localStorage.getItem(`job:${key}`)); } catch { return null; }
+}
+
+async function pollJob(id, { statusEl, onPartial, interval = 600, seen = 0 } = {}) {
   for (;;) {
     await sleep(interval);
     const job = await api(`/api/jobs/${id}`);
@@ -106,6 +117,61 @@ async function runJob(tool, params, { statusEl, onPartial, interval = 600 } = {}
     if (job.status === "done") return job.result;
     if (job.status === "error") throw new Error(job.error);
   }
+}
+
+async function runJob(tool, params, { persistKey, ...opts } = {}) {
+  const { id } = await api("/api/jobs", { tool, params });
+  if (persistKey) saveRunningJob(persistKey, id, params);
+  try {
+    const result = await pollJob(id, opts);
+    if (persistKey) clearRunningJob(persistKey);
+    return result;
+  } catch (e) {
+    if (persistKey) clearRunningJob(persistKey);
+    throw e;
+  }
+}
+
+// Reattaches to a "games" job left running from before the page was reloaded/closed, if the server still has it
+// (jobs are kept for an hour; see JOB_TTL_S in webui/server.py). Returns true if it handled the games tab's
+// initial state (either by resuming or by clearing a stale/expired entry), false if there was nothing to resume.
+async function resumeGamesJob() {
+  const running = getRunningJob("games");
+  if (!running) return false;
+  const status = $("#games-status");
+  const list = $("#games-list");
+  const { riot_id: riotId, count, queue } = running.meta;
+  $("#games-form").riot_id.value = riotId;
+  $("#games-form").count.value = count;
+  $("#games-form").queue.value = queue || "";
+  list.replaceChildren();
+  $("#games-summary").replaceChildren();
+  let puuid = null;
+  const addResults = (items) => {
+    for (const r of items) {
+      puuid = puuid || findPuuid(r, riotId);
+      list.append(gameCard(r, puuid));
+    }
+  };
+  const finish = (res) => {
+    clearRunningJob("games");
+    $("#games-summary").replaceChildren(gamesSummary(res.results, res.puuid, res.rollup));
+    setStatus(status, `${res.results.length} games analyzed.`);
+    cache.set("games", { riotId, count, queue, puuid: res.puuid, results: res.results, rollup: res.rollup });
+  };
+  setStatus(status, "Resuming analysis...", { busy: true });
+  try {
+    const job = await api(`/api/jobs/${running.id}`);
+    addResults(job.partial);
+    if (job.status === "done") { finish(job.result); return true; }
+    if (job.status === "error") { clearRunningJob("games"); setStatus(status, job.error, { error: true }); return true; }
+    finish(await pollJob(running.id, { statusEl: status, onPartial: addResults, seen: job.partial.length }));
+  } catch (e) {
+    // Job expired or the server restarted since — nothing left to resume, fall back to the cached view.
+    clearRunningJob("games");
+    return false;
+  }
+  return true;
 }
 
 function setStatus(el, text, { busy = false, error = false } = {}) {
@@ -276,6 +342,7 @@ async function analyzeGames(form) {
   try {
     const res = await runJob("player", { riot_id: riotId, count, queue }, {
       statusEl: status,
+      persistKey: "games",
       onPartial: (items) => {
         for (const r of items) {
           puuid = puuid || findPuuid(r, riotId);
@@ -818,7 +885,7 @@ async function init() {
     const queue = $("#games-form").queue;
     for (const [id, name] of Object.entries(META.queues)) queue.append(h("option", { value: id }, name));
     $("#items-list").replaceChildren(...META.sim.items.map((name) => h("option", { value: name })));
-    loadCachedGames();
+    if (!(await resumeGamesJob())) loadCachedGames();
     loadCachedAdvisor();
     setupSim();
     setStatus(status, "");
