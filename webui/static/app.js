@@ -442,7 +442,33 @@ function matchDetail(r, puuid) {
         r.leads.gold_flips.length ? h("span", null, `Lead changed hands at ${r.leads.gold_flips.map(mmss).join(", ")}`) : null)),
     h("div", { class: "card" }, h("h4", { style: "margin-top:0" }, "Key moments"),
       h("ul", { style: "margin:0;padding-left:18px" }, r.key_moments.map((m) => h("li", null, describeMoment(m))))),
+    reviewCard(r, (r.players.find((p) => p.puuid === puuid) || r.players[0]).participant_id),
     h("div", { class: "card" }, historyLoader(r, puuid), teamTable(100), h("div", { style: "height:10px" }), teamTable(200)));
+}
+
+// ---------- Player review: bad deaths / invades that kept a player under their potential --------------------
+function reviewFindings(review) {
+  if (!review.findings.length) return h("p", { class: "muted" }, "No deaths recorded.");
+  return h("ul", { style: "margin:0;padding-left:18px" },
+    review.findings.map((f) => h("li", { class: f.swing <= -300 || f.tags.includes("early_solo") ? "loss-text" : null }, f.note)));
+}
+
+function reviewCard(r, defaultPid) {
+  const body = h("div", { style: "margin-top:8px" });
+  const render = (pid) => {
+    const target = r.players.find((p) => p.participant_id === pid);
+    if (!target || !target.review) return fill(body, h("p", { class: "muted" }, "No review available."));
+    fill(body, h("p", { class: "muted" }, target.review.summary), reviewFindings(target.review));
+  };
+  const select = h("select", { onchange: (e) => render(Number(e.target.value)) },
+    ...r.players.map((p) => h("option", { value: p.participant_id }, `${champName(p.champion)} — ${p.riot_id}`)));
+  select.value = defaultPid;
+  render(defaultPid);
+  return h("div", { class: "card" },
+    h("h4", { style: "margin-top:0" }, "Player review",
+      h("span", { class: "muted", style: "font-weight:normal", title: "Deaths and early skirmishes that gave up a lead, came with no trade back, or lost a fight outright — the moments most likely behind an under-target impact." }, " (what could've gone better)")),
+    h("div", { class: "row", style: "align-items:center;gap:8px;margin-bottom:4px" }, h("span", { class: "muted" }, "Target:"), select),
+    body);
 }
 
 // Predictions only use stored games; this fetches missing earlier games on request (slow: many API calls).

@@ -1,4 +1,8 @@
 
+TODO: Repo was made public on 2026-09-29 to satisfy Riot production key Product URL verification.
+      Flip GitHub repo back to private once the production key application is approved
+      (Settings > Danger Zone > Change visibility, on github.com/Aeonx211/LoLToolkit).
+
 user:Aeoen#NA1
 
 General:

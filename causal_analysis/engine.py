@@ -12,10 +12,11 @@ from .metrics import (
     value_at,
 )
 from .parse import UnsupportedMatch, parse_match
+from .review import review_player
 from .verdict import build_verdict
 
 # Bump when analysis logic changes so cached results are recomputed.
-ANALYSIS_VERSION = 4
+ANALYSIS_VERSION = 5
 
 
 def analysis_version():
@@ -39,6 +40,8 @@ def analyze(match, timeline, th: Thresholds | None = None):
     kills = diff_series(pm, "kills")
     moments = key_moments(pm, gold, th.fight_gap_s)
     players = player_impacts(pm)
+    for p in players:
+        p["review"] = review_player(pm, gold, moments, p["participant_id"])
     tags = classify(pm, gold, kills, moments, players, th)
     gold_peaks, xp_peaks = lead_peaks(gold), lead_peaks(xp)
     top_moments = sorted(moments, key=lambda m: abs(m.gold_swing), reverse=True)[:8]
