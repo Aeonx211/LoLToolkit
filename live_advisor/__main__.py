@@ -83,7 +83,6 @@ def main(argv=None):
                                                                       "for the game you're in.")
     parser.add_argument("riot_id", help="your Riot ID, e.g. Aeoen#NA1")
     parser.add_argument("--depth", type=int, default=8, help="recent games to analyze per player (default 8)")
-    parser.add_argument("--allies", action="store_true", help="also analyze your own team")
     parser.add_argument("--replay", metavar="MATCH_ID", help="run against a finished match instead of a live game")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args(argv)
@@ -96,7 +95,7 @@ def main(argv=None):
         sys.exit(str(e))
 
     progress = None if args.json else lambda msg: print(msg, file=sys.stderr)
-    report = build_report(layer, dd, roster, args.depth, args.allies, progress)
+    report = build_report(layer, dd, roster, args.depth, progress)
     if args.json:
         print(json.dumps(report, indent=2))
     else:

@@ -1,4 +1,4 @@
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from data_layer import LIVE, DataDragon, DataLayer
 
@@ -9,7 +9,7 @@ from .history import load_history
 from .live_client import current_state_by_riot_id, fetch_live_client
 from .onetrick import champion_pool
 from .roster import Roster, from_active_game, from_match
-from .threat import rank_carry_threats
+from .threat import carry_threat_row, rank_carry_threats
 
 
 def resolve_roster(layer: DataLayer, dd: DataDragon, riot_id, replay=None):
@@ -31,49 +31,68 @@ def resolve_roster(layer: DataLayer, dd: DataDragon, riot_id, replay=None):
     return roster
 
 
-def build_report(layer: DataLayer, dd: DataDragon, roster: Roster, depth=8, include_allies=False, progress=None):
+def build_report(layer: DataLayer, dd: DataDragon, roster: Roster, depth=8, progress=None, on_player=None):
+    """Build the live-game report for both teams. Enemies get full detail (profile/build/healing/pool) since
+    that's needed for counter-itemization; allies just get their carry-impact numbers, enough to tell you who
+    on your own team to lean on or watch out for. Each player is reported to `on_player` as soon as their data
+    is ready, in completion order, so the UI can render players as they come in instead of waiting on the roster.
+    """
     champions = dd.champions()
     items = dd.items()
-    targets = roster.enemies() + (roster.allies() if include_allies else [])
-    enemy_ids = {e.puuid for e in roster.enemies()}
+    kits = champion_heal_kits(dd, progress)
+    item_kinds = item_heal_kinds(dd)
+    live_state = current_state_by_riot_id(fetch_live_client()) if roster.source == "live" else {}
 
-    def load(entry):
+    def load_enemy(entry):
         if progress:
             progress(f"Pulling history for {entry.riot_id} ({entry.champion})")
         history = load_history(layer, entry, depth, roster.game_start_ms, LIVE)
-        pool = champion_pool(layer, entry, roster.queue_id, roster.game_start_ms) if entry.puuid in enemy_ids else None
-        return entry.puuid, history, pool
-
-    # One thread per player: the requests are network-bound, and the client's rate limiter still sets the pace.
-    with ThreadPoolExecutor(max_workers=len(targets)) as executor:
-        loaded = list(executor.map(load, targets))
-    histories = {puuid: history for puuid, history, _ in loaded}
-    pools = {puuid: pool for puuid, _, pool in loaded}
-
-    enemy_histories = [histories[e.puuid] for e in roster.enemies()]
-    threats = rank_carry_threats(enemy_histories)
-    profiles = [enemy_profile(layer, champions, h) for h in enemy_histories]
-    kits = champion_heal_kits(dd, progress)
-    item_kinds = item_heal_kinds(dd)
-
-    live_state = current_state_by_riot_id(fetch_live_client()) if roster.source == "live" else {}
-    enemies = []
-    for h, profile in zip(enemy_histories, profiles):
-        build = predict_build(layer, items, h)
-        live = live_state.get(h.entry.riot_id.lower())
-        healing = assess_enemy(h.entry.champion, kits.get(h.entry.champion), item_kinds, items, build,
+        pool = champion_pool(layer, entry, roster.queue_id, roster.game_start_ms)
+        profile = enemy_profile(layer, champions, history)
+        build = predict_build(layer, items, history)
+        live = live_state.get(entry.riot_id.lower())
+        healing = assess_enemy(entry.champion, kits.get(entry.champion), item_kinds, items, build,
                                (live or {}).get("items", []), "strong early" in profile["tempo"])
-        enemies.append({
-            "riot_id": h.entry.riot_id,
-            "champion": h.entry.champion,
+        card = {
+            "side": "enemy",
+            "riot_id": entry.riot_id,
+            "champion": entry.champion,
             "profile": profile,
             "build_prediction": build,
             "live": live,
             "healing": healing,
-            "pool": pools[h.entry.puuid],
-        })
+            "pool": pool,
+            "impact": carry_threat_row(history),
+        }
+        return card, history, profile
 
-    report = {
+    def load_ally(entry):
+        if progress:
+            progress(f"Pulling history for {entry.riot_id} ({entry.champion})")
+        history = load_history(layer, entry, depth, roster.game_start_ms, LIVE)
+        card = {"side": "ally", "riot_id": entry.riot_id, "champion": entry.champion, "impact": carry_threat_row(history)}
+        return card, history, None
+
+    jobs = [(e, load_enemy) for e in roster.enemies()] + [(a, load_ally) for a in roster.allies()]
+    enemies, enemy_histories, profiles, ally_rows = [], [], [], []
+    # One thread per player: the requests are network-bound, and the client's rate limiter still sets the pace.
+    with ThreadPoolExecutor(max_workers=len(jobs)) as executor:
+        futures = [executor.submit(fn, entry) for entry, fn in jobs]
+        for future in as_completed(futures):
+            card, history, profile = future.result()
+            if on_player:
+                on_player(card)
+            if card["side"] == "enemy":
+                enemies.append(card)
+                enemy_histories.append(history)
+                profiles.append(profile)
+            else:
+                ally_rows.append(card["impact"])
+
+    threats = rank_carry_threats(enemy_histories)
+    ally_threats = sorted(ally_rows, key=lambda r: r["score"], reverse=True)
+
+    return {
         "source": roster.source,
         "queue_id": roster.queue_id,
         "focus_target": next((t for t in threats if t["flagged"]), None),
@@ -81,7 +100,5 @@ def build_report(layer: DataLayer, dd: DataDragon, roster: Roster, depth=8, incl
         "counters": {**counter_itemization(profiles),
                      "grievous_wounds": grievous_wounds([e["healing"] for e in enemies])},
         "enemies": enemies,
+        "ally_carries": ally_threats,
     }
-    if include_allies:
-        report["ally_carries"] = rank_carry_threats([histories[a.puuid] for a in roster.allies()])
-    return report

@@ -474,7 +474,6 @@ function loadCachedAdvisor() {
   const form = $("#advisor-form");
   form.riot_id.value = c.riotId;
   form.depth.value = c.depth;
-  form.allies.checked = c.allies;
   form.replay.value = c.replay || "";
   renderAdvisor(c.report);
   setStatus($("#advisor-status"), `Showing cached report (${c.report.source}) from ${timeAgo(c.savedAt)}. Click Run advisor to refresh.`);
@@ -484,16 +483,28 @@ function loadCachedAdvisor() {
 async function runAdvisor(form) {
   const status = $("#advisor-status");
   const out = $("#advisor-out");
-  const riotId = form.riot_id.value.trim(), depth = form.depth.value, allies = form.allies.checked;
+  const riotId = form.riot_id.value.trim(), depth = form.depth.value;
   const replay = form.replay.value.trim() || null;
   saved.set("riot_id", riotId);
-  out.replaceChildren();
   setStatus(status, "Finding the game...", { busy: true });
+  // Render each player's card the moment the server reports it, instead of waiting on the whole roster.
+  const enemyGrid = h("div", { class: "grid3" });
+  const allyGrid = h("div", { class: "grid3" });
+  fill(out,
+    h("div", { class: "card muted" }, "Enemy team — loading players as they finish..."), enemyGrid,
+    h("h3", null, "Your team"), allyGrid);
+  const addPlayers = (cards) => {
+    for (const card of cards) {
+      if (card.side === "enemy") enemyGrid.append(enemyCard(card));
+      else allyGrid.append(allyCard(card));
+    }
+  };
   try {
-    const rep = await runJob("advisor", { riot_id: riotId, depth, allies, replay }, { statusEl: status, interval: 800 });
+    const rep = await runJob("advisor", { riot_id: riotId, depth, replay },
+      { statusEl: status, interval: 600, onPartial: addPlayers });
     renderAdvisor(rep);
     setStatus(status, `Done (${rep.source}).`);
-    cache.set("advisor", { riotId, depth, allies, replay, report: rep });
+    cache.set("advisor", { riotId, depth, replay, report: rep });
   } catch (e) {
     setStatus(status, e.message, { error: true });
   }
@@ -524,11 +535,19 @@ function damageBar(split) {
       h("span", null, h("i", { style: "background:var(--true)" }), `True ${pct(split.true)}`)));
 }
 
+function impactChip(imp) {
+  if (!imp) return null;
+  return h("span", { class: `chip ${imp.flagged ? "bad" : ""}`, title: `Carried ${imp.carried_wins}/${imp.wins} recent wins over ${imp.games} games` },
+    `${imp.flagged ? "Threat" : "Impact"}: ${imp.carried_wins}/${imp.wins} carried wins`,
+    imp.avg_impact != null ? ` · ${imp.avg_impact.toFixed(2)}x` : "");
+}
+
 function enemyCard(e) {
-  const p = e.profile, b = e.build_prediction;
+  const p = e.profile;
   return h("div", { class: "card" },
     h("h3", null, champName(e.champion), " ", h("span", { class: "muted", style: "font-weight:400" }, playerLink(e.riot_id))),
     h("div", { class: "chips" },
+      impactChip(e.impact),
       (p.tempo.length ? p.tempo : ["no clear tempo"]).map((t) => h("span", { class: "chip" }, t)),
       e.pool && e.pool.one_trick ? h("span", { class: "chip gold", title: e.pool.on_it ? "Playing their main" : `Not playing it this game` },
         `One-trick: ${champName(e.pool.champion)} (${e.pool.games}/${e.pool.total} games)`) : null,
@@ -540,19 +559,13 @@ function enemyCard(e) {
       p.lane_gold_diff_14 != null ? h("span", { class: "chip" }, `lane gold @14 ${signed(p.lane_gold_diff_14)}`) : null,
       e.healing.score > 0 ? h("span", { class: "chip", title: e.healing.reasons.join("; ") },
         e.healing.reasons.every((r) => r.startsWith("builds")) ? "healing items" : "heals") : null),
-    h("div", { class: "muted", style: "margin-top:6px;font-size:12px" }, `Based on ${p.games} ${p.source}`),
-    b ? h("div", null,
-      h("h4", null, `Predicted build · ${b.games} games · ${pct(b.confidence)} confidence`),
-      b.modal_build.map((i) => h("div", { class: "row", style: "margin-bottom:4px" },
-        h("span", { style: "width:170px" }, i.item),
-        h("div", { class: "bar", style: "flex:1" }, h("span", { style: `width:${i.rate * 100}%;background:var(--accent)` })),
-        h("span", { class: "muted", style: "width:40px;text-align:right" }, pct(i.rate)))),
-      h("div", { class: "muted", style: "font-size:12px;margin-top:6px" },
-        `First item ${b.first_item.item} (${pct(b.first_item.rate)})`,
-        b.boots ? ` · ${b.boots.item}` : "",
-        b.item_spikes_s.length ? ` · item spikes ${b.item_spikes_s.map(mmss).join(", ")}` : ""))
-      : h("p", { class: "muted" }, `No stored games on ${champName(e.champion)} to predict a build from.`),
-    e.live ? h("div", null, h("h4", null, `Now: level ${e.live.level}`), h("div", { class: "muted" }, e.live.items.join(", ") || "no items")) : null);
+    h("div", { class: "muted", style: "margin-top:6px;font-size:12px" }, `Based on ${p.games} ${p.source}`));
+}
+
+function allyCard(a) {
+  return h("div", { class: "card" },
+    h("h3", null, champName(a.champion), " ", h("span", { class: "muted", style: "font-weight:400" }, playerLink(a.riot_id))),
+    h("div", { class: "chips" }, impactChip(a.impact) || h("span", { class: "chip muted" }, "no recent history")));
 }
 
 function renderAdvisor(rep) {
@@ -573,8 +586,12 @@ function renderAdvisor(rep) {
           gw.sources.length ? "" : ". No enemy healing found."),
         gw.sources.length ? h("ul", { style: "margin:0;padding-left:18px" }, gw.sources.map((x) =>
           h("li", null, h("strong", null, champName(x.champion)), `: ${x.reasons.join("; ") || "some healing"}`))) : null)),
+    h("h3", null, "Enemy team"),
     h("div", { class: "grid3" }, rep.enemies.map(enemyCard)),
-    rep.ally_carries ? threatTable(rep.ally_carries, "Your team's likely carries") : null);
+    rep.ally_carries && rep.ally_carries.length ? h("h3", null, "Your team") : null,
+    rep.ally_carries && rep.ally_carries.length
+      ? h("div", { class: "grid3" }, rep.ally_carries.map((t) => allyCard({ champion: t.champion, riot_id: t.riot_id, impact: t })))
+      : null);
 }
 
 // ---------- Tool 3: build sim ------------------------------------------------------------------------------

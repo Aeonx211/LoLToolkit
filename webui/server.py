@@ -128,8 +128,8 @@ class App:
         depth = self._int(params, "depth", 8, 1, 30)
         replay = str(params.get("replay") or "").strip() or None
         roster = resolve_roster(self.layer, self.dd, riot_id, replay)
-        report = build_report(self.layer, self.dd, roster, depth, bool(params.get("allies")),
-                              progress=job["progress"].append)
+        report = build_report(self.layer, self.dd, roster, depth,
+                              progress=job["progress"].append, on_player=job["partial"].append)
         report["my_team"] = roster.my_team
         report["roster"] = [vars(p) for p in roster.players]
         return report
