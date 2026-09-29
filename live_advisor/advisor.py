@@ -32,10 +32,10 @@ def resolve_roster(layer: DataLayer, dd: DataDragon, riot_id, replay=None):
 
 
 def build_report(layer: DataLayer, dd: DataDragon, roster: Roster, depth=8, progress=None, on_player=None):
-    """Build the live-game report for both teams. Enemies get full detail (profile/build/healing/pool) since
-    that's needed for counter-itemization; allies just get their carry-impact numbers, enough to tell you who
-    on your own team to lean on or watch out for. Each player is reported to `on_player` as soon as their data
-    is ready, in completion order, so the UI can render players as they come in instead of waiting on the roster.
+    """Build the live-game report for both teams. Both sides get profile/pool detail (tempo, off-pick/off-role,
+    lane gold); only enemies additionally get build prediction and healing, since those feed counter-itemization,
+    which only makes sense against the enemy. Each player is reported to `on_player` as soon as their data is
+    ready, in completion order, so the UI can render players as they come in instead of waiting on the roster.
     """
     champions = dd.champions()
     items = dd.items()
@@ -70,7 +70,16 @@ def build_report(layer: DataLayer, dd: DataDragon, roster: Roster, depth=8, prog
         if progress:
             progress(f"Pulling history for {entry.riot_id} ({entry.champion})")
         history = load_history(layer, entry, depth, roster.game_start_ms, LIVE)
-        card = {"side": "ally", "riot_id": entry.riot_id, "champion": entry.champion, "impact": carry_threat_row(history)}
+        pool = champion_pool(layer, entry, roster.queue_id, roster.game_start_ms)
+        profile = enemy_profile(layer, champions, history)
+        card = {
+            "side": "ally",
+            "riot_id": entry.riot_id,
+            "champion": entry.champion,
+            "profile": profile,
+            "pool": pool,
+            "impact": carry_threat_row(history),
+        }
         return card, history, None
 
     jobs = [(e, load_enemy) for e in roster.enemies()] + [(a, load_ally) for a in roster.allies()]
@@ -87,7 +96,7 @@ def build_report(layer: DataLayer, dd: DataDragon, roster: Roster, depth=8, prog
                 enemy_histories.append(history)
                 profiles.append(profile)
             else:
-                ally_rows.append(card["impact"])
+                ally_rows.append({**card["impact"], "profile": card["profile"], "pool": card["pool"]})
 
     threats = rank_carry_threats(enemy_histories)
     ally_threats = sorted(ally_rows, key=lambda r: r["score"], reverse=True)

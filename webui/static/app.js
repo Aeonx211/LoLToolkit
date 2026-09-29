@@ -411,7 +411,12 @@ function matchDetail(r, puuid) {
           title: "Actual impact minus predicted. Positive means they had more impact than their history suggested." },
           `${d > 0 ? "+" : ""}${d.toFixed(2)}`);
       })()));
-    return h("div", { class: "table-wrap" }, h("table", null,
+    return h("div", { class: "table-wrap" }, h("table", { class: "team-table" },
+      h("colgroup", null,
+        h("col", { style: "width:16%" }), h("col", { style: "width:16%" }), h("col", { style: "width:9%" }),
+        h("col", { style: "width:8%" }), h("col", { style: "width:7%" }), h("col", { style: "width:9%" }),
+        h("col", { style: "width:8%" }), h("col", { style: "width:7%" }), h("col", { style: "width:8%" }),
+        h("col", { style: "width:8%" }), h("col", { style: "width:4%" })),
       h("thead", null, h("tr", null,
         h("th", { class: team === 100 ? "team-blue" : "team-red" },
           `${TEAM[team]} ${r.winner === team ? "(won)" : "(lost)"}`),
@@ -563,9 +568,21 @@ function enemyCard(e) {
 }
 
 function allyCard(a) {
+  const p = a.profile, pool = a.pool;
   return h("div", { class: "card" },
     h("h3", null, champName(a.champion), " ", h("span", { class: "muted", style: "font-weight:400" }, playerLink(a.riot_id))),
-    h("div", { class: "chips" }, impactChip(a.impact) || h("span", { class: "chip muted" }, "no recent history")));
+    h("div", { class: "chips" },
+      impactChip(a.impact) || h("span", { class: "chip muted" }, "no recent history"),
+      p ? (p.tempo.length ? p.tempo : ["no clear tempo"]).map((t) => h("span", { class: "chip" }, t)) : null,
+      pool && pool.one_trick ? h("span", { class: "chip gold", title: pool.on_it ? "Playing their main" : `Not playing it this game` },
+        `One-trick: ${champName(pool.champion)} (${pool.games}/${pool.total} games)`) : null,
+      pool ? h("span", { class: `chip ${pool.off_champion ? "bad" : ""}`, title: `Their last ${pool.total} games in this queue` },
+        `${pool.off_champion ? "Off-pick" : "On-pick"}: ${pool.on_champion_games}/${pool.total} on ${champName(a.champion)}`) : null,
+      pool && pool.role ? h("span", { class: `chip ${pool.role.off_role ? "bad" : ""}`,
+        title: pool.role.playing ? `Playing ${roleLabel(pool.role.playing)} this game` : "Their role this game isn't known from the live feed" },
+        `${pool.role.off_role ? "Off-role" : "Usually"} ${roleLabel(pool.role.role)} (${pool.role.games}/${pool.role.total})`) : null,
+      p && p.lane_gold_diff_14 != null ? h("span", { class: "chip" }, `lane gold @14 ${signed(p.lane_gold_diff_14)}`) : null),
+    p ? h("div", { class: "muted", style: "margin-top:6px;font-size:12px" }, `Based on ${p.games} ${p.source}`) : null);
 }
 
 function renderAdvisor(rep) {
@@ -590,7 +607,7 @@ function renderAdvisor(rep) {
     h("div", { class: "grid3" }, rep.enemies.map(enemyCard)),
     rep.ally_carries && rep.ally_carries.length ? h("h3", null, "Your team") : null,
     rep.ally_carries && rep.ally_carries.length
-      ? h("div", { class: "grid3" }, rep.ally_carries.map((t) => allyCard({ champion: t.champion, riot_id: t.riot_id, impact: t })))
+      ? h("div", { class: "grid3" }, rep.ally_carries.map((t) => allyCard({ champion: t.champion, riot_id: t.riot_id, impact: t, profile: t.profile, pool: t.pool })))
       : null);
 }
 

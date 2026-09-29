@@ -18,7 +18,7 @@ GW_HIGH = 1.75
 
 # Champions whose kit is built around healing or life drain; Data Dragon's text can't tell us how much a heal is
 # worth, so this list carries that judgement. Keyed by Data Dragon champion id.
-CORE_HEALERS = {"Soraka", "Aatrox", "Warwick", "Vladimir", "Sona", "Nami", "DrMundo", "Swain"}
+CORE_HEALERS = {"Soraka", "Aatrox", "Warwick", "Vladimir", "Sona", "Nami", "DrMundo", "Swain", "Zac"}
 
 SLOTS = ["Q", "W", "E", "R"]
 
