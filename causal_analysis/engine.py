@@ -16,12 +16,13 @@ from .review import review_player
 from .verdict import build_verdict
 
 # Bump when analysis logic changes so cached results are recomputed.
-ANALYSIS_VERSION = 5
+ANALYSIS_VERSION = 7
 
 
 def analysis_version():
     """Cache key for stored analyses: the logic version plus a hash of the current tuning values."""
-    tuned = repr((archetypes.DEFAULT_THRESHOLDS, sorted(metrics.ROLE_BASELINE.items()), metrics.OBJECTIVE_WEIGHT))
+    tuned = repr((archetypes.DEFAULT_THRESHOLDS, sorted(metrics.ROLE_BASELINE.items()), metrics.DEFAULT_BASELINE,
+                  metrics.TOWER_WEIGHT, metrics.NEUTRAL_WEIGHT, metrics.DEATH_WEIGHT, metrics.SHARE_CAP_RATIO))
     return f"{ANALYSIS_VERSION}:{hashlib.sha1(tuned.encode()).hexdigest()[:8]}"
 
 
@@ -69,5 +70,9 @@ def analyze(match, timeline, th: Thresholds | None = None):
             "xp_diff": [v for _, v in xp],
             "kill_diff": [v for _, v in kills],
             "rolling_impact": {str(pid): s for pid, s in rolling_impact(pm, th.rolling_window_s).items()},
+            # One [x, y] (or null) per player per frame, aligned with `t` above — a coarse (per-minute) map
+            # snapshot, not a continuous replay; used to sketch where everyone was around a flagged moment.
+            "positions": {str(pid): [list(f.positions[pid]) if pid in f.positions else None for f in pm.frames]
+                          for pid in pm.players},
         },
     }

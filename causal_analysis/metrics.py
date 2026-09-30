@@ -4,28 +4,59 @@ from itertools import pairwise
 
 from .parse import TEAM_NAMES, TEAMS, Frame, ParsedMatch, other_team
 
-# Typical (kill participation, damage, gold, objective damage) share of team totals by role; used to judge
-# "vastly exceeds their role". Unlike damage/gold, KP isn't exclusive: several players can be credited on the same
-# kill, so a role's KP is typically 45-65% rather than the ~20% you'd expect from an even split, and the column
-# doesn't sum to 1 across the team. TODO: the first three are rough, commonly-cited averages, not computed from
-# real data (the objective share is, from this toolkit's own stored games). Also role-level baselines overrate
-# damage-heavy picks in low-resource roles (e.g. Vel'Koz/Brand support score ~2x a "typical" support on damage).
-# Replace with per-champion (or per champion+role) baselines computed from stored matches once there's enough
-# data, and scale by game length as the spec suggests.
+# Typical (kill participation, damage, gold, tower damage, epic-monster damage, survival) share of team totals by
+# role; used to judge "vastly exceeds their role". Unlike damage/gold, KP isn't exclusive: several players can be
+# credited on the same kill, so a role's KP is typically 45-65% rather than the ~20% you'd expect from an even
+# split, and the column doesn't sum to 1 across the team. Survival is the complement of each player's share of the
+# team's deaths -- (1 - deaths_i / team_deaths) / 4 -- so it also sums to ~1 across the team and averages ~0.20
+# everywhere a player's odds of dying aren't role-skewed (which, empirically, they aren't much: see below).
+#
+# Calibrated 2026-09 from every stored 5v5 Summoner's Rift match in data/toolkit.db (576 games, 1152 role-samples
+# per role after filtering remakes and games missing a `teamPosition`) -- mean share per role, i.e. exactly the
+# number the module docstring used to ask for instead of a hand-guess. Tower and epic-monster (dragon/herald/
+# baron/grubs/atakhan) damage are now tracked separately (previously bundled into one `objective_damage` field that
+# over-credited whichever of the two dominated a given game -- see TOWER_WEIGHT/NEUTRAL_WEIGHT below). This mean-
+# fit baseline pulls the "typical" line for every role close to where it actually sits, which also compresses the
+# ratio scale versus the old hand-guessed baseline (see SHARE_CAP_RATIO and Thresholds.carry_ratio/carry_margin
+# for the consequence: a merely-good game and a truly dominant one now sit closer together than they used to,
+# which is *why* Carried needed a margin-based rule instead of one fixed cutoff).
 ROLE_BASELINE = {
-    "TOP": (0.45, 0.22, 0.21, 0.20),
-    "JUNGLE": (0.65, 0.17, 0.19, 0.35),
-    "MIDDLE": (0.60, 0.26, 0.22, 0.16),
-    "BOTTOM": (0.55, 0.26, 0.25, 0.20),
-    "UTILITY": (0.65, 0.09, 0.13, 0.06),
+    "TOP": (0.353, 0.225, 0.200, 0.336, 0.070, 0.199),
+    "JUNGLE": (0.481, 0.184, 0.214, 0.075, 0.660, 0.204),
+    "MIDDLE": (0.435, 0.235, 0.203, 0.257, 0.070, 0.201),
+    "BOTTOM": (0.482, 0.233, 0.229, 0.262, 0.128, 0.196),
+    "UTILITY": (0.521, 0.124, 0.154, 0.069, 0.042, 0.199),
 }
-DEFAULT_BASELINE = (0.55, 0.20, 0.20, 0.20)
+# Simple mean of the five role baselines above; used as a fallback for a missing/unknown position.
+DEFAULT_BASELINE = (0.454, 0.200, 0.200, 0.200, 0.194, 0.200)
 
-# How much objective damage share (towers/dragons/herald/baron combined) counts toward impact, next to the equal
-# split KP/damage/gold already have. Kept low: objective damage is lumpy (one late Baron can swing it) and a
-# backtest against stored games showed weights much above this start moving everyone's impact number, not just
-# outliers like a low-fight, high-turret-damage game. TODO: revisit once there's enough data to backtest properly.
-OBJECTIVE_WEIGHT = 0.15
+# How much tower damage share, and epic-monster (dragon/herald/baron/grubs/atakhan) damage share, count toward
+# impact, next to the equal split KP/damage/gold already have (which still splits the remaining 1 - TOWER_WEIGHT -
+# NEUTRAL_WEIGHT). Kept at the same combined 0.15 budget the old single OBJECTIVE_WEIGHT used (a backtest against
+# stored games showed weights much above this start moving everyone's impact number, not just outliers like a
+# low-fight, high-turret-damage game) but split unevenly: neutral objectives are a harder, more team-wide prize
+# to take (needs vision, timing, a won fight against the enemy jungler/team) than poking a tower down, so a unit
+# of neutral-damage share counts for 2x a unit of tower-damage share.
+TOWER_WEIGHT = 0.05
+NEUTRAL_WEIGHT = 0.10
+
+# Bonus-only weight on how much better than their role's baseline survival share (see ROLE_BASELINE) a player
+# did. Only ever adds to impact (a player who dies *more* than the role baseline gets no penalty, just no bonus) --
+# a backtest showed a full plus/minus term would double-punish deaths that KP/damage/gold already price in (a
+# death usually costs the dead player gold/damage/kp too), while a bonus-only term for genuinely low deaths moved
+# the population mean by <0.3% at this weight, i.e. it nudges outliers (very clean games) without reshaping the
+# rest of the distribution.
+DEATH_WEIGHT = 0.08
+
+# Cap on how far any single share component (kp, damage, gold, tower, neutral) is allowed to count above its role
+# baseline, applied before weighting. Without it, one lumpy component -- a support's damage share on a poke champ,
+# or a jungler's tower-damage share from backdooring a fight they weren't otherwise in -- can swing the whole
+# ratio on its own (the Vel'Koz/Brand-support overrating this module used to flag as a TODO, and the same failure
+# mode showing up from the objective-damage angle in a support who out-pokes their objective-damage baseline by
+# 2-3x while contributing little else). A backtest across stored games shows 2.0x moves only the outlier tail
+# (max player-game ratio drops from 2.17 to 1.94, and the share of player-games at/above the old carry_ratio=1.52
+# drops ~17%) while leaving the bulk of the distribution (every role's mean/median) unchanged to three decimals.
+SHARE_CAP_RATIO = 2.0
 
 
 def lead_for(value, team):
@@ -110,24 +141,54 @@ def impact(shares):
     return sum(shares) / len(shares)
 
 
-def weighted_impact(shares, objective_weight=None):
-    """Like impact(), but for a (kp, damage, gold, objective damage) tuple: the first three split the remaining
-    weight evenly, same as impact() alone, and objective damage counts for `objective_weight` on top."""
-    w = OBJECTIVE_WEIGHT if objective_weight is None else objective_weight
-    kp, damage, gold, objectives = shares
-    return (1 - w) * impact((kp, damage, gold)) + w * objectives
+def _capped(value, baseline_value, cap_ratio):
+    """Ceiling a share at `cap_ratio` times its role baseline, so one lumpy component can't swing the whole ratio
+    on its own. Never lowers a value that's already below baseline."""
+    if cap_ratio is None or baseline_value <= 0:
+        return value
+    return min(value, cap_ratio * baseline_value)
+
+
+def weighted_impact(shares, baseline=None, tower_weight=None, neutral_weight=None, death_weight=None,
+                    cap_ratio=None):
+    """Like impact(), but for a (kp, damage, gold, tower damage, neutral damage, survival) tuple: the first three
+    split the remaining weight evenly (same as impact() alone), tower/neutral damage count for
+    `tower_weight`/`neutral_weight` on top, and a player who survives more than their role baseline gets a
+    bonus-only addition worth `death_weight` times how far above baseline they are (never a penalty for dying
+    more than baseline -- see DEATH_WEIGHT).
+
+    `baseline` is the role's ROLE_BASELINE/DEFAULT_BASELINE tuple, used to cap each share and as the survival
+    reference point for the death bonus; omitting it (as when scoring the baseline itself) disables both the cap
+    and the bonus, since there's nothing to compare against."""
+    wt = TOWER_WEIGHT if tower_weight is None else tower_weight
+    wn = NEUTRAL_WEIGHT if neutral_weight is None else neutral_weight
+    wd = DEATH_WEIGHT if death_weight is None else death_weight
+    cap = SHARE_CAP_RATIO if cap_ratio is None else cap_ratio
+    kp, damage, gold, tower, neutral, survival = shares
+    if baseline is not None:
+        b_kp, b_damage, b_gold, b_tower, b_neutral, b_survival = baseline
+        kp, damage, gold = _capped(kp, b_kp, cap), _capped(damage, b_damage, cap), _capped(gold, b_gold, cap)
+        tower, neutral = _capped(tower, b_tower, cap), _capped(neutral, b_neutral, cap)
+    else:
+        b_survival = survival
+    base = (1 - wt - wn) * impact((kp, damage, gold)) + wt * tower + wn * neutral
+    return base + wd * max(0.0, survival - b_survival)
 
 
 def final_shares(pm: ParsedMatch, pid):
-    """(kill participation, damage, gold, objective damage) share of the player's team totals over the whole game."""
+    """(kill participation, damage, gold, tower damage, neutral/epic-monster damage, survival) share of the
+    player's team totals over the whole game. Survival is the complement of the player's share of the team's
+    deaths -- (1 - deaths_i / team_deaths) / 4 -- so, like the others, it sums to ~1 across the team."""
     player = pm.players[pid]
     team = [pm.players[p] for p in pm.team_pids(player.team_id)]
     team_kills = sum(p.kills for p in team)
     kp = (player.kills + player.assists) / team_kills if team_kills else 0.0
     out = [kp]
-    for attr in ("damage", "gold", "objective_damage"):
+    for attr in ("damage", "gold", "tower_damage", "neutral_damage"):
         total = sum(getattr(p, attr) for p in team)
         out.append(getattr(player, attr) / total if total else 0.0)
+    team_deaths = sum(p.deaths for p in team)
+    out.append((1 - player.deaths / team_deaths) / 4 if team_deaths else 0.2)
     return tuple(out)
 
 
@@ -144,8 +205,9 @@ def player_impacts(pm: ParsedMatch):
     rows = []
     for pid, p in sorted(pm.players.items()):
         shares = final_shares(pm, pid)
-        baseline = weighted_impact(ROLE_BASELINE.get(p.position, DEFAULT_BASELINE))
-        value = weighted_impact(shares)
+        role_baseline = ROLE_BASELINE.get(p.position, DEFAULT_BASELINE)
+        baseline = weighted_impact(role_baseline)
+        value = weighted_impact(shares, role_baseline)
         rows.append({
             "participant_id": pid,
             "puuid": p.puuid,
@@ -157,7 +219,8 @@ def player_impacts(pm: ParsedMatch):
             "kda": [p.kills, p.deaths, p.assists],
             "items": p.items,
             "shares": {"kp": round(shares[0], 3), "damage": round(shares[1], 3), "gold": round(shares[2], 3),
-                       "objectives": round(shares[3], 3)},
+                       "tower": round(shares[3], 3), "neutral": round(shares[4], 3),
+                       "survival": round(shares[5], 3)},
             "impact": round(value, 3),
             "impact_ratio": round(value / baseline, 3),
             "carried": False,

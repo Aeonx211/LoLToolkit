@@ -34,7 +34,8 @@ class Player:
     assists: int
     damage: int
     gold: int
-    objective_damage: int
+    tower_damage: int
+    neutral_damage: int
     items: list[int]
 
 
@@ -46,6 +47,7 @@ class Frame:
     damage: dict[int, int]
     kills: dict[int, int] = field(default_factory=dict)  # running kill count credited to the killer only
     kp: dict[int, int] = field(default_factory=dict)  # running count of team kills each player killed OR assisted
+    positions: dict[int, tuple[int, int]] = field(default_factory=dict)  # map coords, one snapshot per frame
 
     def get(self, metric):
         return getattr(self, metric)
@@ -58,6 +60,7 @@ class Kill:
     victim: int
     team: int
     assists: list[int] = field(default_factory=list)
+    position: tuple[int, int] | None = None  # victim's map coords, if the event carried one
 
 
 @dataclass
@@ -116,7 +119,8 @@ def parse_match(match, timeline) -> ParsedMatch:
             assists=p.get("assists", 0),
             damage=p.get("totalDamageDealtToChampions", 0),
             gold=p.get("goldEarned", 0),
-            objective_damage=p.get("damageDealtToObjectives", 0),  # towers, dragons, herald, baron combined
+            tower_damage=p.get("damageDealtToTurrets", 0),
+            neutral_damage=p.get("damageDealtToEpicMonsters", 0),  # dragons, herald, baron, grubs, atakhan
             items=[i for i in items if i],
         )
     team_of = {pid: p.team_id for pid, p in players.items()}
@@ -133,7 +137,10 @@ def parse_match(match, timeline) -> ParsedMatch:
                 continue
             killer = e.get("killerId", 0)
             assists = [pid for pid in e.get("assistingParticipantIds", []) if pid in team_of]
-            kills.append(Kill(t, killer if killer in team_of else 0, victim, other_team(team_of[victim]), assists))
+            pos = e.get("position")
+            position = (pos["x"], pos["y"]) if pos else None
+            kills.append(Kill(t, killer if killer in team_of else 0, victim, other_team(team_of[victim]),
+                              assists, position))
         elif kind == "ELITE_MONSTER_KILL":
             team = e.get("killerTeamId") or team_of.get(e.get("killerId"), 0)
             if team not in TEAMS:
@@ -150,14 +157,17 @@ def parse_match(match, timeline) -> ParsedMatch:
 
     frames = []
     for f in tl_frames:
-        gold, xp, damage = {}, {}, {}
+        gold, xp, damage, positions = {}, {}, {}, {}
         for key, v in f["participantFrames"].items():
             pid = int(key)
             if pid in players:
                 gold[pid] = v.get("totalGold", 0)
                 xp[pid] = v.get("xp", 0)
                 damage[pid] = v.get("damageStats", {}).get("totalDamageDoneToChampions", 0)
-        frames.append(Frame(f["timestamp"] / 1000, gold, xp, damage))
+                pos = v.get("position")
+                if pos:
+                    positions[pid] = (pos["x"], pos["y"])
+        frames.append(Frame(f["timestamp"] / 1000, gold, xp, damage, positions=positions))
 
     running = {pid: 0 for pid in players}
     running_kp = {pid: 0 for pid in players}

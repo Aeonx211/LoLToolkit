@@ -21,6 +21,19 @@ def base_damage(pid, minute):
     return int(1500 * WEIGHTS[position_of(pid)] * minute * 5)
 
 
+def base_tower_damage(pid, minute):
+    return int(400 * WEIGHTS[position_of(pid)] * minute)
+
+
+def base_neutral_damage(pid, minute):
+    return int(200 * WEIGHTS[position_of(pid)] * minute)
+
+
+def position_at(pid, minute):
+    """Deterministic map coords so tests can exercise position parsing without a real timeline."""
+    return {"x": (pid * 1200) % 14980, "y": int(minute * 100) % 14980}
+
+
 def gold_from_diff(diff_fn):
     """Per-player gold where blue-minus-red team gold equals diff_fn(minute)."""
     def gold(pid, minute):
@@ -30,6 +43,7 @@ def gold_from_diff(diff_fn):
 
 
 def build_match(duration_min=30, winner=100, gold=base_gold, damage=base_damage, kills=(), objectives=(),
+                tower_damage=base_tower_damage, neutral_damage=base_neutral_damage,
                 match_id="NA1_1", queue_id=420):
     """kills: (seconds, killer_pid, victim_pid); objectives: (seconds, team, monsterType)."""
     events_by_frame = {}
@@ -39,7 +53,7 @@ def build_match(duration_min=30, winner=100, gold=base_gold, damage=base_damage,
 
     for t, killer, victim in kills:
         add_event(t, {"type": "CHAMPION_KILL", "timestamp": int(t * 1000), "killerId": killer,
-                      "victimId": victim, "assistingParticipantIds": []})
+                      "victimId": victim, "assistingParticipantIds": [], "position": position_at(victim, t / 60)})
     for t, team, monster in objectives:
         add_event(t, {"type": "ELITE_MONSTER_KILL", "timestamp": int(t * 1000), "killerTeamId": team,
                       "killerId": 1 if team == 100 else 6, "monsterType": monster})
@@ -53,6 +67,7 @@ def build_match(duration_min=30, winner=100, gold=base_gold, damage=base_damage,
                     "totalGold": gold(pid, minute),
                     "xp": 280 * minute,
                     "damageStats": {"totalDamageDoneToChampions": damage(pid, minute)},
+                    "position": position_at(pid, minute),
                 }
                 for pid in range(1, 11)
             },
@@ -80,6 +95,8 @@ def build_match(duration_min=30, winner=100, gold=base_gold, damage=base_damage,
             "assists": 0,
             "totalDamageDealtToChampions": damage(pid, duration_min),
             "goldEarned": gold(pid, duration_min),
+            "damageDealtToTurrets": tower_damage(pid, duration_min),
+            "damageDealtToEpicMonsters": neutral_damage(pid, duration_min),
             **{f"item{i}": 0 for i in range(7)},
         }
         for pid in range(1, 11)

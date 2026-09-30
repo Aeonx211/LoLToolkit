@@ -80,7 +80,12 @@ SETTINGS = [
                "Enemy player's share of team impact during the swing."),
     _threshold("snowball_ratio", "Snowballed-on: spike ratio", "Window share vs their share before the swing."),
     _threshold("snowball_min_kills", "Snowballed-on: min kills", "Kills by that player during the swing."),
-    _threshold("carry_ratio", "Carried: impact vs role", "Impact must be this multiple of the role baseline."),
+    _threshold("carry_ratio", "Carried: impact vs role (floor)",
+               "Impact must be at least this multiple of the role baseline to be eligible."),
+    _threshold("carry_margin", "Carried: margin over next teammate",
+               "How far (in impact_ratio) a player must lead the next-best teammate (or the whole team, if "
+               "last) to qualify. Walking down from the top, players within this margin of each other co-carry "
+               "together; the first gap this big or bigger stops the group."),
     _threshold("carry_min_impact", "Carried: min impact share", "Absolute floor on impact share (0-1)."),
     _threshold("even_band", "Even: gold band", "Gold diff must stay within this band..."),
     _threshold("even_until_frac", "Even: until fraction of game", "...until this fraction of the game (0-1)."),
@@ -88,17 +93,31 @@ SETTINGS = [
     _threshold("fight_gap_s", "Fight grouping gap (s)", "Kills/objectives closer than this form one moment."),
     _threshold("rolling_window_s", "Rolling impact window (s)", ""),
     *[
-        _dict_entry("Tool 1: role baselines (KP, damage, gold, objective damage share)",
+        _dict_entry("Tool 1: role baselines (KP, damage, gold, tower, neutral, survival share)",
                     f"causal_analysis.ROLE_BASELINE.{role}", metrics.ROLE_BASELINE, role, role.title(),
-                    "Typical kill participation, damage share, gold share, objective (tower/dragon/herald/baron) "
-                    "damage share. KP isn't exclusive (several players can be credited per kill), so it runs "
-                    "~45-65% rather than an even split.")
+                    "Typical kill participation, damage share, gold share, tower-damage share, neutral/epic-"
+                    "monster-damage share, and survival share (1 - this role's share of the team's deaths, "
+                    "so higher is fewer deaths than teammates). KP isn't exclusive (several players can be "
+                    "credited per kill), so it runs ~45-65% rather than an even split.")
         for role in list(metrics.ROLE_BASELINE)
     ],
-    _module("Tool 1: role baselines (KP, damage, gold, objective damage share)", metrics, "OBJECTIVE_WEIGHT",
-            "Impact: objective damage weight",
-            "How much objective damage share counts toward Impact, alongside KP/damage/gold (which always split "
-            "the rest evenly). 0 ignores objectives entirely; 1 makes Impact only objective damage."),
+    _module("Tool 1: role baselines (KP, damage, gold, tower, neutral, survival share)", metrics, "TOWER_WEIGHT",
+            "Impact: tower damage weight",
+            "How much tower-damage share counts toward Impact, alongside KP/damage/gold (which always split "
+            "the rest evenly)."),
+    _module("Tool 1: role baselines (KP, damage, gold, tower, neutral, survival share)", metrics, "NEUTRAL_WEIGHT",
+            "Impact: neutral/epic-monster damage weight",
+            "How much dragon/herald/baron/grubs/atakhan damage share counts toward Impact. Kept higher than the "
+            "tower weight: contesting/securing a neutral objective is a harder, more team-wide win than poking "
+            "a tower."),
+    _module("Tool 1: role baselines (KP, damage, gold, tower, neutral, survival share)", metrics, "DEATH_WEIGHT",
+            "Impact: low-deaths bonus weight",
+            "Bonus-only weight on surviving more than the role baseline (see role baselines' survival share). "
+            "Never subtracts for dying more than baseline, only adds for dying less."),
+    _module("Tool 1: role baselines (KP, damage, gold, tower, neutral, survival share)", metrics, "SHARE_CAP_RATIO",
+            "Impact: per-component cap vs role baseline",
+            "Ceiling on how far any single share (kp/damage/gold/tower/neutral) counts above its role baseline "
+            "before being weighted, so one lumpy component can't swing the whole ratio alone."),
     _module(G2, threat, "MIN_WINS_TO_FLAG", "Carry flag: min recent wins"),
     _module(G2, threat, "CARRY_RATE_TO_FLAG", "Carry flag: carried-win rate", "0-1"),
     _module(G2, threat, "FULL_CONFIDENCE_WINS", "Carry score: wins for full confidence"),

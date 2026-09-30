@@ -1,33 +1,3 @@
 {
-  "causal_analysis.carry_ratio": 1.52,
-  "causal_analysis.ROLE_BASELINE.TOP": [
-    0.352,
-    0.223,
-    0.199,
-    0.2
-  ],
-  "causal_analysis.ROLE_BASELINE.JUNGLE": [
-    0.477,
-    0.185,
-    0.213,
-    0.389
-  ],
-  "causal_analysis.ROLE_BASELINE.MIDDLE": [
-    0.45,
-    0.242,
-    0.205,
-    0.156
-  ],
-  "causal_analysis.ROLE_BASELINE.BOTTOM": [
-    0.471,
-    0.224,
-    0.227,
-    0.2
-  ],
-  "causal_analysis.ROLE_BASELINE.UTILITY": [
-    0.516,
-    0.126,
-    0.156,
-    0.055
-  ]
+  "causal_analysis.carry_ratio": 1.35
 }

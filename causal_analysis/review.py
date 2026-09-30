@@ -57,6 +57,7 @@ def _death_finding(pm: ParsedMatch, gold_series, moments, pid, kill):
         "tags": tags,
         "lead_before": round(lead_before),
         "swing": round(swing),
+        "position": kill.position,
         "note": ", ".join(parts[:1]) + (" " + " ".join(parts[1:]) if len(parts) > 1 else ""),
     }
 
@@ -81,6 +82,7 @@ def _early_aggression_findings(pm: ParsedMatch, gold_series, moments, pid, own_d
                 "tags": ["early_aggression"],
                 "lead_before": None,
                 "swing": round(swing),
+                "position": None,
                 "note": f"Took part in a skirmish at {mmss(m.start)} that didn't pay off "
                         f"({fmt_gold(swing)} swung to {TEAM_NAMES[enemy]}).",
             })

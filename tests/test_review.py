@@ -43,6 +43,17 @@ class ReviewPlayerTests(unittest.TestCase):
         self.assertEqual(review["flagged_count"], 0)
         self.assertIn("No standout", review["summary"])
 
+    def test_positions_flow_through_to_timeline_and_death_findings(self):
+        kills = [(500, 6, 1)]
+        result = analyze(*build_match(20, kills=kills))
+        positions = result["timeline"]["positions"]
+        self.assertIn("1", positions)
+        self.assertTrue(any(p is not None for p in positions["1"]))
+
+        finding = next(f for f in review_for(result, 1)["findings"] if f["t"] == 500)
+        self.assertIsNotNone(finding["position"])
+        self.assertEqual(len(finding["position"]), 2)
+
 
 if __name__ == "__main__":
     unittest.main()

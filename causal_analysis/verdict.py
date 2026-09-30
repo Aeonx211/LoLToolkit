@@ -8,7 +8,10 @@ def _pct(x):
 
 def build_verdict(pm: ParsedMatch, gold, tags, moments):
     W, L = TEAM_NAMES[pm.winner], TEAM_NAMES[pm.loser]
-    by = {t["archetype"]: t["detail"] for t in tags}
+    # Every archetype except Carried fires at most once per game; Carried can co-fire for more than one player,
+    # so it's pulled out separately below rather than collapsed into `by` (which would silently drop all but one).
+    by = {t["archetype"]: t["detail"] for t in tags if t["archetype"] != "Carried"}
+    carried = [t["detail"] for t in tags if t["archetype"] == "Carried"]
     sentences = []
 
     if "Stomp" in by:
@@ -52,12 +55,15 @@ def build_verdict(pm: ParsedMatch, gold, tags, moments):
             f"{d['champion']} ({d['riot_id']}) snowballed from {mmss(d['from_t'])}: {d['kills']} kills and "
             f"{_pct(d['window_share'])} of {W}'s impact in the swing window (was {_pct(d['before_share'])})."
         )
-    if "Carried" in by:
-        d = by["Carried"]
+    if len(carried) == 1:
+        d = carried[0]
         s = d["shares"]
         role = d["position"].lower() or "player"
         sentences.append(
             f"{d['champion']} ({d['riot_id']}) carried {W}: {_pct(s['kp'])} kill participation, {_pct(s['damage'])} "
             f"of damage, {_pct(s['gold'])} of gold ({d['impact_ratio']:.1f}x a typical {role})."
         )
+    elif len(carried) > 1:
+        names = ", ".join(f"{d['champion']} ({d['riot_id']}, {d['impact_ratio']:.1f}x)" for d in carried)
+        sentences.append(f"{names} co-carried {W}, well clear of the rest of the team.")
     return " ".join(sentences)

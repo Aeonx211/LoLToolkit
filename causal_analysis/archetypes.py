@@ -11,8 +11,8 @@ from .metrics import (
 from .parse import ParsedMatch
 
 
-# TODO: these are first-guess cutoffs; calibrate against a larger sample of real games (e.g. check the
-#  archetype distribution over a few hundred ranked matches and adjust until each tag looks right by eye).
+# TODO: most of these are still first-guess cutoffs; calibrate against a larger sample of real games (e.g. check
+#  the archetype distribution over a few hundred ranked matches and adjust until each tag looks right by eye).
 @dataclass(frozen=True)
 class Thresholds:
     remake_s: float = 300
@@ -26,7 +26,21 @@ class Thresholds:
     snowball_window_share: float = 0.35
     snowball_ratio: float = 1.5
     snowball_min_kills: int = 3
-    carry_ratio: float = 1.35
+    # Carried: calibrated 2026-09 against all 576 usable stored games (see ROLE_BASELINE's calibration note in
+    # metrics.py -- these two are downstream of that recalibration, which pulled the impact_ratio scale in
+    # substantially, so they aren't comparable to the old flat carry_ratio=1.35/1.52). carry_ratio is a floor:
+    # a player must clear it to be eligible at all. carry_margin is what makes it dynamic instead of a single
+    # cutoff: starting from the top of the winning team's impact_ratio, players within carry_margin of each other
+    # co-carry together (letting two standouts who are close to each other but clearly ahead of the rest both
+    # get tagged, per a real example game where two players sat at 1.205/1.204 with the next-best at 0.970); the
+    # first gap of at least carry_margin stops the group. Because the recalibrated baseline is an honest per-role
+    # mean (not a hand-guess), the *max* of 5 same-role-ish samples on a winning team clears a modest floor like
+    # 1.20 more often than the old, biased baseline implied -- so Carried now fires on about 70% of stored games
+    # (was ~12% under the old flat 1.52 rule) versus firing at all vs. ~16% of those having 2+ co-carries. Raising
+    # carry_ratio trades that back for rarity (e.g. ~1.50 gets back to the old ~12% rate) at the direct cost of
+    # no longer flagging cases like the example above, where the two standouts only reached ~1.20.
+    carry_ratio: float = 1.20
+    carry_margin: float = 0.15
     carry_min_impact: float = 0.30
     even_band: float = 2500
     even_until_frac: float = 0.75
@@ -107,14 +121,30 @@ def classify(pm: ParsedMatch, gold, kill_diff, moments, players, th: Thresholds 
         tags.append(_tag("Even-then-decided", None, band=max(early), until=cutoff,
                          decider=turning_point(moments, W, 0.6 * pm.duration_s)))
 
-    winners = [p for p in players if p["team_id"] == W]
-    top = max(winners, key=lambda p: p["impact_ratio"])
-    if top["impact_ratio"] >= th.carry_ratio and top["impact"] >= th.carry_min_impact:
+    for top in _carried(players, W, th):
         top["carried"] = True
         tags.append(_tag("Carried", W, participant_id=top["participant_id"], champion=top["champion"],
                          riot_id=top["riot_id"], position=top["position"], shares=top["shares"],
                          impact_ratio=top["impact_ratio"]))
     return tags
+
+
+def _carried(players, W, th: Thresholds):
+    """Winning-team players clearly ahead of the rest of their team, not just above a flat cutoff: sort by
+    impact_ratio, then walk down from the top while consecutive players stay within `carry_margin` of each other
+    (a tight cluster co-carries together), stopping at the first real gap. Everyone in that top cluster qualifies
+    if they clear the (lower, absolute) `carry_ratio`/`carry_min_impact` floor -- so a close 1-2 punch that both
+    clearly outpaced the rest of the team can both get tagged, while a single standout with no one else close
+    still gets tagged alone."""
+    winners = sorted((p for p in players if p["team_id"] == W), key=lambda p: -p["impact_ratio"])
+    carried = []
+    for i, p in enumerate(winners):
+        if p["impact_ratio"] < th.carry_ratio or p["impact"] < th.carry_min_impact:
+            break
+        carried.append(p)
+        if i + 1 >= len(winners) or p["impact_ratio"] - winners[i + 1]["impact_ratio"] >= th.carry_margin:
+            break
+    return carried
 
 
 def _snowballed_on(pm: ParsedMatch, gold, peaks, th: Thresholds):

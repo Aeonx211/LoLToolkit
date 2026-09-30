@@ -24,7 +24,11 @@ function h(tag, attrs, ...children) {
 
 function s(tag, attrs, ...children) {
   const el = document.createElementNS(SVG_NS, tag);
-  for (const [k, v] of Object.entries(attrs || {})) if (v != null) el.setAttribute(k, v);
+  for (const [k, v] of Object.entries(attrs || {})) {
+    if (v == null) continue;
+    if (k.startsWith("on")) el.addEventListener(k.slice(2), v);
+    else el.setAttribute(k, v);
+  }
   for (const c of children.flat(Infinity)) {
     if (c == null) continue;
     el.append(c instanceof Node ? c : document.createTextNode(String(c)));
@@ -224,7 +228,7 @@ function areaChart(t, values, { width, height, pad = 0, upColor, downColor, mark
     const x = X(m.t);
     svg.append(s("g", null,
       s("line", { x1: x, x2: x, y1: y0, y2: y1, stroke: m.color, "stroke-dasharray": "3 3", "stroke-opacity": 0.8 }),
-      s("circle", { cx: x, cy: y0 + 6, r: 5, fill: m.color }, s("title", null, m.label))));
+      s("circle", { cx: x, cy: y0 + 6, r: m.radius || 5, fill: m.color }, s("title", null, m.label))));
   }
   return svg;
 }
@@ -283,7 +287,7 @@ function gameCard(r, puuid) {
         h("span", { class: "muted" },
           `${roleLabel(me.position)} · ${me.kda.join("/")} · ${queueName(r.queue_id)} · `
           + `${mmss(r.duration_s)} · ${new Date(r.game_start).toLocaleDateString()}`),
-        h("span", { class: "muted", title: "Weighted average of KP/damage/gold share and objective damage share, divided by a typical mix for this role. 1x = typical." }, `impact ${me.impact_ratio.toFixed(2)}x`)),
+        h("span", { class: "muted", title: "Weighted average of KP/damage/gold, tower damage and neutral-objective damage share, plus a small bonus for dying less than typical, divided by a typical mix for this role. 1x = typical." }, `impact ${me.impact_ratio.toFixed(2)}x`)),
       h("div", { class: "chips" }, tags.length ? tags : h("span", { class: "chip" }, "No archetype")),
       h("p", { class: "verdict" }, r.verdict)),
     h("div", { class: "side" },
@@ -383,12 +387,38 @@ function matchDetail(r, puuid) {
   const close = h("button", { onclick: () => $("#match-dialog").close() }, "Close");
   if (r.skipped) return h("div", null, h("div", { class: "dialog-head" }, h("h2", null, r.match_id), close),
     h("p", null, `Skipped: ${r.skipped}`));
-  const markers = r.key_moments.map((m) => ({
+  const keyMarkers = r.key_moments.map((m) => ({
     t: m.start, color: m.beneficiary === 100 ? cssVar("--blue") : cssVar("--red"), label: describeMoment(m),
   }));
-  const chart = areaChart(r.timeline.t, r.timeline.gold_diff, {
-    width: 940, height: 240, pad: 10, axes: true, upColor: cssVar("--blue"), downColor: cssVar("--red"), markers,
+  const chartHost = h("div");
+  const buildChart = (reviewMarkers = []) => areaChart(r.timeline.t, r.timeline.gold_diff, {
+    width: 940, height: 240, pad: 10, axes: true, upColor: cssVar("--blue"), downColor: cssVar("--red"),
+    markers: [...keyMarkers, ...reviewMarkers],
   });
+  fill(chartHost, buildChart());
+  let currentFindings = [];
+  let currentPid = null;
+  const posBounds = computeBounds(r.timeline.positions);
+  const mapHost = h("div");
+  const clearMap = () => fill(mapHost, h("p", { class: "muted" }, "Click a timestamp in Player review below to see a map snapshot."));
+  clearMap();
+  const setFindings = (findings, pid) => {
+    currentFindings = findings;
+    currentPid = pid;
+    fill(chartHost, buildChart(findings.map((f) => ({ t: f.t, color: cssVar("--accent"), label: f.note }))));
+    clearMap();
+  };
+  const jumpTo = (t) => {
+    const finding = currentFindings.find((f) => f.t === t);
+    fill(chartHost, buildChart(currentFindings.map((f) => ({
+      t: f.t, color: cssVar("--accent"), label: f.note, radius: f.t === t ? 8 : 5,
+    }))));
+    fill(mapHost, minimap(r, posBounds, t, currentPid, finding && finding.position),
+      h("p", { class: "muted", style: "font-size:12px;margin:4px 0 0" },
+        "Approximate: ally/enemy dots are the nearest recorded minute mark (can be up to ~30s off); "
+        + "the × is your exact death spot."));
+    chartHost.scrollIntoView({ behavior: "smooth", block: "center" });
+  };
   const peaks = r.leads.gold_peaks;
   const teamTable = (team) => {
     const rows = r.players.filter((p) => p.team_id === team).map((p) => h("tr", { class: p.puuid === puuid ? "me" : null },
@@ -399,7 +429,8 @@ function matchDetail(r, puuid) {
       h("td", { class: "num", title: "Kill participation: this player's kills+assists, over the team's kills in the game" }, pct(p.shares.kp)),
       h("td", { class: "num" }, pct(p.shares.damage)),
       h("td", { class: "num" }, pct(p.shares.gold)),
-      h("td", { class: "num", title: "Share of the team's tower/dragon/herald/baron damage" }, pct(p.shares.objectives)),
+      h("td", { class: "num", title: "Share of the team's tower damage" }, pct(p.shares.tower)),
+      h("td", { class: "num", title: "Share of the team's dragon/herald/baron/grubs/atakhan damage" }, pct(p.shares.neutral)),
       h("td", { class: "num" }, `${p.impact_ratio.toFixed(2)}x`),
       h("td", { class: "num muted", title: p.predicted_impact ? `Average impact over their ${p.predicted_impact.games} earlier stored game(s)` : "No earlier stored games for this player" },
         p.predicted_impact ? `${p.predicted_impact.value.toFixed(2)}x` : "n/a"),
@@ -413,17 +444,19 @@ function matchDetail(r, puuid) {
       })()));
     return h("div", { class: "table-wrap" }, h("table", { class: "team-table" },
       h("colgroup", null,
-        h("col", { style: "width:16%" }), h("col", { style: "width:16%" }), h("col", { style: "width:9%" }),
-        h("col", { style: "width:8%" }), h("col", { style: "width:7%" }), h("col", { style: "width:9%" }),
-        h("col", { style: "width:8%" }), h("col", { style: "width:7%" }), h("col", { style: "width:8%" }),
-        h("col", { style: "width:8%" }), h("col", { style: "width:4%" })),
+        h("col", { style: "width:14%" }), h("col", { style: "width:14%" }), h("col", { style: "width:7%" }),
+        h("col", { style: "width:7%" }), h("col", { style: "width:7%" }), h("col", { style: "width:7%" }),
+        h("col", { style: "width:7%" }), h("col", { style: "width:7%" }), h("col", { style: "width:7%" }),
+        h("col", { style: "width:8%" }), h("col", { style: "width:7%" }), h("col", { style: "width:8%" })),
       h("thead", null, h("tr", null,
         h("th", { class: team === 100 ? "team-blue" : "team-red" },
           `${TEAM[team]} ${r.winner === team ? "(won)" : "(lost)"}`),
         h("th", null, "Player"), h("th", null, "Role"), h("th", { class: "num" }, "KDA"),
         h("th", { class: "num", title: "Kill participation (kills+assists, not exclusive — can add up to more than 100% across the team)" }, "KP"),
-        h("th", { class: "num" }, "Damage"), h("th", { class: "num" }, "Gold"), h("th", { class: "num" }, "Obj"),
-        h("th", { class: "num", title: "Weighted average of KP/damage/gold share (85%) and objective damage share (15%), divided by the same mix for a typical player in this role. Above 1x means they contributed more than a typical player in that role would; well above (~1.35x+) can tag them as the game's Carried player." }, "Impact"),
+        h("th", { class: "num" }, "Damage"), h("th", { class: "num" }, "Gold"),
+        h("th", { class: "num", title: "Share of the team's tower damage" }, "Tower"),
+        h("th", { class: "num", title: "Share of the team's dragon/herald/baron/grubs/atakhan damage" }, "Neutral"),
+        h("th", { class: "num", title: "Weighted average of KP/damage/gold share (85%), tower damage share (5%) and neutral-objective damage share (10%), divided by the same mix for a typical player in this role, plus a small bonus for dying less than a typical player in this role. Above 1x means they contributed more than a typical player in that role would." }, "Impact"),
         h("th", { class: "num", title: "Predicted impact: the player's average impact over their earlier stored games, before this one. Compare with the actual Impact." }, "Predicted"),
         h("th", { class: "num", title: "Actual impact minus predicted: who over- or under-performed their expectation this game." }, "Δ"))),
       h("tbody", null, rows)));
@@ -435,38 +468,127 @@ function matchDetail(r, puuid) {
       close),
     h("div", { class: "chips" }, r.tags.map((t) => h("span", { class: "chip" }, neutralTag(t)))),
     h("p", null, r.verdict),
-    h("div", { class: "card" }, h("h4", { style: "margin-top:0" }, "Gold difference (Blue up, Red down)"), chart,
+    h("div", { class: "card" }, h("h4", { style: "margin-top:0" }, "Gold difference (Blue up, Red down)"), chartHost,
       h("div", { class: "legend" },
         h("span", null, `Blue peak +${kfmt(peaks["100"].lead)} at ${mmss(peaks["100"].at)}`),
         h("span", null, `Red peak +${kfmt(peaks["200"].lead)} at ${mmss(peaks["200"].at)}`),
         r.leads.gold_flips.length ? h("span", null, `Lead changed hands at ${r.leads.gold_flips.map(mmss).join(", ")}`) : null)),
     h("div", { class: "card" }, h("h4", { style: "margin-top:0" }, "Key moments"),
       h("ul", { style: "margin:0;padding-left:18px" }, r.key_moments.map((m) => h("li", null, describeMoment(m))))),
-    reviewCard(r, (r.players.find((p) => p.puuid === puuid) || r.players[0]).participant_id),
-    h("div", { class: "card" }, historyLoader(r, puuid), teamTable(100), h("div", { style: "height:10px" }), teamTable(200)));
+    historyLoader(r, puuid),
+    h("div", { class: "card" }, teamTable(100), h("div", { style: "height:10px" }), teamTable(200)),
+    h("div", { class: "row", style: "align-items:flex-start;gap:12px" },
+      h("div", { style: "flex:1" },
+        reviewCard(r, (r.players.find((p) => p.puuid === puuid) || r.players[0]).participant_id, setFindings, jumpTo)),
+      h("div", { class: "card", style: "flex:0 0 240px" }, h("h4", { style: "margin-top:0" }, "Map snapshot"), mapHost)));
+}
+
+// ---------- Map snapshot: rough player spread around a flagged moment ---------------------------------------
+function computeBounds(positions) {
+  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
+  for (const arr of Object.values(positions)) {
+    for (const p of arr) {
+      if (!p) continue;
+      minX = Math.min(minX, p[0]); maxX = Math.max(maxX, p[0]);
+      minY = Math.min(minY, p[1]); maxY = Math.max(maxY, p[1]);
+    }
+  }
+  return isFinite(minX) ? { minX, maxX, minY, maxY } : null;
+}
+
+function nearestIndex(tArr, t) {
+  let best = 0, bestDiff = Infinity;
+  for (let i = 0; i < tArr.length; i++) {
+    const d = Math.abs(tArr[i] - t);
+    if (d < bestDiff) { bestDiff = d; best = i; }
+  }
+  return best;
+}
+
+// Coarse — one snapshot per in-game minute, not a continuous replay. `exactPos` (the flagged death's own
+// coordinates, when Riot's event carried one) is drawn as an ×; everyone else is the nearest minute mark.
+function minimap(r, bounds, t, targetPid, exactPos) {
+  if (!bounds) return h("p", { class: "muted" }, "No position data for this match.");
+  const size = 220;
+  const idx = nearestIndex(r.timeline.t, t);
+  const span = Math.max(bounds.maxX - bounds.minX, bounds.maxY - bounds.minY, 1);
+  const X = (x) => ((x - bounds.minX) / span) * size;
+  const Y = (y) => size - ((y - bounds.minY) / span) * size;
+  // A label that follows the hovered/focused dot — quicker and better-styled than relying on the native
+  // SVG <title> tooltip (which most browsers delay by ~1s and can't be styled).
+  const labelBg = s("rect", { fill: cssVar("--surface"), stroke: cssVar("--border"), rx: 3, opacity: 0, "pointer-events": "none" });
+  const labelText = s("text", { fill: cssVar("--text"), "font-size": 10, opacity: 0, "pointer-events": "none" });
+  const showLabel = (cx, cy, text) => {
+    labelText.textContent = text;
+    const w = text.length * 5.5 + 8;
+    const x = Math.min(Math.max(cx - w / 2, 0), size - w), y = Math.max(cy - 22, 0);
+    labelBg.setAttribute("x", x); labelBg.setAttribute("y", y);
+    labelBg.setAttribute("width", w); labelBg.setAttribute("height", 14);
+    labelBg.setAttribute("opacity", 1);
+    labelText.setAttribute("x", x + 4); labelText.setAttribute("y", y + 10);
+    labelText.setAttribute("opacity", 1);
+  };
+  const hideLabel = () => { labelBg.setAttribute("opacity", 0); labelText.setAttribute("opacity", 0); };
+
+  const dots = r.players.map((p) => {
+    const pos = (r.timeline.positions[p.participant_id] || [])[idx];
+    if (!pos) return null;
+    const isTarget = p.participant_id === targetPid;
+    const cx = X(pos[0]), cy = Y(pos[1]);
+    const label = `${champName(p.champion)} (${p.riot_id})`;
+    return s("circle", {
+      cx, cy, r: isTarget ? 6 : 4,
+      fill: p.team_id === 100 ? cssVar("--blue") : cssVar("--red"),
+      stroke: isTarget ? cssVar("--text") : "none", "stroke-width": isTarget ? 1.5 : 0,
+      tabindex: 0,
+      onmouseenter: () => showLabel(cx, cy, label),
+      onmouseleave: hideLabel,
+      onfocus: () => showLabel(cx, cy, label),
+      onblur: hideLabel,
+    }, s("title", null, label));
+  });
+  const mark = exactPos && s("g", { stroke: cssVar("--accent"), "stroke-width": 2 },
+    s("line", { x1: X(exactPos[0]) - 6, y1: Y(exactPos[1]) - 6, x2: X(exactPos[0]) + 6, y2: Y(exactPos[1]) + 6 }),
+    s("line", { x1: X(exactPos[0]) - 6, y1: Y(exactPos[1]) + 6, x2: X(exactPos[0]) + 6, y2: Y(exactPos[1]) - 6 }));
+  return s("svg", { viewBox: `0 0 ${size} ${size}`, width: size, height: size, class: "minimap" },
+    s("rect", { x: 0, y: 0, width: size, height: size, fill: "none", stroke: "currentColor", "stroke-opacity": 0.15 }),
+    s("line", { x1: 0, y1: size, x2: size, y2: 0, stroke: "currentColor", "stroke-opacity": 0.1, "stroke-dasharray": "4 4" }),
+    ...dots.filter(Boolean), mark || null, labelBg, labelText);
 }
 
 // ---------- Player review: bad deaths / invades that kept a player under their potential --------------------
-function reviewFindings(review) {
+// Findings jump to the gold chart above (via onJump) so the swing can be seen and checked, since there's no
+// in-browser replay: to actually watch the moment, open the match's Replay in the League client and scrub to
+// the timestamp shown here.
+function reviewFindings(review, onJump) {
   if (!review.findings.length) return h("p", { class: "muted" }, "No deaths recorded.");
   return h("ul", { style: "margin:0;padding-left:18px" },
-    review.findings.map((f) => h("li", { class: f.swing <= -300 || f.tags.includes("early_solo") ? "loss-text" : null }, f.note)));
+    review.findings.map((f) => h("li", { class: f.swing <= -300 || f.tags.includes("early_solo") ? "loss-text" : null },
+      h("a", { href: "#", class: "chart-jump", onclick: (e) => { e.preventDefault(); onJump(f.t); } }, mmss(f.t)),
+      " " + f.note.replace(/^[^ ]+ ?/, ""))));
 }
 
-function reviewCard(r, defaultPid) {
+function reviewCard(r, defaultPid, onFindingsChange, onJump) {
   const body = h("div", { style: "margin-top:8px" });
-  const render = (pid) => {
-    const target = r.players.find((p) => p.participant_id === pid);
+  const render = (value) => {
+    const pid = value === "none" ? null : Number(value);
+    const target = pid == null ? null : r.players.find((p) => p.participant_id === pid);
+    onFindingsChange(target && target.review ? target.review.findings : [], pid);
+    if (pid == null) return fill(body, h("p", { class: "muted" }, "No target selected."));
     if (!target || !target.review) return fill(body, h("p", { class: "muted" }, "No review available."));
-    fill(body, h("p", { class: "muted" }, target.review.summary), reviewFindings(target.review));
+    fill(body, h("p", { class: "muted" }, target.review.summary), reviewFindings(target.review, onJump));
   };
-  const select = h("select", { onchange: (e) => render(Number(e.target.value)) },
+  const select = h("select", { onchange: (e) => render(e.target.value) },
+    h("option", { value: "none" }, "— None —"),
     ...r.players.map((p) => h("option", { value: p.participant_id }, `${champName(p.champion)} — ${p.riot_id}`)));
   select.value = defaultPid;
   render(defaultPid);
   return h("div", { class: "card" },
     h("h4", { style: "margin-top:0" }, "Player review",
-      h("span", { class: "muted", style: "font-weight:normal", title: "Deaths and early skirmishes that gave up a lead, came with no trade back, or lost a fight outright — the moments most likely behind an under-target impact." }, " (what could've gone better)")),
+      h("span", { class: "muted", style: "font-weight:normal" }, " (what could've gone better)")),
+    h("p", { class: "muted", style: "margin-top:0" },
+      "Click a timestamp to mark it on the chart above. To actually watch it, open this match's Replay in the "
+      + "League client and scrub to that time."),
     h("div", { class: "row", style: "align-items:center;gap:8px;margin-bottom:4px" }, h("span", { class: "muted" }, "Target:"), select),
     body);
 }
