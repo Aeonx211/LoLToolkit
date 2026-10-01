@@ -37,6 +37,11 @@ class Player:
     tower_damage: int
     neutral_damage: int
     items: list[int]
+    ally_jg: int  # jungle monsters killed in the player's own half of the map
+    enemy_jg: int  # jungle monsters killed in the enemy's half (invaded/stolen camps)
+    largest_multi_kill: int  # Riot's largestMultiKill (1 = no multi-kill, 2 = double, up to 5 = penta)
+    damage_taken_pct: float  # Riot's challenges.damageTakenOnTeamPercentage
+    solo_kills: int  # Riot's challenges.soloKills
 
 
 @dataclass
@@ -48,6 +53,7 @@ class Frame:
     kills: dict[int, int] = field(default_factory=dict)  # running kill count credited to the killer only
     kp: dict[int, int] = field(default_factory=dict)  # running count of team kills each player killed OR assisted
     positions: dict[int, tuple[int, int]] = field(default_factory=dict)  # map coords, one snapshot per frame
+    jungle: dict[int, int] = field(default_factory=dict)  # cumulative jungle monster kills, one snapshot per frame
 
     def get(self, metric):
         return getattr(self, metric)
@@ -122,6 +128,11 @@ def parse_match(match, timeline) -> ParsedMatch:
             tower_damage=p.get("damageDealtToTurrets", 0),
             neutral_damage=p.get("damageDealtToEpicMonsters", 0),  # dragons, herald, baron, grubs, atakhan
             items=[i for i in items if i],
+            ally_jg=p.get("totalAllyJungleMinionsKilled", 0),
+            enemy_jg=p.get("totalEnemyJungleMinionsKilled", 0),
+            largest_multi_kill=p.get("largestMultiKill", 1),
+            damage_taken_pct=p.get("challenges", {}).get("damageTakenOnTeamPercentage", 0.0),
+            solo_kills=p.get("challenges", {}).get("soloKills", 0),
         )
     team_of = {pid: p.team_id for pid, p in players.items()}
 
@@ -157,17 +168,18 @@ def parse_match(match, timeline) -> ParsedMatch:
 
     frames = []
     for f in tl_frames:
-        gold, xp, damage, positions = {}, {}, {}, {}
+        gold, xp, damage, positions, jungle = {}, {}, {}, {}, {}
         for key, v in f["participantFrames"].items():
             pid = int(key)
             if pid in players:
                 gold[pid] = v.get("totalGold", 0)
                 xp[pid] = v.get("xp", 0)
                 damage[pid] = v.get("damageStats", {}).get("totalDamageDoneToChampions", 0)
+                jungle[pid] = v.get("jungleMinionsKilled", 0)
                 pos = v.get("position")
                 if pos:
                     positions[pid] = (pos["x"], pos["y"])
-        frames.append(Frame(f["timestamp"] / 1000, gold, xp, damage, positions=positions))
+        frames.append(Frame(f["timestamp"] / 1000, gold, xp, damage, positions=positions, jungle=jungle))
 
     running = {pid: 0 for pid in players}
     running_kp = {pid: 0 for pid in players}

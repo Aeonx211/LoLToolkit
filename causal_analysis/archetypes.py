@@ -47,6 +47,11 @@ class Thresholds:
     even_min_duration_s: float = 1200
     fight_gap_s: float = 30
     rolling_window_s: float = 300
+    # Invader: fires either for an early (see metrics.EARLY_INVADE_WINDOW_S) kill/assist in the enemy jungle, or
+    # for a jungler whose enemy-jungle camp share in just the first metrics.EARLY_INVASION_WINDOW_S seconds clears
+    # this floor -- well above the 0.096 whole-game population mean (metrics.INVASION_BASELINE_SHARE note), so it
+    # only tags an actual early invade, not camp theft that happened to pile up later in a long game.
+    invader_share: float = 0.35
 
 
 DEFAULT_THRESHOLDS = Thresholds()
@@ -126,6 +131,12 @@ def classify(pm: ParsedMatch, gold, kill_diff, moments, players, th: Thresholds 
         tags.append(_tag("Carried", W, participant_id=top["participant_id"], champion=top["champion"],
                          riot_id=top["riot_id"], position=top["position"], shares=top["shares"],
                          impact_ratio=top["impact_ratio"]))
+
+    for p in players:
+        if p["early_invade"] or p["early_invasion_share"] >= th.invader_share:
+            tags.append(_tag("Invader", p["team_id"], participant_id=p["participant_id"], champion=p["champion"],
+                             riot_id=p["riot_id"], early=p["early_invade"],
+                             invasion_share=p["early_invasion_share"]))
     return tags
 
 

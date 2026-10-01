@@ -48,6 +48,82 @@ NEUTRAL_WEIGHT = 0.10
 # rest of the distribution.
 DEATH_WEIGHT = 0.08
 
+# Bonus-only weight for junglers who take a large share of their jungle monster kills from the enemy's half of the
+# map (invaded/stolen camps) rather than farming their own. Real case: an enemy jungler who invaded early, then
+# repeatedly took our camps and used the resulting lead to gank, scored impact_ratio 0.829 under kp/damage/gold/
+# tower/neutral alone -- his neutral-damage share was huge (.822) but that's farming volume, not *whose* camps he
+# was farming, and champion-damage share was low since he wasn't a laner. `totalEnemyJungleMinionsKilled` /
+# `totalAllyJungleMinionsKilled` (present on every stored participant) let us isolate that directly. Backtested
+# against 1245 stored jungle role-samples: mean enemy-jungle share is 0.096 (median 0.077, p90 0.211); the flagged
+# game's jungler sat at 0.556, a ~5.8x outlier. At this weight/baseline the bonus is negligible (<0.005) for every
+# other sampled game and moves only that one outlier from 0.829 to ~0.96, same "moves outliers not the population"
+# bar as DEATH_WEIGHT.
+INVASION_WEIGHT = 0.08
+INVASION_BASELINE_SHARE = 0.10
+
+# One-time bonus for a jungler who gets a kill or assist before EARLY_INVADE_WINDOW_S on the enemy half of the map
+# -- an early invade, not just later camp theft. Flat and small because early-game kills are rare by construction
+# (few kills happen in the first couple minutes at all), so this fires selectively.
+EARLY_INVADE_BONUS = 0.03
+EARLY_INVADE_WINDOW_S = 150.0
+
+# Rough diagonal split of Summoner's Rift: team 100 spawns near (0, 0), team 200 near (MAP_HALF*2, MAP_HALF*2), so
+# x + y above this line is closer to team 200's base and below it is closer to team 100's -- a coarse "whose half"
+# check (doesn't account for river/objective camps sitting near the line), used for the early-invade flag and the
+# early-invasion share below.
+MAP_HALF = 14820.0
+
+# Window used to compute the "first N minutes" enemy-jungle share for the Invader tag (see
+# early_invasion_share() and archetypes.Thresholds.invader_share) -- deliberately the same idea as
+# EARLY_INVADE_WINDOW_S but a bit wider, since a tag meant to say "invaded early" shouldn't fire off camp theft
+# that only picked up once the enemy jungler was already dead for the game.
+EARLY_INVASION_WINDOW_S = 300.0
+
+# Typical share of team damage taken (Riot's own challenges.damageTakenOnTeamPercentage) by role. Calibrated
+# 2026-09 from the same 655-game stored sample as ROLE_BASELINE (1308 role-samples/role). Frontliners (top/jungle)
+# soak roughly 40% more of the team's incoming damage than backline roles, and until now nothing in weighted_impact
+# credited that at all -- a tanky bruiser/jungler who peels for the team and eats cooldowns gets zero recognition
+# from kp/damage/gold/objective shares alone, which all reward *dealing* damage or securing kills/objectives, not
+# *absorbing* punishment.
+DAMAGE_TAKEN_BASELINE = {
+    "TOP": 0.247,
+    "JUNGLE": 0.235,
+    "MIDDLE": 0.185,
+    "BOTTOM": 0.166,
+    "UTILITY": 0.166,
+}
+DEFAULT_DAMAGE_TAKEN_BASELINE = 0.200
+
+# Bonus-only weight for damage-taken share above role baseline. Gated by survival (see tank_bonus()): soaking a lot
+# of damage while also dying a lot isn't the same skill as tanking it and living, so the raw excess is scaled down
+# toward 0 the further the player's survival share sits below their role's baseline (a player who dies more than
+# typical for their role gets little or none of this bonus, never a penalty beyond that).
+TANK_WEIGHT = 0.06
+
+# (p90, p95-p90) of Riot's challenges.soloKills by role, same 655-game sample -- the floor is the role's 90th
+# percentile, so only the top ~10% of games get anything at all, reaching full weight at p95. Two earlier, looser
+# cuts of this (mean/p90-mean, then p75/p95-p75) still moved the whole population's impact_ratio mean by 4.3% and
+# 3.0% respectively (see ANALYSIS_VERSION=10/11 backtests) -- not the "moves outliers, not the population" bar
+# SHARE_CAP_RATIO/DEATH_WEIGHT were held to. Span is floored at 1 for roles (bottom/utility) where p90 and p95
+# land on the same integer.
+SOLO_KILL_BASELINE = {
+    "TOP": (6, 2),
+    "JUNGLE": (4, 1),
+    "MIDDLE": (6, 1),
+    "BOTTOM": (3, 1),
+    "UTILITY": (1, 1),
+}
+DEFAULT_SOLO_KILL_BASELINE = (4, 1)
+SOLO_KILL_WEIGHT = 0.05
+
+# Bonus for a personal multi-kill (Riot's own largestMultiKill: 1 = none, 2 = double, ... 5 = penta) -- a discrete,
+# officially-scored signal for "picked off several enemies in one burst" that's independent of role and doesn't
+# need any position/lane heuristics. No entry for a double kill: backtesting the full stored sample showed doubles
+# happen in 29% of player-games -- not an outlier at all -- and gave that bonus alone ~4.4% population-wide drift
+# on impact_ratio (see ANALYSIS_VERSION=10 backtest note on SOLO_KILL_BASELINE). Triple+ is rare enough to keep
+# (7.5% triple, 1.1% quadra, 0.1% penta combined), so the bonus starts there.
+MULTIKILL_BONUS = {3: 0.05, 4: 0.09, 5: 0.15}
+
 # Cap on how far any single share component (kp, damage, gold, tower, neutral) is allowed to count above its role
 # baseline, applied before weighting. Without it, one lumpy component -- a support's damage share on a poke champ,
 # or a jungler's tower-damage share from backdooring a fight they weren't otherwise in -- can swing the whole
@@ -192,6 +268,88 @@ def final_shares(pm: ParsedMatch, pid):
     return tuple(out)
 
 
+def invasion_share(player):
+    """Share of a jungler's jungle-monster kills taken from the enemy's half of the map. 0 for non-junglers or
+    junglers with no recorded jungle CS."""
+    if player.position != "JUNGLE":
+        return 0.0
+    total = player.ally_jg + player.enemy_jg
+    return player.enemy_jg / total if total > 0 else 0.0
+
+
+def invasion_bonus(player):
+    """Bonus-only addition (see INVASION_WEIGHT) for a jungler whose enemy-jungle share clears the population
+    baseline -- farming your own camps earns nothing extra; taking the enemy's does."""
+    share = invasion_share(player)
+    if share <= INVASION_BASELINE_SHARE:
+        return 0.0
+    return INVASION_WEIGHT * (share - INVASION_BASELINE_SHARE) / (1 - INVASION_BASELINE_SHARE)
+
+
+def early_invasion_share(pm: ParsedMatch, pid, window_s=None):
+    """Share of a jungler's jungle-monster kills taken from the enemy's half of the map within the first
+    `window_s` (default EARLY_INVASION_WINDOW_S) seconds -- unlike invasion_share(), which is a whole-game total,
+    this reconstructs the split from per-minute timeline snapshots (cumulative `jungle` CS + `positions`), so it
+    can say whether the theft actually happened *early* rather than just piling up late once the enemy jungler was
+    already out of the game."""
+    window_s = EARLY_INVASION_WINDOW_S if window_s is None else window_s
+    player = pm.players[pid]
+    if player.position != "JUNGLE":
+        return 0.0
+    on_enemy_half = (lambda x, y: x + y > MAP_HALF) if player.team_id == 100 else (lambda x, y: x + y < MAP_HALF)
+    enemy_cs, total_cs, prev = 0, 0, None
+    for f in pm.frames:
+        if f.t > window_s:
+            break
+        if prev is not None:
+            delta = f.jungle.get(pid, 0) - prev.jungle.get(pid, 0)
+            if delta > 0:
+                total_cs += delta
+                pos = f.positions.get(pid) or prev.positions.get(pid)
+                if pos and on_enemy_half(*pos):
+                    enemy_cs += delta
+        prev = f
+    return enemy_cs / total_cs if total_cs > 0 else 0.0
+
+
+def multikill_bonus(player):
+    return MULTIKILL_BONUS.get(player.largest_multi_kill, 0.0)
+
+
+def tank_bonus(player, survival_share, baseline_survival):
+    """Bonus-only credit for damage-taken share above role baseline, scaled down (never up) by how far the
+    player's survival share sits below their role's baseline -- see TANK_WEIGHT."""
+    baseline_dt = DAMAGE_TAKEN_BASELINE.get(player.position, DEFAULT_DAMAGE_TAKEN_BASELINE)
+    excess = max(0.0, player.damage_taken_pct - baseline_dt)
+    if excess <= 0:
+        return 0.0
+    gate = min(1.0, survival_share / baseline_survival) if baseline_survival > 0 else 1.0
+    return TANK_WEIGHT * (excess / (1 - baseline_dt)) * gate
+
+
+def solo_kill_bonus(player):
+    floor, span = SOLO_KILL_BASELINE.get(player.position, DEFAULT_SOLO_KILL_BASELINE)
+    if span <= 0:
+        return 0.0
+    excess = max(0.0, player.solo_kills - floor)
+    return SOLO_KILL_WEIGHT * min(1.0, excess / span)
+
+
+def early_invade_kill(pm: ParsedMatch, pid):
+    """Whether this jungler got a kill or assist before EARLY_INVADE_WINDOW_S on the enemy half of the map."""
+    player = pm.players[pid]
+    if player.position != "JUNGLE":
+        return False
+    on_enemy_half = (lambda x, y: x + y > MAP_HALF) if player.team_id == 100 else (lambda x, y: x + y < MAP_HALF)
+    for k in pm.kills:
+        if k.t > EARLY_INVADE_WINDOW_S or not k.position:
+            continue
+        if pid == k.killer or pid in k.assists:
+            if on_enemy_half(*k.position):
+                return True
+    return False
+
+
 def rolling_impact(pm: ParsedMatch, window_s):
     series = {pid: [] for pid in pm.players}
     for i, frame in enumerate(pm.frames):
@@ -208,6 +366,9 @@ def player_impacts(pm: ParsedMatch):
         role_baseline = ROLE_BASELINE.get(p.position, DEFAULT_BASELINE)
         baseline = weighted_impact(role_baseline)
         value = weighted_impact(shares, role_baseline)
+        early_invade = early_invade_kill(pm, pid)
+        value += (invasion_bonus(p) + (EARLY_INVADE_BONUS if early_invade else 0.0) + multikill_bonus(p)
+                  + tank_bonus(p, shares[5], role_baseline[5]) + solo_kill_bonus(p))
         rows.append({
             "participant_id": pid,
             "puuid": p.puuid,
@@ -221,6 +382,12 @@ def player_impacts(pm: ParsedMatch):
             "shares": {"kp": round(shares[0], 3), "damage": round(shares[1], 3), "gold": round(shares[2], 3),
                        "tower": round(shares[3], 3), "neutral": round(shares[4], 3),
                        "survival": round(shares[5], 3)},
+            "invasion_share": round(invasion_share(p), 3),
+            "early_invasion_share": round(early_invasion_share(pm, pid), 3),
+            "early_invade": early_invade,
+            "largest_multi_kill": p.largest_multi_kill,
+            "damage_taken_pct": round(p.damage_taken_pct, 3),
+            "solo_kills": p.solo_kills,
             "impact": round(value, 3),
             "impact_ratio": round(value / baseline, 3),
             "carried": False,

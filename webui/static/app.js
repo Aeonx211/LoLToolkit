@@ -43,6 +43,7 @@ const TEAM = { 100: "Blue", 200: "Red" };
 const mmss = (sec) => `${Math.floor(sec / 60)}:${String(Math.floor(sec % 60)).padStart(2, "0")}`;
 const kfmt = (v) => (Math.abs(v) >= 1000 ? `${(Math.abs(v) / 1000).toFixed(1)}k` : `${Math.round(Math.abs(v))}`);
 const pct = (x) => `${Math.round(x * 100)}%`;
+const valueClass = (v) => (v > 1.2 ? "win-text" : v < 0.8 ? "loss-text" : "muted");
 const signed = (v) => (v > 0 ? "+" : "") + Math.round(v);
 const champName = (id) => (META && META.champions[id]) || id;
 const queueName = (id) => (META && META.queues[id]) || `Queue ${id}`;
@@ -391,34 +392,10 @@ function matchDetail(r, puuid) {
     t: m.start, color: m.beneficiary === 100 ? cssVar("--blue") : cssVar("--red"), label: describeMoment(m),
   }));
   const chartHost = h("div");
-  const buildChart = (reviewMarkers = []) => areaChart(r.timeline.t, r.timeline.gold_diff, {
+  fill(chartHost, areaChart(r.timeline.t, r.timeline.gold_diff, {
     width: 940, height: 240, pad: 10, axes: true, upColor: cssVar("--blue"), downColor: cssVar("--red"),
-    markers: [...keyMarkers, ...reviewMarkers],
-  });
-  fill(chartHost, buildChart());
-  let currentFindings = [];
-  let currentPid = null;
-  const posBounds = computeBounds(r.timeline.positions);
-  const mapHost = h("div");
-  const clearMap = () => fill(mapHost, h("p", { class: "muted" }, "Click a timestamp in Player review below to see a map snapshot."));
-  clearMap();
-  const setFindings = (findings, pid) => {
-    currentFindings = findings;
-    currentPid = pid;
-    fill(chartHost, buildChart(findings.map((f) => ({ t: f.t, color: cssVar("--accent"), label: f.note }))));
-    clearMap();
-  };
-  const jumpTo = (t) => {
-    const finding = currentFindings.find((f) => f.t === t);
-    fill(chartHost, buildChart(currentFindings.map((f) => ({
-      t: f.t, color: cssVar("--accent"), label: f.note, radius: f.t === t ? 8 : 5,
-    }))));
-    fill(mapHost, minimap(r, posBounds, t, currentPid, finding && finding.position),
-      h("p", { class: "muted", style: "font-size:12px;margin:4px 0 0" },
-        "Approximate: ally/enemy dots are the nearest recorded minute mark (can be up to ~30s off); "
-        + "the × is your exact death spot."));
-    chartHost.scrollIntoView({ behavior: "smooth", block: "center" });
-  };
+    markers: keyMarkers,
+  }));
   const peaks = r.leads.gold_peaks;
   const teamTable = (team) => {
     const rows = r.players.filter((p) => p.team_id === team).map((p) => h("tr", { class: p.puuid === puuid ? "me" : null },
@@ -431,8 +408,8 @@ function matchDetail(r, puuid) {
       h("td", { class: "num" }, pct(p.shares.gold)),
       h("td", { class: "num", title: "Share of the team's tower damage" }, pct(p.shares.tower)),
       h("td", { class: "num", title: "Share of the team's dragon/herald/baron/grubs/atakhan damage" }, pct(p.shares.neutral)),
-      h("td", { class: "num" }, `${p.impact_ratio.toFixed(2)}x`),
-      h("td", { class: "num muted", title: p.predicted_impact ? `Average impact over their ${p.predicted_impact.games} earlier stored game(s)` : "No earlier stored games for this player" },
+      h("td", { class: `num ${valueClass(p.impact_ratio)}` }, `${p.impact_ratio.toFixed(2)}x`),
+      h("td", { class: `num ${p.predicted_impact ? valueClass(p.predicted_impact.value) : "muted"}`, title: p.predicted_impact ? `Average impact over their ${p.predicted_impact.games} earlier stored game(s)` : "No earlier stored games for this player" },
         p.predicted_impact ? `${p.predicted_impact.value.toFixed(2)}x` : "n/a"),
       (() => {
         const d = p.predicted_impact ? p.impact_ratio - p.predicted_impact.value : null;
@@ -476,121 +453,7 @@ function matchDetail(r, puuid) {
     h("div", { class: "card" }, h("h4", { style: "margin-top:0" }, "Key moments"),
       h("ul", { style: "margin:0;padding-left:18px" }, r.key_moments.map((m) => h("li", null, describeMoment(m))))),
     historyLoader(r, puuid),
-    h("div", { class: "card" }, teamTable(100), h("div", { style: "height:10px" }), teamTable(200)),
-    h("div", { class: "row", style: "align-items:flex-start;gap:12px" },
-      h("div", { style: "flex:1" },
-        reviewCard(r, (r.players.find((p) => p.puuid === puuid) || r.players[0]).participant_id, setFindings, jumpTo)),
-      h("div", { class: "card", style: "flex:0 0 240px" }, h("h4", { style: "margin-top:0" }, "Map snapshot"), mapHost)));
-}
-
-// ---------- Map snapshot: rough player spread around a flagged moment ---------------------------------------
-function computeBounds(positions) {
-  let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-  for (const arr of Object.values(positions)) {
-    for (const p of arr) {
-      if (!p) continue;
-      minX = Math.min(minX, p[0]); maxX = Math.max(maxX, p[0]);
-      minY = Math.min(minY, p[1]); maxY = Math.max(maxY, p[1]);
-    }
-  }
-  return isFinite(minX) ? { minX, maxX, minY, maxY } : null;
-}
-
-function nearestIndex(tArr, t) {
-  let best = 0, bestDiff = Infinity;
-  for (let i = 0; i < tArr.length; i++) {
-    const d = Math.abs(tArr[i] - t);
-    if (d < bestDiff) { bestDiff = d; best = i; }
-  }
-  return best;
-}
-
-// Coarse — one snapshot per in-game minute, not a continuous replay. `exactPos` (the flagged death's own
-// coordinates, when Riot's event carried one) is drawn as an ×; everyone else is the nearest minute mark.
-function minimap(r, bounds, t, targetPid, exactPos) {
-  if (!bounds) return h("p", { class: "muted" }, "No position data for this match.");
-  const size = 220;
-  const idx = nearestIndex(r.timeline.t, t);
-  const span = Math.max(bounds.maxX - bounds.minX, bounds.maxY - bounds.minY, 1);
-  const X = (x) => ((x - bounds.minX) / span) * size;
-  const Y = (y) => size - ((y - bounds.minY) / span) * size;
-  // A label that follows the hovered/focused dot — quicker and better-styled than relying on the native
-  // SVG <title> tooltip (which most browsers delay by ~1s and can't be styled).
-  const labelBg = s("rect", { fill: cssVar("--surface"), stroke: cssVar("--border"), rx: 3, opacity: 0, "pointer-events": "none" });
-  const labelText = s("text", { fill: cssVar("--text"), "font-size": 10, opacity: 0, "pointer-events": "none" });
-  const showLabel = (cx, cy, text) => {
-    labelText.textContent = text;
-    const w = text.length * 5.5 + 8;
-    const x = Math.min(Math.max(cx - w / 2, 0), size - w), y = Math.max(cy - 22, 0);
-    labelBg.setAttribute("x", x); labelBg.setAttribute("y", y);
-    labelBg.setAttribute("width", w); labelBg.setAttribute("height", 14);
-    labelBg.setAttribute("opacity", 1);
-    labelText.setAttribute("x", x + 4); labelText.setAttribute("y", y + 10);
-    labelText.setAttribute("opacity", 1);
-  };
-  const hideLabel = () => { labelBg.setAttribute("opacity", 0); labelText.setAttribute("opacity", 0); };
-
-  const dots = r.players.map((p) => {
-    const pos = (r.timeline.positions[p.participant_id] || [])[idx];
-    if (!pos) return null;
-    const isTarget = p.participant_id === targetPid;
-    const cx = X(pos[0]), cy = Y(pos[1]);
-    const label = `${champName(p.champion)} (${p.riot_id})`;
-    return s("circle", {
-      cx, cy, r: isTarget ? 6 : 4,
-      fill: p.team_id === 100 ? cssVar("--blue") : cssVar("--red"),
-      stroke: isTarget ? cssVar("--text") : "none", "stroke-width": isTarget ? 1.5 : 0,
-      tabindex: 0,
-      onmouseenter: () => showLabel(cx, cy, label),
-      onmouseleave: hideLabel,
-      onfocus: () => showLabel(cx, cy, label),
-      onblur: hideLabel,
-    }, s("title", null, label));
-  });
-  const mark = exactPos && s("g", { stroke: cssVar("--accent"), "stroke-width": 2 },
-    s("line", { x1: X(exactPos[0]) - 6, y1: Y(exactPos[1]) - 6, x2: X(exactPos[0]) + 6, y2: Y(exactPos[1]) + 6 }),
-    s("line", { x1: X(exactPos[0]) - 6, y1: Y(exactPos[1]) + 6, x2: X(exactPos[0]) + 6, y2: Y(exactPos[1]) - 6 }));
-  return s("svg", { viewBox: `0 0 ${size} ${size}`, width: size, height: size, class: "minimap" },
-    s("rect", { x: 0, y: 0, width: size, height: size, fill: "none", stroke: "currentColor", "stroke-opacity": 0.15 }),
-    s("line", { x1: 0, y1: size, x2: size, y2: 0, stroke: "currentColor", "stroke-opacity": 0.1, "stroke-dasharray": "4 4" }),
-    ...dots.filter(Boolean), mark || null, labelBg, labelText);
-}
-
-// ---------- Player review: bad deaths / invades that kept a player under their potential --------------------
-// Findings jump to the gold chart above (via onJump) so the swing can be seen and checked, since there's no
-// in-browser replay: to actually watch the moment, open the match's Replay in the League client and scrub to
-// the timestamp shown here.
-function reviewFindings(review, onJump) {
-  if (!review.findings.length) return h("p", { class: "muted" }, "No deaths recorded.");
-  return h("ul", { style: "margin:0;padding-left:18px" },
-    review.findings.map((f) => h("li", { class: f.swing <= -300 || f.tags.includes("early_solo") ? "loss-text" : null },
-      h("a", { href: "#", class: "chart-jump", onclick: (e) => { e.preventDefault(); onJump(f.t); } }, mmss(f.t)),
-      " " + f.note.replace(/^[^ ]+ ?/, ""))));
-}
-
-function reviewCard(r, defaultPid, onFindingsChange, onJump) {
-  const body = h("div", { style: "margin-top:8px" });
-  const render = (value) => {
-    const pid = value === "none" ? null : Number(value);
-    const target = pid == null ? null : r.players.find((p) => p.participant_id === pid);
-    onFindingsChange(target && target.review ? target.review.findings : [], pid);
-    if (pid == null) return fill(body, h("p", { class: "muted" }, "No target selected."));
-    if (!target || !target.review) return fill(body, h("p", { class: "muted" }, "No review available."));
-    fill(body, h("p", { class: "muted" }, target.review.summary), reviewFindings(target.review, onJump));
-  };
-  const select = h("select", { onchange: (e) => render(e.target.value) },
-    h("option", { value: "none" }, "— None —"),
-    ...r.players.map((p) => h("option", { value: p.participant_id }, `${champName(p.champion)} — ${p.riot_id}`)));
-  select.value = defaultPid;
-  render(defaultPid);
-  return h("div", { class: "card" },
-    h("h4", { style: "margin-top:0" }, "Player review",
-      h("span", { class: "muted", style: "font-weight:normal" }, " (what could've gone better)")),
-    h("p", { class: "muted", style: "margin-top:0" },
-      "Click a timestamp to mark it on the chart above. To actually watch it, open this match's Replay in the "
-      + "League client and scrub to that time."),
-    h("div", { class: "row", style: "align-items:center;gap:8px;margin-bottom:4px" }, h("span", { class: "muted" }, "Target:"), select),
-    body);
+    h("div", { class: "card" }, teamTable(100), h("div", { style: "height:10px" }), teamTable(200)));
 }
 
 // Predictions only use stored games; this fetches missing earlier games on request (slow: many API calls).
