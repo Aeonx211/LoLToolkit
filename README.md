@@ -27,6 +27,17 @@ Three League of Legends tools on one shared Riot API layer. See [Spec.md](Spec.m
 
 Everything the server fetches is cached in `data/toolkit.db` (server-side, permanent) and, for whatever you last looked at per tab, in your browser's local storage (instant reload, no re-fetch). See [Web UI](#web-ui) below for what each tab does, and [CLI usage](#cli-usage) if you'd rather run the tools from a terminal.
 
+## Replay probe (experimental)
+
+Checks whether your local League client can download replays of another player's games (including other regions). Run it on the PC with the client open and logged in:
+
+```
+python -m replay_probe "Reus#FIRST" --platform euw1 -n 5
+python -m replay_probe "Reus#FIRST" --list-only     # just list match IDs, no client needed
+```
+
+Riot has no public replay API, so this drives the client's local LCU API. Replays only play on the patch they were recorded on.
+
 ## Setup
 
 Requires Python 3.11+. There are no third-party dependencies.
