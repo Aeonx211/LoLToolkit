@@ -15,3 +15,7 @@ Default five-role vocabulary (`needs-triage`, `needs-info`, `ready-for-agent`, `
 ### Domain docs
 
 Single-context: one `GLOSSARY.md` and `docs/adr/` at the repo root. See `docs/agents/domain.md`.
+
+## Notifications
+
+The user often works from a phone and is not watching the session. Send a one-line `PushNotification` (lead with what they need to act on) when a turn ends waiting on their input, or when a long task completes. Skip it for routine progress or when they are actively replying.

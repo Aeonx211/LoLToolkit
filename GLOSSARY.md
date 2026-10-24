@@ -28,9 +28,9 @@ _Avoid_: Counter
 One breakdown of win rate by a single dimension, e.g. by enemy mid champion, by boots, or by keystone. Every cut reports games, W–L, and win %, and is greyed out below a minimum sample.
 _Avoid_: Stat, table
 
-**Combination**:
-A cut over a *set* of items or runes taken together (unordered), alongside the single-element cuts. Configurable in the UI, because sample sizes shrink fast.
-_Avoid_: Build (ambiguous with a single game's item list)
+**Filter stack**:
+The ordered list of selections the user has made on the Champion Stats tab (e.g. first item = Riftmaker, then boots = Berserker's). Each selection narrows the focus slice to matching games and every cut recalculates. Replaces precomputed set combinations.
+_Avoid_: Combination, set, build
 
 **Rune value**:
 The per-game numbers (`var1`–`var3`) Riot attaches to a selected rune, such as damage dealt or stacks. Meaning is rune-specific and kept in a hand-maintained label table. A diagnostic, not a recommendation.
