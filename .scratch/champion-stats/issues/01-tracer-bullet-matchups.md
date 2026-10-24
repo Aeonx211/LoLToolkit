@@ -17,4 +17,4 @@
 ## Comments
 
 - Done. Each single-valued cut is computed over the slice filtered by every *other* stack entry, so it keeps listing its alternatives and clicking one swaps the selection. Every shown row therefore has at least one game, which covers "rows that would leave zero games are disabled": such rows are never offered. Multi-valued cuts (e.g. any item, in 03) are computed over the full slice and stack as AND.
-- Browser check: Playwright against seeded rows (40 games), with Data Dragon stubbed since the container can't reach it. The script and launcher live in the session scratchpad, not the repo.
+- Browser check: Playwright against seeded rows (40 games), with Data Dragon stubbed since the container can't reach it. Script and launcher: `.scratch/champion-stats/tools/`.
