@@ -937,6 +937,7 @@ async function init() {
   } catch (e) {
     setStatus(status, `Couldn't load game data: ${e.message}`, { error: true });
   }
+  csInit();
   showTab(saved.get("tab", "games"));
 }
 

@@ -13,6 +13,7 @@
     <button data-tab="games" class="active">Game Analysis</button>
     <button data-tab="advisor">Live Advisor</button>
     <button data-tab="sim">Build Sim</button>
+    <button data-tab="champstats">Champion Stats</button>
     <button data-tab="tuning">Tuning</button>
   </nav>
 </header>
@@ -67,6 +68,16 @@
     <div id="sim-out"></div>
   </section>
 
+  <section id="tab-champstats" class="tab">
+    <form id="cs-form" class="toolbar">
+      <label>Riot ID <input name="riot_id" placeholder="Name#TAG" required></label>
+      <label>Champion <input name="champion" placeholder="Lillia" required></label>
+      <button type="submit" class="primary">Load</button>
+    </form>
+    <div id="cs-status" class="status"></div>
+    <div id="cs-out"></div>
+  </section>
+
   <section id="tab-tuning" class="tab">
     <p class="hint">Changes are saved to <code>tuning.json</code> and used by both the web UI and the CLIs. Changing Tool 1 values re-analyzes stored games next time you open them, with no extra API calls.</p>
     <div id="tuning-out"></div>
@@ -81,5 +92,6 @@
 <dialog id="match-dialog"><div id="match-detail"></div></dialog>
 <datalist id="items-list"></datalist>
 <script src="/static/app.js"></script>
+<script src="/static/champion_stats.js"></script>
 </body>
 </html>

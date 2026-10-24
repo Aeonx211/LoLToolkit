@@ -15,6 +15,7 @@ from build_sim.effects import KEYSTONES, MINOR_RUNES, SHARDS
 from build_sim.kits import KITS
 from causal_analysis import analyze_match_id, analyze_puuid
 from causal_analysis.__main__ import QUEUES
+from champion_stats import TRACKED_PLAYERS, load_rows
 from data_layer import DataDragon, DataLayer, RiotApiError, load_settings
 from live_advisor import build_report, resolve_roster
 
@@ -46,6 +47,7 @@ class App:
             "sim_run": self.run_sim,
             "sim_compare": self.run_compare,
             "sim_breakpoints": self.run_breakpoints,
+            "champion_stats": self.run_champion_stats,
         }.get(tool)
         if runner is None:
             raise ValueError(f"Unknown tool {tool!r}")
@@ -146,6 +148,15 @@ class App:
         base, rows = breakpoints(self.game, params["scenario"], candidates)
         return {"base": base, "rows": rows}
 
+    def run_champion_stats(self, params, job):
+        riot_id = str(params.get("riot_id", "")).strip()
+        champion = str(params.get("champion", "")).strip()
+        if not champion:
+            raise ValueError("champion is required")
+        target = self._int(params, "target", 100, 1, 300)
+        return load_rows(self.layer, riot_id, champion, str(params.get("queue") or "solo"), target,
+                         progress=job["progress"].append)
+
     # --- metadata ------------------------------------------------------------------------------------------
 
     def champion_names(self):
@@ -162,6 +173,7 @@ class App:
             "platform": self.platform,
             "queues": {str(k): v for k, v in QUEUES.items()},
             "champions": self.champion_names(),
+            "tracked_players": [{"riot_id": r, "champion": c} for r, c in TRACKED_PLAYERS],
             "sim": {
                 "champions": {name: list(kit.abilities) for name, kit in KITS.items()},
                 "keystones": sorted(k for k in KEYSTONES if k),
