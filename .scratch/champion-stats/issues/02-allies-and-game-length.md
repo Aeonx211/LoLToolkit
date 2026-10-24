@@ -4,8 +4,12 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Ally champion by role cut, with the tracked player's own role excluded
-- [ ] Game length bucket is part of the game row (tested) and shown as a cut
-- [ ] Both cuts filter and recalculate like Matchups
+- [x] Ally champion by role cut, with the tracked player's own role excluded
+- [x] Game length bucket is part of the game row (tested) and shown as a cut
+- [x] Both cuts filter and recalculate like Matchups
+
+## Comments
+
+- Done. Game length table keeps bucket order by default (click a header to sort differently).

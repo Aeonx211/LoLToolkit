@@ -4,8 +4,12 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Camp pace at each mark comes from per-minute frames; jungle CS before 10 and enemy-jungle kills from end-of-game stats (tested)
-- [ ] First dragon and first herald team from the timeline's elite monster kills (tested)
-- [ ] Averages shown separately for wins and losses
+- [x] Camp pace at each mark comes from per-minute frames; jungle CS before 10 and enemy-jungle kills from end-of-game stats (tested)
+- [x] First dragon and first herald team from the timeline's elite monster kills (tested)
+- [x] Averages shown separately for wins and losses
+
+## Comments
+
+- Done. Pace compares against the enemy in your role, which for a jungler is the enemy jungler. Enemy-jungle camps come from `totalEnemyJungleMinionsKilled`, falling back to the challenges field. Neither has been checked against a real payload yet (ticket 08).

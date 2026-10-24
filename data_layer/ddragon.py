@@ -61,3 +61,7 @@ class DataDragon:
 
     def items(self, version=None):
         return self._cached(version, "item.json")["data"]
+
+    def runes(self, version=None):
+        """Rune trees as Riot ships them: [{id, name, slots: [{runes: [{id, name}]}]}]."""
+        return self._cached(version, "runesReforged.json")

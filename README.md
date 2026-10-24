@@ -8,6 +8,7 @@ Three League of Legends tools on one shared Riot API layer. See [Spec.md](Spec.m
 | `causal_analysis/` (Tool 1) | Tags each game (Stomp, Comeback, Thrown, Snowballed-on, Carried, Even-then-decided) and explains why it was won or lost |
 | `live_advisor/` (Tool 2) | Focus target from Tool 1 carry tags, counter-itemization, and opponent build prediction for your current game |
 | `build_sim/` (Tool 3) | Combat simulator for combos and trades, with A/B build comparison and item/keystone breakpoints |
+| `champion_stats/` (Tool 4) | Your own win rates on one champion by matchup, allies, items, runes, camp pace and game length, with click-to-filter drill-down |
 
 ## Quickstart
 
@@ -59,6 +60,7 @@ The UI has one tab per tool plus a **Tuning** tab:
 - **Game Analysis:** recent games with perspective tags such as "We threw" or "You carried". Click a game for its gold chart, key moments and players.
 - **Live Advisor:** run it during a game, or use "Replay advisor" on any past game.
 - **Build Sim:** build editor, simulate, find breakpoints, and A/B compare against a second build.
+- **Champion Stats:** enter a Riot ID and champion, then Load. It backfills up to 100 ranked games on that champion (a few minutes the first time), then shows your win rates by matchup, allies, items, runes, camp pace and game length. Click any row to filter every table to those games; keep clicking to stack filters.
 - **Tuning:** edit every threshold and hand-entered number. Saved values go to `tuning.json`, which the CLIs also read. Delete that file or use "Reset all" to go back to the defaults.
 
 The server only listens on localhost and rejects requests addressed to any other hostname.

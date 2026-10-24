@@ -4,8 +4,13 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Game row includes keystone, trees, each selected rune with var1–var3, and stat shards (tested)
-- [ ] Rune value label table with best guesses for common keystones and minor runes; unlabeled runes show raw var1–var3
-- [ ] Rune values framed as diagnostic, not a recommendation
+- [x] Game row includes keystone, trees, each selected rune with var1–var3, and stat shards (tested)
+- [x] Rune value label table with best guesses for common keystones and minor runes; unlabeled runes show raw var1–var3
+- [x] Rune values framed as diagnostic, not a recommendation
+
+## Comments
+
+- Done. `python -m champion_stats.dump_runes "Name#TAG" Champion` added for ticket 08. Labels are in `champion_stats/rune_labels.py`, all unverified.
+- The full rune page table hides pages under the min-games setting (default 5), rather than a fixed 5.

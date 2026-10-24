@@ -155,7 +155,7 @@ class App:
             raise ValueError("champion is required")
         target = self._int(params, "target", 100, 1, 300)
         return load_rows(self.layer, riot_id, champion, str(params.get("queue") or "solo"), target,
-                         progress=job["progress"].append)
+                         progress=job["progress"].append, dd=self.dd)
 
     # --- metadata ------------------------------------------------------------------------------------------
 

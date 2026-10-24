@@ -174,3 +174,12 @@ details summary { cursor: pointer; color: var(--muted); }
 .cs-table tr.thin td { opacity: .45; }
 .cs-table tr.selected td { background: color-mix(in srgb, var(--accent) 18%, transparent); opacity: 1; }
 .cs-cut { overflow-x: auto; }
+.cs-paths { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 0 12px; }
+.cs-path { cursor: pointer; }
+.cs-path:hover { border-color: var(--accent); }
+.cs-path b { display: block; margin: 2px 0 4px; }
+.cs-wide p { margin: 0 0 8px; font-size: 13px; }
+.cs-table.static tbody tr { cursor: default; }
+.cs-table.static tbody tr:hover { background: none; }
+.cs-cut h3 .chip { font-weight: 400; margin-left: 4px; }
+.cs-span { grid-column: 1 / -1; }

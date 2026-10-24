@@ -72,7 +72,11 @@
     <form id="cs-form" class="toolbar">
       <label>Riot ID <input name="riot_id" placeholder="Name#TAG" required></label>
       <label>Champion <input name="champion" placeholder="Lillia" required></label>
+      <label>Queue <select name="queue"><option value="solo">Ranked Solo</option><option value="flex">Ranked Flex</option><option value="both">Both</option></select></label>
       <button type="submit" class="primary">Load</button>
+      <span class="spacer"></span>
+      <label>Patches <select name="patch_from"></select> to <select name="patch_to"></select></label>
+      <label>Min games <input name="min_games" type="number" min="1" max="50" value="5" class="narrow"></label>
     </form>
     <div id="cs-status" class="status"></div>
     <div id="cs-out"></div>
