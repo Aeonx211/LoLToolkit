@@ -103,6 +103,21 @@ const count = (f) => rows.filter(f).length;
   await page.waitForSelector("#cs-out .cs-table");
   assert((await banner()).startsWith(`${count((r) => r.patch === "15.19" && r.boots === 3111)} of 25`), "stack + patch restored after reload");
   assert(await page.inputValue("#cs-form select[name=queue]") === "solo", "queue toggle defaults to solo");
+  // All patches: one click clears the patch range (the filter stack stays).
+  assert(!(await page.isDisabled("#cs-form button[name=all_patches]")), "all patches enabled while a range is set");
+  await page.click("#cs-form button[name=all_patches]");
+  assert((await banner()).startsWith(`${count((r) => r.boots === 3111)} of 40`), "all patches widens back to every game");
+  assert(await page.inputValue("select[name=patch_from]") === "" && await page.inputValue("select[name=patch_to]") === "",
+    "all patches resets both ends");
+  assert(await page.isDisabled("#cs-form button[name=all_patches]"), "all patches disabled when already all");
+  // Layout: no table is wider than its card, at desktop and phone widths.
+  for (const width of [1280, 390]) {
+    await page.setViewportSize({ width, height: 1000 });
+    const over = await page.$$eval("#cs-out .cs-cut", (cs) => cs.filter((c) => c.scrollWidth > c.clientWidth + 1)
+      .map((c) => c.querySelector("h3")?.textContent));
+    assert(!over.length, `tables fit their cards at ${width}px ${over}`);
+  }
+  await page.setViewportSize({ width: 1280, height: 1400 });
   await page.screenshot({ path: process.argv[2] + "/champstats.png", fullPage: true });
   assert(!errors.length, "no page errors " + errors);
   await browser.close();

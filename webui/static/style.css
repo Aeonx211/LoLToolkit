@@ -164,11 +164,15 @@ details summary { cursor: pointer; color: var(--muted); }
 .cs-summary { display: flex; flex-wrap: wrap; gap: 8px 24px; }
 .cs-summary .stat { border: 0; padding: 0; min-width: 0; background: none; }
 .cs-section h2 { font-size: 17px; margin: 18px 0 8px; }
-.cs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(360px, 100%), 1fr)); gap: 0 12px; }
+/* Stats tables need ~420px; the stats tab gets a wider page so large screens still fit three columns. */
+main:has(> #tab-champstats.active) { max-width: 1440px; }
+.cs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr)); gap: 0 12px; }
 .cs-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-.cs-table th { text-align: left; color: var(--muted); font-weight: 600; cursor: pointer; user-select: none; padding: 4px 6px; border-bottom: 1px solid var(--border); white-space: nowrap; }
+.cs-table th { text-align: left; color: var(--muted); font-weight: 600; cursor: pointer; user-select: none; padding: 4px 5px; border-bottom: 1px solid var(--border); white-space: nowrap; }
 .cs-table th.sorted { color: var(--text); }
-.cs-table td { padding: 4px 6px; border-bottom: 1px solid var(--border); }
+.cs-table td { padding: 4px 5px; border-bottom: 1px solid var(--border); }
+/* The label column (champion, item path, rune page) wraps so tables fit their card; numbers stay on one line. */
+.cs-table td:first-child, .cs-table.static td { white-space: normal; }
 .cs-table tbody tr { cursor: pointer; }
 .cs-table tbody tr:hover { background: var(--surface-2); }
 .cs-table tr.thin td { opacity: .45; }
@@ -183,9 +187,9 @@ details summary { cursor: pointer; color: var(--muted); }
 .cs-table.static tbody tr:hover { background: none; }
 .cs-cut h3 .chip { font-weight: 400; margin-left: 4px; }
 .cs-span { grid-column: 1 / -1; }
-@media (max-width: 600px) {
-  /* Phone: drop the Score column (it still drives the default sort) so the rest fits without scrolling. */
-  .cs-table:not(.static) th:nth-child(7), .cs-table:not(.static) td:nth-child(7) { display: none; }
-  .cs-table th, .cs-table td { padding: 4px 4px; }
-  .cs-cut { padding: 12px 10px; }
+@media (max-width: 640px) {
+  .cs-table { font-size: 12px; }
+  .cs-table th, .cs-table td { padding: 3px 3px; }
+  .cs-table.static th { white-space: normal; }
+  .cs-cut.card { padding: 12px 10px; }
 }

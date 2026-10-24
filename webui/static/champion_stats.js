@@ -322,6 +322,12 @@ function csFillPatches() {
   CS.patchFrom = form.patch_from.value;
   CS.patchTo = form.patch_to.value;
   form.min_games.value = CS.minGames;
+  csSyncAllPatches();
+}
+
+// "All patches" is a shortcut for Oldest → Newest, so it's only clickable while a narrower range is set.
+function csSyncAllPatches() {
+  $("#cs-form").all_patches.disabled = !CS.patchFrom && !CS.patchTo;
 }
 
 // ---------- loading -----------------------------------------------------------------------------------------
@@ -368,11 +374,18 @@ function csWireSlice(form) {
     CS.patchFrom = form.patch_from.value;
     CS.patchTo = form.patch_to.value;
     CS.minGames = Math.max(1, Number(form.min_games.value) || 5);
+    csSyncAllPatches();
     csSaveView();
     if (CS.data) csRender();
   };
   form.patch_from.addEventListener("change", onSlice);
   form.patch_to.addEventListener("change", onSlice);
+  form.all_patches.addEventListener("click", () => {
+    form.patch_from.value = "";
+    form.patch_to.value = "";
+    onSlice();
+  });
+  csSyncAllPatches();
   // "input", not "change": a change event fires on blur, and re-rendering then would swallow the click that blurred it.
   form.min_games.addEventListener("input", onSlice);
 }
