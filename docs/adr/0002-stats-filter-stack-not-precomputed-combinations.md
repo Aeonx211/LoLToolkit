@@ -1,5 +1,5 @@
 ---
-status: proposed
+status: accepted
 ---
 
 # Champion stats are explored by stacking filters, not by precomputed combination tables
