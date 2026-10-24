@@ -227,19 +227,23 @@ function csRuneValues(rows) {
   }
   if (!byRune.size) return null;
   const labels = CS.data.names?.rune_labels || {};
+  const verified = new Set((CS.data.names?.rune_labels_verified || []).map(String));
   const body = [];
   for (const [id, games] of byRune) {
     const known = labels[id];
     for (let i = 0; i < 3; i++) {
-      if (known ? !known[i] : games.every((g) => !g.vals[i])) continue;
+      // A slot without a label still shows, as its raw var, when the games have values for it.
+      const label = known?.[i];
+      if (!label && games.every((g) => !g.vals[i])) continue;
       const avg = (list) => csAvg(list, (g) => g.vals[i]);
       const wins = games.filter((g) => g.win), losses = games.filter((g) => !g.win);
-      body.push(h("tr", null, h("td", null, csRune(id)), h("td", null, known ? known[i] : `var${i + 1}`),
+      body.push(h("tr", null, h("td", null, csRune(id)),
+        h("td", null, label || `var${i + 1}`, label && !verified.has(id) ? [" ", h("span", { class: "chip" }, "unverified")] : null),
         h("td", null, games.length), h("td", null, csFmt(avg(wins))), h("td", null, csFmt(avg(losses)))));
     }
   }
   return h("div", { class: "card cs-cut cs-wide" },
-    h("h3", null, "Rune values ", h("span", { class: "chip" }, "labels unverified")),
+    h("h3", null, "Rune values"),
     h("p", { class: "muted" }, "Average per game. Higher in wins usually means the game went well, not that the rune is better."),
     h("table", { class: "cs-table static" },
       h("thead", null, h("tr", null, ["Rune", "Value", "Games", "Avg in wins", "Avg in losses"].map((t) => h("th", null, t)))),
@@ -266,7 +270,7 @@ function csPaceTable(rows) {
           line(`${m}:00 you`, (r) => r.pace?.[m]?.[0]), line(`${m}:00 them`, (r) => r.pace?.[m]?.[1]),
           line(`${m}:00 gap`, (r) => csGap(r, m), 1, true)]),
         line("Jungle CS before 10:00", (r) => r.jungle_cs_10),
-        line("Enemy jungle camps taken", (r) => r.enemy_jungle_kills))));
+        line("Enemy jungle CS taken", (r) => r.enemy_jungle_kills))));
 }
 
 const CS_EXTRAS = { builds: [csPaths], runes: [], pace: [csPaceTable] };

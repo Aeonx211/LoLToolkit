@@ -22,14 +22,15 @@ const rows = Array.from({ length: 40 }, (_, i) => {
     items, boots: pick([3020, 3111]), pet: pick([1103, 1102]),
     keystone, primary_tree: 8100, secondary_tree: 8200, runes, shards: [5008, 5008, 5011],
     page: [...runes, 5008, 5008, 5011].join("-"),
-    rune_values: { [keystone]: [800 + Math.floor(rnd() * 400), 10, 0], 8126: [300, 0, 0] },
+    rune_values: { [keystone]: [800 + Math.floor(rnd() * 400), 10, 0], 8126: [300, 0, 0] },  // Conqueror's var2 has no label
     pace: { 3: [18, 18], 5: [mine5, theirs5], 8: [60, 55], 10: [80, 75] },
     jungle_cs_10: 60, enemy_jungle_kills: 4, first_dragon: pick(["us", "them", null]), first_herald: pick(["us", "them"]),
   };
 });
 const names = { items: ITEMS, runes: { 8128: "Dark Harvest", 8010: "Conqueror", 8126: "Cheap Shot", 8138: "Eyeball Collection",
   8106: "Ultimate Hunter", 8234: "Celerity", 8237: "Scorch" }, trees: { 8100: "Domination", 8200: "Sorcery" },
-  shards: { 5008: "Adaptive Force", 5011: "Health" }, rune_labels: { 8128: ["Total damage", "Souls collected", null] } };
+  shards: { 5008: "Adaptive Force", 5011: "Health" }, rune_labels: { 8128: ["Total damage", "Souls collected", null], 8010: ["Total healing", null, null] },
+  rune_labels_verified: [8010] };
 const data = { puuid: "p", riot_id: "Aeoen#NA1", champion: "Lillia", queue: "solo", rows, names, savedAt: Date.now() };
 const count = (f) => rows.filter(f).length;
 (async () => {
@@ -75,9 +76,12 @@ const count = (f) => rows.filter(f).length;
   // Runes.
   await page.click(`${table("Keystone")} tbody tr:has-text('Conqueror')`);
   assert((await banner()).startsWith(`${count((r) => r.keystone === 8010)} of 40`), "keystone filter");
-  assert(await page.isVisible(".cs-cut h3:has-text('Rune values') .chip:text('labels unverified')"), "rune values marked unverified");
-  assert(await page.isVisible(".cs-cut:has(h3:has-text('Rune values')) td:text('var1')"), "unlabeled rune shows raw var");
   await page.click(".cs-chips button:text('Clear all')");
+  const runeValues = ".cs-cut:has(h3:has-text('Rune values'))";
+  assert(await page.isVisible(`${runeValues} tr:has-text('Dark Harvest') .chip:text('unverified')`), "unverified rune marked");
+  assert(!(await page.isVisible(`${runeValues} tr:has-text('Conqueror') .chip`)), "verified rune not marked");
+  assert(await page.isVisible(`${runeValues} td:text('var1')`), "unlabeled rune shows raw var");
+  assert(await page.isVisible(`${runeValues} tr:has-text('Conqueror') td:text('var2')`), "unlabeled non-zero slot shows raw var");
   // Camp pace.
   await page.click(`${table("Camp pace at 5:00")} tbody tr:has-text('Ahead')`);
   assert((await banner()).startsWith(`${count((r) => r.pace[5][0] > r.pace[5][1])} of 40`), "pace ahead at 5");

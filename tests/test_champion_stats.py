@@ -138,11 +138,21 @@ class BackfillTests(unittest.TestCase):
         self.assertIn("2 kept", seen[-1])
 
 
-# Minimal Data Dragon item data: just the fields item classification reads.
+# Minimal Data Dragon item data: just the fields item classification reads, shaped like patch 16.20's item.json
+# (tier-2 boots upgrade into tier-3 boots; a missing `into`/`from` means none).
 ITEMS = {
-    "1001": {"name": "Boots", "tags": ["Boots"], "into": ["3020"], "gold": {"total": 300}},
-    "3020": {"name": "Sorcerer's Shoes", "tags": ["Boots"], "into": [], "gold": {"total": 1100}},
-    "3111": {"name": "Mercury's Treads", "tags": ["Boots"], "into": [], "gold": {"total": 1250}},
+    "1001": {"name": "Boots", "tags": ["Boots"], "into": ["3020", "3111", "3008"], "gold": {"total": 300}},
+    "3020": {"name": "Sorcerer's Shoes", "tags": ["Boots", "MagicPenetration"], "from": ["1001"], "into": ["3175"],
+             "gold": {"total": 1100}},
+    "3175": {"name": "Spellslinger's Shoes", "tags": ["Boots"], "from": ["3020"], "gold": {"total": 1100}},
+    "3111": {"name": "Mercury's Treads", "tags": ["Boots", "SpellBlock", "Tenacity"], "from": ["1001", "1033"],
+             "into": ["3173"], "gold": {"total": 1250}},
+    "3006": {"name": "Berserker's Greaves", "tags": ["AttackSpeed", "Boots"], "from": ["1001", "1042", "1042"],
+             "into": ["3172"], "gold": {"total": 1100}},
+    "3172": {"name": "Gunmetal Greaves", "tags": ["AttackSpeed", "LifeSteal", "NonbootsMovement"], "from": ["3006"],
+             "gold": {"total": 1100}},  # really ships without the Boots tag
+    "3008": {"name": "Gluttonous Greaves", "tags": ["LifeSteal", "SpellVamp", "Boots"], "from": ["1001"],
+             "into": ["3168"], "gold": {"total": 1000}},
     "1052": {"name": "Amplifying Tome", "tags": [], "into": ["3916"], "gold": {"total": 400}},
     "3916": {"name": "Oblivion Orb", "tags": [], "into": ["3165"], "gold": {"total": 800}},
     "6653": {"name": "Liandry's Torment", "tags": [], "into": [], "gold": {"total": 3000}},
@@ -150,7 +160,8 @@ ITEMS = {
     "4633": {"name": "Riftmaker", "tags": [], "into": [], "gold": {"total": 3100}},
     "3157": {"name": "Zhonya's Hourglass", "tags": [], "into": [], "gold": {"total": 3250}},
     "2003": {"name": "Health Potion", "tags": ["Consumable"], "into": [], "gold": {"total": 50}},
-    "1103": {"name": "Mosstomper Seedling", "tags": [], "into": [], "gold": {"total": 450}},
+    "1103": {"name": "Mosstomper Seedling", "tags": ["Jungle"], "gold": {"total": 450}},
+    "3364": {"name": "Oracle Lens", "tags": ["Active", "Trinket", "Vision"], "gold": {"total": 0}},
 }
 
 
@@ -199,6 +210,41 @@ class BuildTests(unittest.TestCase):
                         buy(700, 3111)])
         self.assertEqual(row["boots"], 3111)
 
+    def test_tier_two_boots_are_completed_boots(self):
+        # Real games: tier-2 boots list their tier-3 upgrade under `into`, and most games never buy the upgrade.
+        row = self.row([buy(300, 1001), buy(600, 3008), buy(700, 6653)])
+        self.assertEqual(row["boots"], 3008)
+        self.assertEqual(row["items"], [6653])
+
+    def test_tier_three_upgrade_replaces_tier_two_boots(self):
+        row = self.row([buy(300, 1001), buy(600, 3020), buy(1500, 3175)])
+        self.assertEqual(row["boots"], 3175)
+
+    def test_untagged_tier_three_boots_still_count(self):
+        row = self.row([buy(600, 3006), buy(1500, 3172)])
+        self.assertEqual((row["boots"], row["items"]), (3172, []))
+
+    def test_untagged_boots_are_never_legendary(self):
+        # A Boots-less tier-3 boot that ever cost legendary money must stay boots, not become an item.
+        match, timeline = lillia_match()
+        items = {**ITEMS, "3172": {**ITEMS["3172"], "gold": {"total": 2500}}}
+        row = game_row(match, with_events(timeline, [buy(600, 3006), buy(1500, 3172)]), ME, items)
+        self.assertEqual((row["boots"], row["items"]), (3172, []))
+
+    def test_basic_boots_alone_are_not_completed(self):
+        self.assertIsNone(self.row([buy(300, 1001)])["boots"])
+
+    def test_trinket_swap_and_pet_are_not_items(self):
+        # Real timelines log the pet buy and the Oracle Lens swap as ITEM_PURCHASED.
+        row = self.row([buy(9, 1103), buy(975, 3364), buy(1000, 6653)])
+        self.assertEqual((row["items"], row["boots"], row["pet"]), ([6653], None, 1103))
+
+    def test_undo_of_a_sale_keeps_the_item(self):
+        # Undoing a sale logs beforeId 0 / afterId item; the item was already counted when bought.
+        row = self.row([buy(700, 6653), (900, {"type": "ITEM_SOLD", "participantId": 2, "itemId": 6653}),
+                        (902, {"type": "ITEM_UNDO", "participantId": 2, "beforeId": 0, "afterId": 6653})])
+        self.assertEqual(row["items"], [6653])
+
     def test_other_players_purchases_ignored(self):
         self.assertEqual(self.row([buy(700, 6653, pid=3)])["items"], [])
 
@@ -221,6 +267,10 @@ PERKS = {
 
 
 class RuneTests(unittest.TestCase):
+    def test_verified_runes_have_labels(self):
+        from champion_stats.rune_labels import RUNE_VALUE_LABELS, VERIFIED_RUNES
+        self.assertLessEqual(VERIFIED_RUNES, set(RUNE_VALUE_LABELS))
+
     def test_rune_page(self):
         match, timeline = lillia_match()
         match["info"]["participants"][1]["perks"] = PERKS
@@ -263,6 +313,13 @@ class CampPaceTests(unittest.TestCase):
         row = game_row(match, timeline, ME)
         self.assertEqual((row["jungle_cs_10"], row["enemy_jungle_kills"]), (62, 14))
 
+    def test_enemy_jungle_ignores_challenge_monster_count(self):
+        # challenges.enemyJungleMonsterKills counts something smaller than CS (20 vs 26 in a real game), so it
+        # mustn't stand in for totalEnemyJungleMinionsKilled.
+        match, timeline = lillia_match()
+        match["info"]["participants"][1]["challenges"] = {"enemyJungleMonsterKills": 20}
+        self.assertEqual(game_row(match, timeline, ME)["enemy_jungle_kills"], 0)
+
     def test_first_objectives(self):
         match, timeline = build_match(objectives=[(400, 200, "DRAGON"), (500, 100, "RIFTHERALD"), (900, 100, "DRAGON")])
         match["info"]["participants"][1]["championName"] = "Lillia"
@@ -299,6 +356,21 @@ class LoadRowsTests(unittest.TestCase):
         self.assertEqual(names["runes"], {8128: "Dark Harvest"})
         self.assertEqual(names["trees"], {8100: "Domination"})
         self.assertIn(8128, names["rune_labels"])
+        self.assertEqual(names["rune_labels_verified"], [])
+
+    def test_verified_rune_labels_are_named(self):
+        from champion_stats import load_rows, service
+        match, timeline = lillia_match("NA1_5")
+        match["info"]["participants"][1]["perks"] = PERKS
+        client = FakeClient([(match, timeline)])
+        store = Store(":memory:")
+        self.addCleanup(store.close)
+        store.save_account(ME, "Aeoen", "NA1")
+        original = service.VERIFIED_RUNES
+        service.VERIFIED_RUNES = frozenset({8128, 9999})  # 9999 isn't on the page, so it isn't sent
+        self.addCleanup(setattr, service, "VERIFIED_RUNES", original)
+        data = load_rows(DataLayer(client, store), "Aeoen#NA1", "Lillia", "solo", dd=FakeDragon())
+        self.assertEqual(data["names"]["rune_labels_verified"], [8128])
 
     def test_unknown_queue(self):
         from champion_stats import load_rows

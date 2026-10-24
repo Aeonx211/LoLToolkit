@@ -52,8 +52,14 @@ def _is_legendary(item):
             and item.get("gold", {}).get("total", 0) >= LEGENDARY_MIN_GOLD)
 
 
-def _is_completed_boots(item):
-    return "Boots" in item.get("tags", []) and not item.get("into")
+def _is_completed_boots(item, items):
+    """Tier-2 or tier-3 boots. Tier-2 boots list their tier-3 upgrade under `into`, so "built from something" is what
+    separates them from Boots (and Slightly Magical Footwear). Some tier-3 boots (Gunmetal Greaves) ship without the
+    Boots tag, so an upgrade of completed boots counts too."""
+    if not item.get("from"):
+        return False
+    return "Boots" in item.get("tags", []) or any(
+        _is_completed_boots(items[f], items) for f in item["from"] if f in items)
 
 
 def _build(timeline, participant_id, items):
@@ -64,8 +70,8 @@ def _build(timeline, participant_id, items):
     if not items:
         return [], None, pet
     data = [(i, items.get(str(i))) for i in bought if i not in PETS]
-    legendaries = [i for i, d in data if d and _is_legendary(d)]
-    boots = [i for i, d in data if d and _is_completed_boots(d)]
+    boots = [i for i, d in data if d and _is_completed_boots(d, items)]
+    legendaries = [i for i, d in data if d and i not in boots and _is_legendary(d)]
     return list(dict.fromkeys(legendaries)), (boots[-1] if boots else None), pet
 
 
@@ -151,7 +157,8 @@ def game_row(match, timeline, puuid, items=None):
         **_runes(me),
         "pace": _camp_pace(timeline, me["participantId"], lane_opponent),
         "jungle_cs_10": round(challenges.get("jungleCsBefore10Minutes", 0)),
-        "enemy_jungle_kills": me.get("totalEnemyJungleMinionsKilled", challenges.get("enemyJungleMonsterKills", 0)),
+        # Same CS units as jungleMinionsKilled; challenges.enemyJungleMonsterKills counts something smaller.
+        "enemy_jungle_kills": me.get("totalEnemyJungleMinionsKilled", 0),
         "first_dragon": _first_objective(timeline, "DRAGON", me["teamId"]),
         "first_herald": _first_objective(timeline, "RIFTHERALD", me["teamId"]),
     }

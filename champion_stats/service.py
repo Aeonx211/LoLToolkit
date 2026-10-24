@@ -2,7 +2,7 @@ from data_layer import BULK, DataDragon, DataLayer
 
 from .backfill import backfill
 from .rows import PETS, game_row
-from .rune_labels import RUNE_VALUE_LABELS, SHARD_NAMES
+from .rune_labels import RUNE_VALUE_LABELS, SHARD_NAMES, VERIFIED_RUNES
 
 # (Riot ID, focus champion) pairs the tool is set up for; the tab and CLI default to the first.
 TRACKED_PLAYERS = [("Aeoen#NA1", "Lillia")]
@@ -36,6 +36,7 @@ def _names(rows, static_names):
         "trees": pick(static_names.get("trees", {}), trees),
         "shards": SHARD_NAMES,
         "rune_labels": pick(RUNE_VALUE_LABELS, {int(i) for i in runes}),
+        "rune_labels_verified": sorted(i for i in runes if i in VERIFIED_RUNES and i in RUNE_VALUE_LABELS),
     }
 
 
