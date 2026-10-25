@@ -376,3 +376,28 @@ class LoadRowsTests(unittest.TestCase):
         from champion_stats import load_rows
         with self.assertRaises(ValueError):
             load_rows(None, "a#b", "Lillia", "aram")
+
+
+class ExportTests(unittest.TestCase):
+    def test_page_embeds_rows_and_scripts(self):
+        import json
+        import re
+
+        from champion_stats.export import build_html
+        rows = [game_row(*lillia_match(f"NA1_{i}"), ME) for i in range(3)]
+        data = {"puuid": ME, "riot_id": "Aeoen#NA1", "champion": "Lillia", "queue": "solo", "rows": rows,
+                "names": {"items": {}, "runes": {}, "trees": {}, "shards": {}, "rune_labels": {}}}
+        page = build_html(data, {"Lillia": "Lillia"}, exported_at=0)
+        self.assertIn("<title>Champion Stats</title>", page)
+        self.assertIn("3 Ranked Solo games", page)
+        self.assertIn("function csRender", page)
+        self.assertIn("const fill", page)  # app.js helpers
+        self.assertNotIn("function showTab", page)  # but not the rest of app.js
+        self.assertNotIn(ME, page)  # puuid stripped
+        embedded = json.loads(re.search(r"const CS_EXPORT = (.*);\n", page).group(1))
+        self.assertEqual([r["match_id"] for r in embedded["rows"]], ["NA1_0", "NA1_1", "NA1_2"])
+
+    def test_script_close_tags_in_data_are_escaped(self):
+        from champion_stats.export import build_html
+        data = {"riot_id": "x</script>#NA1", "champion": "Lillia", "queue": "solo", "rows": [], "names": {}}
+        self.assertNotIn("x</script>", build_html(data))

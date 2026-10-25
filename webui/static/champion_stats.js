@@ -355,6 +355,15 @@ function csInit() {
     e.preventDefault();
     withButton(form.querySelector("button.primary"), () => csLoad(form));
   });
+  csWireSlice(form);
+  if (cached?.rows && cached.names) {  // rows cached before the build/rune fields existed can't render
+    csShow(cached);
+    setStatus($("#cs-status"), `Showing ${cached.rows.length} cached games from ${timeAgo(cached.savedAt)}. Click Load to refresh.`);
+  }
+}
+
+// Patch range and min games apply instantly. Shared with the offline export (champion_stats/export.py).
+function csWireSlice(form) {
   const onSlice = () => {
     CS.patchFrom = form.patch_from.value;
     CS.patchTo = form.patch_to.value;
@@ -366,11 +375,12 @@ function csInit() {
   form.patch_to.addEventListener("change", onSlice);
   // "input", not "change": a change event fires on blur, and re-rendering then would swallow the click that blurred it.
   form.min_games.addEventListener("input", onSlice);
-  if (cached?.rows && cached.names) {  // rows cached before the build/rune fields existed can't render
-    CS.data = cached;
-    csRestoreView();
-    csFillPatches();
-    setStatus($("#cs-status"), `Showing ${cached.rows.length} cached games from ${timeAgo(cached.savedAt)}. Click Load to refresh.`);
-    csRender();
-  }
+}
+
+// Show loaded rows with the last saved view (filter stack, sort, patch range, min games).
+function csShow(data) {
+  CS.data = data;
+  csRestoreView();
+  csFillPatches();
+  csRender();
 }

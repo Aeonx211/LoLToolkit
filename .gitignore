@@ -18,3 +18,6 @@ Thumbs.db
 .idea/
 
 data/
+
+# Champion Stats offline export (your game data; the repo is public)
+champion_stats.html
