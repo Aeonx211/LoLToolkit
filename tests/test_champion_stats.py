@@ -401,3 +401,69 @@ class ExportTests(unittest.TestCase):
         from champion_stats.export import build_html
         data = {"riot_id": "x</script>#NA1", "champion": "Lillia", "queue": "solo", "rows": [], "names": {}}
         self.assertNotIn("x</script>", build_html(data))
+
+    def test_page_has_the_slice_controls_the_tab_wires(self):
+        from champion_stats.export import build_html
+        data = {"riot_id": "Aeoen#NA1", "champion": "Lillia", "queue": "solo", "rows": [], "names": {}}
+        page = build_html(data)
+        for name in ("patch_from", "patch_to", "all_patches", "min_games"):
+            self.assertIn(f'name="{name}"', page)
+
+    def test_snapshot_rebuilds_the_page_without_riot(self):
+        import os
+        import tempfile
+
+        from champion_stats import export
+        rows = [game_row(*lillia_match(f"NA1_{i}"), ME) for i in range(2)]
+        data = {"puuid": ME, "riot_id": "Aeoen#NA1", "champion": "Lillia", "queue": "solo", "rows": rows,
+                "names": {"items": {}, "runes": {}, "trees": {}, "shards": {}, "rune_labels": {}}}
+        with tempfile.TemporaryDirectory() as tmp:
+            snap, out = os.path.join(tmp, "snap.json"), os.path.join(tmp, "page.html")
+            export.save_snapshot(snap, data, {"Lillia": "Lillia"}, exported_at=0)
+            with open(snap, encoding="utf-8") as f:
+                self.assertNotIn(ME, f.read())  # puuid stays out of the committed file
+            export.main(["--from-data", snap, "-o", out])  # no Riot ID, no DataLayer, no network
+            with open(out, encoding="utf-8") as f:
+                page = f.read()
+        self.assertIn("2 Ranked Solo games", page)
+        self.assertIn('"match_id":"NA1_1"', page)
+
+    def test_riot_id_and_champion_needed_without_snapshot(self):
+        from champion_stats import export
+        with self.assertRaises(SystemExit):
+            export.main([])
+
+
+class BrowserCompatTests(unittest.TestCase):
+    """The shared web UI code also runs in the offline export on phones, which may have Chrome as old as 80."""
+
+    @staticmethod
+    def read(name):
+        from pathlib import Path
+        return (Path(__file__).resolve().parent.parent / "webui" / "static" / name).read_text(encoding="utf-8")
+
+    def test_no_post_chrome_80_javascript(self):
+        import re
+        newer = {r"\?\?=|\|\|=|&&=": "logical assignment (Chrome 85)", r"\.replaceAll\(": "replaceAll (Chrome 85)",
+                 r"\.at\(-?\d": "Array.at (Chrome 92)", r"\bstructuredClone\(": "structuredClone (Chrome 98)",
+                 r"Object\.hasOwn\(": "Object.hasOwn (Chrome 93)", r"\.findLast(Index)?\(": "findLast (Chrome 97)",
+                 r"Promise\.any\(": "Promise.any (Chrome 85)", r"^await ": "top-level await (Chrome 89)"}
+        for name in ("app.js", "champion_stats.js"):
+            text = self.read(name)
+            for pattern, what in newer.items():
+                self.assertIsNone(re.search(pattern, text, re.M), f"{name} uses {what}")
+
+    def test_replace_children_has_a_fallback_before_first_use(self):
+        app = self.read("app.js")
+        polyfill = app.find("Element.prototype.replaceChildren =")
+        self.assertNotEqual(polyfill, -1)
+        self.assertLess(polyfill, app.find(".replaceChildren("))
+        self.assertLess(polyfill, app.find("// ---------- tabs"))  # inside the helpers the export embeds
+
+    def test_color_mix_always_has_a_fallback(self):
+        import re
+        css = self.read("style.css")
+        for rule in re.findall(r"[^{}]*\{[^{}]*color-mix\([^{}]*\}", css):
+            for prop in re.findall(r"([\w-]+)\s*:\s*color-mix\(", rule):
+                before = rule[:rule.index(f"{prop}: color-mix(")]
+                self.assertRegex(before, rf"\b{prop}\s*:", f"no {prop} fallback before color-mix in: {rule.strip()}")

@@ -6,6 +6,7 @@
   --text: #e7e9ee;
   --muted: #98a0af;
   --accent: #c8aa6e;
+  --accent-rgb: 200, 170, 110;  /* --accent as r, g, b for translucent tints (rgba works on old Chrome; color-mix needs 111) */
   --accent-ink: #1a1408;
   --blue: #4a90e2;
   --red: #e0524f;
@@ -19,7 +20,7 @@
 @media (prefers-color-scheme: light) {
   :root {
     --bg: #f4f5f7; --surface: #ffffff; --surface-2: #f0f1f4; --border: #dde0e6;
-    --text: #1b1e25; --muted: #5f6675; --accent: #9a7b3c; --accent-ink: #ffffff; --true: #5b5f69;
+    --text: #1b1e25; --muted: #5f6675; --accent: #9a7b3c; --accent-rgb: 154, 123, 60; --accent-ink: #ffffff; --true: #5b5f69;
   }
 }
 * { box-sizing: border-box; }
@@ -104,7 +105,7 @@ table { width: 100%; border-collapse: collapse; }
 th, td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--border); white-space: nowrap; }
 th { color: var(--muted); font-weight: 600; font-size: 12px; }
 td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
-tr.me td { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+tr.me td { background: rgba(var(--accent-rgb), .12); }
 .table-wrap { overflow-x: auto; }
 table.team-table { table-layout: fixed; min-width: 980px; }
 table.team-table td, table.team-table th { overflow: hidden; text-overflow: ellipsis; }
@@ -123,7 +124,7 @@ a.player-link:hover { color: var(--accent); text-decoration: underline; }
 .legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 6px; }
 .legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
 
-.banner { border: 1px solid var(--accent); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; }
+.banner { border: 1px solid var(--accent); background: rgba(var(--accent-rgb), .10); background: color-mix(in srgb, var(--accent) 10%, var(--surface)); border-radius: var(--radius); padding: 14px 16px; margin-bottom: 12px; }
 .banner .big { font-size: 18px; font-weight: 700; }
 
 dialog { width: min(1200px, 98vw); max-height: 92vh; padding: 0; border: 1px solid var(--border); border-radius: 12px; background: var(--bg); color: var(--text); }
@@ -176,7 +177,7 @@ main:has(> #tab-champstats.active) { max-width: 1440px; }
 .cs-table tbody tr { cursor: pointer; }
 .cs-table tbody tr:hover { background: var(--surface-2); }
 .cs-table tr.thin td { opacity: .45; }
-.cs-table tr.selected td { background: color-mix(in srgb, var(--accent) 18%, transparent); opacity: 1; }
+.cs-table tr.selected td { background: rgba(var(--accent-rgb), .18); opacity: 1; }
 .cs-cut { overflow-x: auto; }
 .cs-paths { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(320px, 100%), 1fr)); gap: 0 12px; }
 .cs-path { cursor: pointer; }
@@ -193,3 +194,25 @@ main:has(> #tab-champstats.active) { max-width: 1440px; }
   .cs-table.static th { white-space: normal; }
   .cs-cut.card { padding: 12px 10px; }
 }
+@media (max-width: 400px) {
+  /* Narrow phones: drop the Score column (it still drives the default sort) so the rest fits without scrolling. */
+  .cs-table:not(.static) th:nth-child(7), .cs-table:not(.static) td:nth-child(7) { display: none; }
+}
+
+/* Flex `gap` arrived in Chrome 84. app.js adds .no-flex-gap on older browsers; these margins stand in for it. */
+.no-flex-gap header > * { margin-right: 24px; }
+.no-flex-gap nav > * { margin-right: 4px; }
+.no-flex-gap label > * { margin: 0 3px; }  /* text nodes sit between controls, so pad both sides */
+.no-flex-gap .toolbar > * { margin: 0 14px 10px 0; }
+.no-flex-gap .list > * + * { margin-top: 10px; }
+.no-flex-gap .row > * { margin-right: 10px; }
+.no-flex-gap .game .side > * + * { margin-top: 8px; }
+.no-flex-gap .game .title > * { margin: 0 12px 6px 0; }
+.no-flex-gap .chips > *, .no-flex-gap .cs-chips > * { margin: 0 6px 6px 0; }
+.no-flex-gap .stats > * { margin: 0 10px 10px 0; }
+.no-flex-gap .legend > * { margin-right: 14px; }
+.no-flex-gap .dialog-head > * + *, .no-flex-gap .savebar > * + * { margin-left: 12px; }
+.no-flex-gap .builder .checks > * { margin: 0 12px 4px 0; }
+.no-flex-gap .builder .mode > * { margin-right: 12px; }
+.no-flex-gap .cs-chips .chip > * + * { margin-left: 4px; }
+.no-flex-gap .cs-summary > * { margin: 0 24px 8px 0; }

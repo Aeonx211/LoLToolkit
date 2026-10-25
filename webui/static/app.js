@@ -36,6 +36,24 @@ function s(tag, attrs, ...children) {
   return el;
 }
 
+// ---------- old-browser fallbacks (the offline export runs on phones with Chrome as old as 80) ----------
+// Element.replaceChildren arrived in Chrome 86.
+if (!Element.prototype.replaceChildren) {
+  Element.prototype.replaceChildren = function (...nodes) {
+    this.textContent = "";
+    this.append(...nodes);
+  };
+}
+// Flex `gap` arrived in Chrome 84; without it, style.css's .no-flex-gap rules add margins instead.
+(() => {
+  const probe = document.createElement("div");
+  probe.style.cssText = "display:flex;flex-direction:column;row-gap:1px;position:absolute;visibility:hidden";
+  probe.append(document.createElement("div"), document.createElement("div"));
+  document.documentElement.append(probe);
+  if (probe.scrollHeight !== 1) document.documentElement.classList.add("no-flex-gap");
+  probe.remove();
+})();
+
 // replaceChildren() would render null/false as text, so drop them first.
 const fill = (el, ...children) => el.replaceChildren(...children.flat(Infinity).filter((c) => c != null && c !== false));
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -827,7 +845,7 @@ function setupSim() {
   BUILD_B = makeBuildB($("#sim-b"));
   const examples = META.sim.examples;
   const pick = $("#sim-example");
-  for (const name of Object.keys(examples)) pick.append(h("option", { value: name }, name.replaceAll("_", " ")));
+  for (const name of Object.keys(examples)) pick.append(h("option", { value: name }, name.split("_").join(" ")));
   pick.addEventListener("change", () => {
     const ex = examples[pick.value];
     if (!ex) return;

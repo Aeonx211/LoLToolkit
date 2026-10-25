@@ -61,7 +61,7 @@ The UI has one tab per tool plus a **Tuning** tab:
 - **Live Advisor:** run it during a game, or use "Replay advisor" on any past game.
 - **Build Sim:** build editor, simulate, find breakpoints, and A/B compare against a second build.
 - **Champion Stats:** enter a Riot ID and champion, then Load. It backfills up to 100 ranked games on that champion (a few minutes the first time), then shows your win rates by matchup, allies, items, runes, camp pace and game length. Click any row to filter every table to those games; keep clicking to stack filters.
-  To view it on your phone without the server, export it as one HTML file: `python -m champion_stats.export "Aeoen#NA1" Lillia` writes `champion_stats.html` (refreshing new games first). The file is gitignored because it holds your game data.
+  To view it on your phone without the server, export it as one HTML file: `python -m champion_stats.export "Aeoen#NA1" Lillia` writes `champion_stats.html` (refreshing new games first). The file is gitignored. Add `--save-data snapshots/champion_stats/NAME.json` to also save the data as a committable snapshot, and `--from-data` that file to rebuild the page later with no Riot key.
 - **Tuning:** edit every threshold and hand-entered number. Saved values go to `tuning.json`, which the CLIs also read. Delete that file or use "Reset all" to go back to the defaults.
 
 The server only listens on localhost and rejects requests addressed to any other hostname.

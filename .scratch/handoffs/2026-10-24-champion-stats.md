@@ -29,6 +29,34 @@ Saved in the repo rather than `/tmp` because cloud containers are reclaimed and 
 - Waiting on the user: should camp pace compare against the enemy jungler (spec/glossary) or the enemy in your role (as built)? Should the backfill cap how many games it scans? Code-review follow-ups are listed in ticket 08's Comments.
 - `CLAUDE.md` asks for a one-line PushNotification when a turn ends waiting on the user or a long task finishes.
 
+## Offline export (phone)
+
+- `python -m champion_stats.export "Aeoen#NA1" Lillia` writes `champion_stats.html` (gitignored): the tab plus the rows
+  in one file, no server or network. Its form must carry every control `csWireSlice` wires (`patch_from`, `patch_to`,
+  `all_patches`, `min_games`); a test checks this.
+- Data snapshot: `--save-data snapshots/champion_stats/Aeoen-NA1_Lillia_solo.json` (committed, no puuid; the repo
+  is public and the user chose to commit it). In a cloud session with no Riot access, rebuild the page with
+  `python -m champion_stats.export --from-data snapshots/champion_stats/Aeoen-NA1_Lillia_solo.json`. It shows the
+  games as of the snapshot (2026-10-25: 61 games); refresh the snapshot on the user's PC.
+- Verified 2026-10-25 on the real export from file:// with all non-file requests blocked: OnePlus 7 Pro profile
+  (412x892, DPR 3.5, mobile, touch, Android Chrome UA), with localStorage throwing, with replaceChildren/replaceAll
+  deleted, and at 360px. Every section renders, no page or card scrolls sideways, and tap filtering, chips, Clear all,
+  patch range, All patches and min games work, with no console errors.
+
+## Browser compatibility (Chrome 80+)
+
+The shared web UI code is also the export's, so it has to run on Chrome 80 (old phones):
+- `app.js` helpers (before the `// ---------- tabs` marker, so the export gets them) polyfill
+  `Element.replaceChildren` (Chrome 86) and detect flex `gap` (Chrome 84), adding `.no-flex-gap` so style.css's
+  margin fallbacks apply. `replaceAll` (Chrome 85) became split/join.
+- `color-mix()` (Chrome 111): accent tints use `rgba(var(--accent-rgb), a)`; keep `--accent-rgb` in step with
+  `--accent` in both themes. The banner keeps color-mix with an rgba fallback line before it.
+- `:has()` (Chrome 105) only widens the web UI's stats tab; older browsers keep the 1200px page.
+- `BrowserCompatTests` in `tests/test_champion_stats.py` guard against newer JS (logical assignment, replaceAll,
+  Array.at, ...) and unguarded color-mix. To check syntax properly, parse app.js and champion_stats.js with acorn at
+  `ecmaVersion: 2020` (they pass).
+- Below 400px the Score column is hidden (it still drives the default sort) so tables fit 360px phones.
+
 ## Suggested skills
 
 - `tdd` for each ticket's row extraction.
