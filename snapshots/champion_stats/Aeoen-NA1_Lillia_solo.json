@@ -1,0 +1,6825 @@
+{
+ "data": {
+  "riot_id": "Aeoen#NA1",
+  "champion": "Lillia",
+  "queue": "solo",
+  "rows": [
+   {
+    "match_id": "NA1_5665784937",
+    "patch": "16.21",
+    "queue": 420,
+    "start": 1792788495109,
+    "duration_s": 1876,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 0,
+    "deaths": 6,
+    "assists": 7,
+    "cs": 229,
+    "allies": {
+     "TOP": "Gnar",
+     "MIDDLE": "Fizz",
+     "BOTTOM": "Smolder",
+     "UTILITY": "Sona"
+    },
+    "enemies": {
+     "TOP": "Teemo",
+     "JUNGLE": "Viego",
+     "MIDDLE": "Garen",
+     "BOTTOM": "Caitlyn",
+     "UTILITY": "Thresh"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8236
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8236-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      348,
+      0,
+      0
+     ],
+     "9111": [
+      594,
+      140,
+      0
+     ],
+     "9105": [
+      17,
+      20,
+      0
+     ],
+     "8014": [
+      335,
+      0,
+      0
+     ],
+     "8234": [
+      18747,
+      0,
+      0
+     ],
+     "8236": [
+      48,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      20
+     ],
+     "5": [
+      38,
+      40
+     ],
+     "8": [
+      60,
+      54
+     ],
+     "10": [
+      82,
+      75
+     ]
+    },
+    "jungle_cs_10": 82,
+    "enemy_jungle_kills": 26,
+    "first_dragon": "them",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5665771979",
+    "patch": "16.21",
+    "queue": 420,
+    "start": 1792786786735,
+    "duration_s": 1447,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 4,
+    "deaths": 4,
+    "assists": 1,
+    "cs": 160,
+    "allies": {
+     "TOP": "Volibear",
+     "MIDDLE": "Xerath",
+     "BOTTOM": "Yasuo",
+     "UTILITY": "Pyke"
+    },
+    "enemies": {
+     "TOP": "KSante",
+     "JUNGLE": "Talon",
+     "MIDDLE": "Yone",
+     "BOTTOM": "Kaisa",
+     "UTILITY": "Lux"
+    },
+    "length": "<25",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8236
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8236-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      83,
+      0,
+      0
+     ],
+     "9111": [
+      299,
+      100,
+      0
+     ],
+     "9105": [
+      12,
+      10,
+      0
+     ],
+     "8014": [
+      332,
+      0,
+      0
+     ],
+     "8234": [
+      12551,
+      0,
+      0
+     ],
+     "8236": [
+      24,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      24
+     ],
+     "5": [
+      24,
+      36
+     ],
+     "8": [
+      40,
+      60
+     ],
+     "10": [
+      57,
+      84
+     ]
+    },
+    "jungle_cs_10": 56,
+    "enemy_jungle_kills": 14,
+    "first_dragon": "them",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5665748022",
+    "patch": "16.21",
+    "queue": 420,
+    "start": 1792783539360,
+    "duration_s": 1971,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 6,
+    "deaths": 10,
+    "assists": 6,
+    "cs": 181,
+    "allies": {
+     "TOP": "Ambessa",
+     "MIDDLE": "Rumble",
+     "BOTTOM": "Sivir",
+     "UTILITY": "Nami"
+    },
+    "enemies": {
+     "TOP": "Akali",
+     "JUNGLE": "Briar",
+     "MIDDLE": "Ekko",
+     "BOTTOM": "Zeri",
+     "UTILITY": "Yuumi"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     6665
+    ],
+    "boots": 3008,
+    "pet": 1103,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8236
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8236-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      161,
+      0,
+      0
+     ],
+     "9111": [
+      830,
+      240,
+      0
+     ],
+     "9105": [
+      13,
+      20,
+      0
+     ],
+     "8014": [
+      535,
+      0,
+      0
+     ],
+     "8234": [
+      19269,
+      0,
+      0
+     ],
+     "8236": [
+      48,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      6,
+      12
+     ],
+     "5": [
+      18,
+      34
+     ],
+     "8": [
+      38,
+      46
+     ],
+     "10": [
+      54,
+      63
+     ]
+    },
+    "jungle_cs_10": 54,
+    "enemy_jungle_kills": 10,
+    "first_dragon": "them",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5665719995",
+    "patch": "16.21",
+    "queue": 420,
+    "start": 1792779075467,
+    "duration_s": 1531,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 5,
+    "deaths": 6,
+    "assists": 13,
+    "cs": 155,
+    "allies": {
+     "TOP": "Malphite",
+     "MIDDLE": "Akshan",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Lulu"
+    },
+    "enemies": {
+     "TOP": "Renekton",
+     "JUNGLE": "Evelynn",
+     "MIDDLE": "Fizz",
+     "BOTTOM": "Samira",
+     "UTILITY": "Seraphine"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633,
+     6665
+    ],
+    "boots": 3008,
+    "pet": 1103,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8236
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8236-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      1012,
+      0,
+      0
+     ],
+     "9111": [
+      1557,
+      360,
+      0
+     ],
+     "9105": [
+      10,
+      50,
+      0
+     ],
+     "8014": [
+      942,
+      0,
+      0
+     ],
+     "8234": [
+      12934,
+      0,
+      0
+     ],
+     "8236": [
+      24,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      24,
+      24
+     ],
+     "5": [
+      36,
+      36
+     ],
+     "8": [
+      60,
+      52
+     ],
+     "10": [
+      68,
+      70
+     ]
+    },
+    "jungle_cs_10": 68,
+    "enemy_jungle_kills": 17,
+    "first_dragon": "them",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5665336411",
+    "patch": "16.21",
+    "queue": 420,
+    "start": 1792719937304,
+    "duration_s": 1720,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 7,
+    "deaths": 9,
+    "assists": 6,
+    "cs": 156,
+    "allies": {
+     "TOP": "Riven",
+     "MIDDLE": "TwistedFate",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Bard"
+    },
+    "enemies": {
+     "TOP": "Ezreal",
+     "JUNGLE": "Vi",
+     "MIDDLE": "Yone",
+     "BOTTOM": "MissFortune",
+     "UTILITY": "Janna"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633,
+     3143
+    ],
+    "boots": 3047,
+    "pet": 1103,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8236
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8236-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      140,
+      0,
+      0
+     ],
+     "9111": [
+      1022,
+      260,
+      0
+     ],
+     "9105": [
+      13,
+      30,
+      0
+     ],
+     "8014": [
+      558,
+      0,
+      0
+     ],
+     "8234": [
+      13834,
+      0,
+      0
+     ],
+     "8236": [
+      24,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      24,
+      24
+     ],
+     "5": [
+      40,
+      40
+     ],
+     "8": [
+      60,
+      60
+     ],
+     "10": [
+      76,
+      74
+     ]
+    },
+    "jungle_cs_10": 76,
+    "enemy_jungle_kills": 10,
+    "first_dragon": "them",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5665063795",
+    "patch": "16.21",
+    "queue": 420,
+    "start": 1792686768404,
+    "duration_s": 1531,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 5,
+    "deaths": 1,
+    "assists": 11,
+    "cs": 181,
+    "allies": {
+     "TOP": "Mordekaiser",
+     "MIDDLE": "Viego",
+     "BOTTOM": "Smolder",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Nasus",
+     "JUNGLE": "Hecarim",
+     "MIDDLE": "Shyvana",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Janna"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3009,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8236
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8236-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      465,
+      0,
+      0
+     ],
+     "9111": [
+      1523,
+      320,
+      0
+     ],
+     "9105": [
+      14,
+      20,
+      0
+     ],
+     "8014": [
+      788,
+      0,
+      0
+     ],
+     "8234": [
+      13086,
+      0,
+      0
+     ],
+     "8236": [
+      24,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      24,
+      24
+     ],
+     "5": [
+      40,
+      40
+     ],
+     "8": [
+      60,
+      64
+     ],
+     "10": [
+      74,
+      84
+     ]
+    },
+    "jungle_cs_10": 74,
+    "enemy_jungle_kills": 8,
+    "first_dragon": "them",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5665032418",
+    "patch": "16.21",
+    "queue": 420,
+    "start": 1792681474942,
+    "duration_s": 1893,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 10,
+    "deaths": 4,
+    "assists": 11,
+    "cs": 235,
+    "allies": {
+     "TOP": "Illaoi",
+     "MIDDLE": "Malzahar",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Yorick",
+     "JUNGLE": "Khazix",
+     "MIDDLE": "Fizz",
+     "BOTTOM": "Kaisa",
+     "UTILITY": "Shaco"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     6665
+    ],
+    "boots": 3008,
+    "pet": 1103,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8236
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8236-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      651,
+      0,
+      0
+     ],
+     "9111": [
+      1664,
+      420,
+      0
+     ],
+     "9105": [
+      10,
+      30,
+      0
+     ],
+     "8014": [
+      1197,
+      0,
+      0
+     ],
+     "8234": [
+      18420,
+      0,
+      0
+     ],
+     "8236": [
+      48,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      16
+     ],
+     "5": [
+      24,
+      32
+     ],
+     "8": [
+      37,
+      54
+     ],
+     "10": [
+      49,
+      64
+     ]
+    },
+    "jungle_cs_10": 50,
+    "enemy_jungle_kills": 46,
+    "first_dragon": "us",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5664503238",
+    "patch": "16.21",
+    "queue": 420,
+    "start": 1792614293995,
+    "duration_s": 1757,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 8,
+    "deaths": 2,
+    "assists": 14,
+    "cs": 233,
+    "allies": {
+     "TOP": "Urgot",
+     "MIDDLE": "Akshan",
+     "BOTTOM": "Brand",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "MonkeyKing",
+     "JUNGLE": "DrMundo",
+     "MIDDLE": "Vladimir",
+     "BOTTOM": "Leblanc",
+     "UTILITY": "Thresh"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633,
+     6665
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8236
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8236-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      345,
+      0,
+      0
+     ],
+     "9111": [
+      1702,
+      440,
+      0
+     ],
+     "9105": [
+      8,
+      10,
+      0
+     ],
+     "8014": [
+      1145,
+      0,
+      0
+     ],
+     "8234": [
+      18321,
+      0,
+      0
+     ],
+     "8236": [
+      24,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      16
+     ],
+     "5": [
+      32,
+      28
+     ],
+     "8": [
+      56,
+      52
+     ],
+     "10": [
+      72,
+      68
+     ]
+    },
+    "jungle_cs_10": 72,
+    "enemy_jungle_kills": 46,
+    "first_dragon": "us",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5664489189",
+    "patch": "16.21",
+    "queue": 420,
+    "start": 1792612049291,
+    "duration_s": 1979,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 4,
+    "deaths": 6,
+    "assists": 15,
+    "cs": 249,
+    "allies": {
+     "TOP": "Ornn",
+     "MIDDLE": "Ekko",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Akali",
+     "JUNGLE": "Ambessa",
+     "MIDDLE": "Kennen",
+     "BOTTOM": "Samira",
+     "UTILITY": "Nami"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     8010
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8236
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8236-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      477,
+      0,
+      0
+     ],
+     "9111": [
+      1667,
+      380,
+      0
+     ],
+     "9105": [
+      8,
+      30,
+      0
+     ],
+     "8014": [
+      777,
+      0,
+      0
+     ],
+     "8234": [
+      21036,
+      0,
+      0
+     ],
+     "8236": [
+      48,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      20
+     ],
+     "5": [
+      40,
+      32
+     ],
+     "8": [
+      64,
+      44
+     ],
+     "10": [
+      80,
+      68
+     ]
+    },
+    "jungle_cs_10": 80,
+    "enemy_jungle_kills": 38,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5664455977",
+    "patch": "16.21",
+    "queue": 420,
+    "start": 1792606719429,
+    "duration_s": 2225,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 5,
+    "deaths": 1,
+    "assists": 11,
+    "cs": 306,
+    "allies": {
+     "TOP": "Yorick",
+     "MIDDLE": "Fizz",
+     "BOTTOM": "Ashe",
+     "UTILITY": "Teemo"
+    },
+    "enemies": {
+     "TOP": "Renekton",
+     "JUNGLE": "Brand",
+     "MIDDLE": "Viktor",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Zyra"
+    },
+    "length": "35+",
+    "items": [
+     6653,
+     4633,
+     3089,
+     6665
+    ],
+    "boots": 3009,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8232
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8232-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      135,
+      0,
+      0
+     ],
+     "9111": [
+      1565,
+      320,
+      0
+     ],
+     "9105": [
+      9,
+      50,
+      0
+     ],
+     "8014": [
+      834,
+      0,
+      0
+     ],
+     "8234": [
+      25602,
+      0,
+      0
+     ],
+     "8232": [
+      7,
+      40,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      24
+     ],
+     "5": [
+      36,
+      40
+     ],
+     "8": [
+      60,
+      60
+     ],
+     "10": [
+      72,
+      68
+     ]
+    },
+    "jungle_cs_10": 72,
+    "enemy_jungle_kills": 40,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5663634812",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1792465685208,
+    "duration_s": 1760,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 2,
+    "deaths": 6,
+    "assists": 8,
+    "cs": 201,
+    "allies": {
+     "TOP": "Renekton",
+     "MIDDLE": "Yone",
+     "BOTTOM": "Karthus",
+     "UTILITY": "Amumu"
+    },
+    "enemies": {
+     "TOP": "Sion",
+     "JUNGLE": "Qiyana",
+     "MIDDLE": "Locke",
+     "BOTTOM": "Kalista",
+     "UTILITY": "Yuumi"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633,
+     6665
+    ],
+    "boots": 3008,
+    "pet": 1103,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8232
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8232-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      163,
+      0,
+      0
+     ],
+     "9111": [
+      408,
+      200,
+      0
+     ],
+     "9105": [
+      13,
+      0,
+      0
+     ],
+     "8014": [
+      469,
+      0,
+      0
+     ],
+     "8234": [
+      15333,
+      0,
+      0
+     ],
+     "8232": [
+      4,
+      40,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      24
+     ],
+     "5": [
+      36,
+      36
+     ],
+     "8": [
+      56,
+      52
+     ],
+     "10": [
+      72,
+      78
+     ]
+    },
+    "jungle_cs_10": 72,
+    "enemy_jungle_kills": 20,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5663576483",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1792462196890,
+    "duration_s": 1963,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 3,
+    "deaths": 8,
+    "assists": 5,
+    "cs": 237,
+    "allies": {
+     "TOP": "Zaahen",
+     "MIDDLE": "Akshan",
+     "BOTTOM": "MissFortune",
+     "UTILITY": "KogMaw"
+    },
+    "enemies": {
+     "TOP": "Ambessa",
+     "JUNGLE": "Kayn",
+     "MIDDLE": "Viktor",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Velkoz"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     8010
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8232
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8232-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      72,
+      0,
+      0
+     ],
+     "9111": [
+      487,
+      160,
+      0
+     ],
+     "9105": [
+      11,
+      0,
+      0
+     ],
+     "8014": [
+      318,
+      0,
+      0
+     ],
+     "8234": [
+      18822,
+      0,
+      0
+     ],
+     "8232": [
+      5,
+      10,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      20
+     ],
+     "5": [
+      36,
+      32
+     ],
+     "8": [
+      54,
+      44
+     ],
+     "10": [
+      68,
+      52
+     ]
+    },
+    "jungle_cs_10": 68,
+    "enemy_jungle_kills": 34,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5663362649",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1792441259249,
+    "duration_s": 1724,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 6,
+    "deaths": 5,
+    "assists": 6,
+    "cs": 204,
+    "allies": {
+     "TOP": "Camille",
+     "MIDDLE": "Malzahar",
+     "BOTTOM": "Sivir",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Mordekaiser",
+     "JUNGLE": "Belveth",
+     "MIDDLE": "Xerath",
+     "BOTTOM": "Samira",
+     "UTILITY": "Lux"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633,
+     3065
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      91,
+      0,
+      0
+     ],
+     "9111": [
+      511,
+      240,
+      0
+     ],
+     "9105": [
+      12,
+      40,
+      0
+     ],
+     "8014": [
+      424,
+      0,
+      0
+     ],
+     "8321": [
+      660,
+      0,
+      0
+     ],
+     "8410": [
+      39,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      8,
+      16
+     ],
+     "5": [
+      21,
+      28
+     ],
+     "8": [
+      40,
+      52
+     ],
+     "10": [
+      64,
+      70
+     ]
+    },
+    "jungle_cs_10": 64,
+    "enemy_jungle_kills": 4,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5663343292",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1792437712501,
+    "duration_s": 1957,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 0,
+    "deaths": 10,
+    "assists": 6,
+    "cs": 177,
+    "allies": {
+     "TOP": "Kayle",
+     "MIDDLE": "Naafiri",
+     "BOTTOM": "Xayah",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Ambessa",
+     "JUNGLE": "Udyr",
+     "MIDDLE": "Azir",
+     "BOTTOM": "Yasuo",
+     "UTILITY": "Janna"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      103,
+      0,
+      0
+     ],
+     "9111": [
+      192,
+      120,
+      0
+     ],
+     "9105": [
+      12,
+      20,
+      0
+     ],
+     "8014": [
+      318,
+      0,
+      0
+     ],
+     "8321": [
+      457,
+      0,
+      0
+     ],
+     "8410": [
+      44,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      24
+     ],
+     "5": [
+      40,
+      28
+     ],
+     "8": [
+      64,
+      46
+     ],
+     "10": [
+      76,
+      70
+     ]
+    },
+    "jungle_cs_10": 76,
+    "enemy_jungle_kills": 16,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5663317049",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1792432118609,
+    "duration_s": 1122,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 3,
+    "deaths": 1,
+    "assists": 7,
+    "cs": 136,
+    "allies": {
+     "TOP": "Sion",
+     "MIDDLE": "TwistedFate",
+     "BOTTOM": "Samira",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Gangplank",
+     "JUNGLE": "Hecarim",
+     "MIDDLE": "Leblanc",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Maokai"
+    },
+    "length": "<25",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      119,
+      0,
+      0
+     ],
+     "9111": [
+      465,
+      200,
+      0
+     ],
+     "9105": [
+      9,
+      0,
+      0
+     ],
+     "8014": [
+      469,
+      0,
+      0
+     ],
+     "8321": [
+      457,
+      0,
+      0
+     ],
+     "8410": [
+      41,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      16
+     ],
+     "5": [
+      36,
+      32
+     ],
+     "8": [
+      52,
+      56
+     ],
+     "10": [
+      64,
+      56
+     ]
+    },
+    "jungle_cs_10": 64,
+    "enemy_jungle_kills": 14,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5661674773",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1792205339106,
+    "duration_s": 1255,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 3,
+    "deaths": 0,
+    "assists": 9,
+    "cs": 154,
+    "allies": {
+     "TOP": "Yone",
+     "MIDDLE": "Fizz",
+     "BOTTOM": "Tristana",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Garen",
+     "JUNGLE": "Amumu",
+     "MIDDLE": "Sylas",
+     "BOTTOM": "Caitlyn",
+     "UTILITY": "Milio"
+    },
+    "length": "<25",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      400,
+      0,
+      0
+     ],
+     "9111": [
+      789,
+      240,
+      0
+     ],
+     "9105": [
+      10,
+      20,
+      0
+     ],
+     "8014": [
+      469,
+      0,
+      0
+     ],
+     "8321": [
+      457,
+      0,
+      0
+     ],
+     "8410": [
+      48,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      12
+     ],
+     "5": [
+      36,
+      32
+     ],
+     "8": [
+      64,
+      56
+     ],
+     "10": [
+      78,
+      64
+     ]
+    },
+    "jungle_cs_10": 78,
+    "enemy_jungle_kills": 14,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5661631959",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1792202314183,
+    "duration_s": 2214,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 9,
+    "deaths": 3,
+    "assists": 17,
+    "cs": 251,
+    "allies": {
+     "TOP": "Riven",
+     "MIDDLE": "Vex",
+     "BOTTOM": "Caitlyn",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Singed",
+     "JUNGLE": "Amumu",
+     "MIDDLE": "Yasuo",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Seraphine"
+    },
+    "length": "35+",
+    "items": [
+     6653,
+     4633,
+     8010,
+     3065,
+     3143
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      935,
+      0,
+      0
+     ],
+     "9111": [
+      2767,
+      520,
+      0
+     ],
+     "9105": [
+      9,
+      0,
+      0
+     ],
+     "8014": [
+      1426,
+      0,
+      0
+     ],
+     "8321": [
+      1080,
+      0,
+      0
+     ],
+     "8410": [
+      102,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      12,
+      16
+     ],
+     "5": [
+      32,
+      36
+     ],
+     "8": [
+      44,
+      56
+     ],
+     "10": [
+      60,
+      72
+     ]
+    },
+    "jungle_cs_10": 60,
+    "enemy_jungle_kills": 48,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5661309980",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1792155443135,
+    "duration_s": 2031,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 9,
+    "deaths": 4,
+    "assists": 19,
+    "cs": 224,
+    "allies": {
+     "TOP": "Darius",
+     "MIDDLE": "Aurora",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Renekton",
+     "JUNGLE": "Shaco",
+     "MIDDLE": "Anivia",
+     "BOTTOM": "Caitlyn",
+     "UTILITY": "Alistar"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     6665,
+     8010
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      361,
+      0,
+      0
+     ],
+     "9111": [
+      1932,
+      560,
+      0
+     ],
+     "9105": [
+      10,
+      50,
+      0
+     ],
+     "8014": [
+      949,
+      0,
+      0
+     ],
+     "8321": [
+      915,
+      0,
+      0
+     ],
+     "8410": [
+      81,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      12,
+      12
+     ],
+     "5": [
+      32,
+      32
+     ],
+     "8": [
+      44,
+      44
+     ],
+     "10": [
+      52,
+      52
+     ]
+    },
+    "jungle_cs_10": 52,
+    "enemy_jungle_kills": 31,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5660820439",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1792090385209,
+    "duration_s": 1807,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 5,
+    "deaths": 3,
+    "assists": 12,
+    "cs": 217,
+    "allies": {
+     "TOP": "Darius",
+     "MIDDLE": "TwistedFate",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Renekton",
+     "JUNGLE": "Kayn",
+     "MIDDLE": "Xerath",
+     "BOTTOM": "Viktor",
+     "UTILITY": "Malzahar"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     3065
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      334,
+      0,
+      0
+     ],
+     "9111": [
+      1484,
+      340,
+      0
+     ],
+     "9105": [
+      12,
+      40,
+      0
+     ],
+     "8014": [
+      665,
+      0,
+      0
+     ],
+     "8321": [
+      660,
+      0,
+      0
+     ],
+     "8410": [
+      53,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      18,
+      24
+     ],
+     "5": [
+      36,
+      36
+     ],
+     "8": [
+      57,
+      48
+     ],
+     "10": [
+      75,
+      64
+     ]
+    },
+    "jungle_cs_10": 75,
+    "enemy_jungle_kills": 58,
+    "first_dragon": "them",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5660800818",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1792084972998,
+    "duration_s": 1858,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 1,
+    "deaths": 8,
+    "assists": 8,
+    "cs": 207,
+    "allies": {
+     "TOP": "Zac",
+     "MIDDLE": "Swain",
+     "BOTTOM": "Xayah",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Zaahen",
+     "JUNGLE": "MonkeyKing",
+     "MIDDLE": "Sylas",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Milio"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      218,
+      0,
+      0
+     ],
+     "9111": [
+      583,
+      180,
+      0
+     ],
+     "9105": [
+      10,
+      40,
+      0
+     ],
+     "8014": [
+      562,
+      0,
+      0
+     ],
+     "8321": [
+      457,
+      0,
+      0
+     ],
+     "8410": [
+      62,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      4,
+      12
+     ],
+     "5": [
+      28,
+      28
+     ],
+     "8": [
+      44,
+      48
+     ],
+     "10": [
+      74,
+      64
+     ]
+    },
+    "jungle_cs_10": 70,
+    "enemy_jungle_kills": 0,
+    "first_dragon": "us",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5660781203",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1792082456871,
+    "duration_s": 2053,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 10,
+    "deaths": 5,
+    "assists": 22,
+    "cs": 199,
+    "allies": {
+     "TOP": "Urgot",
+     "MIDDLE": "Zoe",
+     "BOTTOM": "Ezreal",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Gragas",
+     "JUNGLE": "Shyvana",
+     "MIDDLE": "Ahri",
+     "BOTTOM": "Ashe",
+     "UTILITY": "Nautilus"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     8010,
+     3065
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      1011,
+      0,
+      0
+     ],
+     "9111": [
+      2660,
+      640,
+      0
+     ],
+     "9105": [
+      11,
+      20,
+      0
+     ],
+     "8014": [
+      1620,
+      0,
+      0
+     ],
+     "8321": [
+      877,
+      0,
+      0
+     ],
+     "8410": [
+      85,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      20
+     ],
+     "5": [
+      24,
+      40
+     ],
+     "8": [
+      44,
+      56
+     ],
+     "10": [
+      48,
+      62
+     ]
+    },
+    "jungle_cs_10": 48,
+    "enemy_jungle_kills": 36,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5660287048",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1792010707346,
+    "duration_s": 2073,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 1,
+    "deaths": 3,
+    "assists": 15,
+    "cs": 235,
+    "allies": {
+     "TOP": "Sett",
+     "MIDDLE": "Malzahar",
+     "BOTTOM": "Tristana",
+     "UTILITY": "Nami"
+    },
+    "enemies": {
+     "TOP": "Ambessa",
+     "JUNGLE": "Diana",
+     "MIDDLE": "Orianna",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Zyra"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     6665
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      396,
+      0,
+      0
+     ],
+     "9111": [
+      1255,
+      320,
+      0
+     ],
+     "9105": [
+      14,
+      40,
+      0
+     ],
+     "8014": [
+      728,
+      0,
+      0
+     ],
+     "8321": [
+      697,
+      0,
+      0
+     ],
+     "8410": [
+      75,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      12,
+      16
+     ],
+     "5": [
+      28,
+      33
+     ],
+     "8": [
+      44,
+      56
+     ],
+     "10": [
+      58,
+      80
+     ]
+    },
+    "jungle_cs_10": 58,
+    "enemy_jungle_kills": 20,
+    "first_dragon": "them",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5660266463",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1792008065999,
+    "duration_s": 2259,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 3,
+    "deaths": 6,
+    "assists": 14,
+    "cs": 249,
+    "allies": {
+     "TOP": "Sett",
+     "MIDDLE": "Taliyah",
+     "BOTTOM": "Varus",
+     "UTILITY": "Teemo"
+    },
+    "enemies": {
+     "TOP": "Renekton",
+     "JUNGLE": "Qiyana",
+     "MIDDLE": "Chogath",
+     "BOTTOM": "Kaisa",
+     "UTILITY": "Leona"
+    },
+    "length": "35+",
+    "items": [
+     6653,
+     4633,
+     6665,
+     8010
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      603,
+      0,
+      0
+     ],
+     "9111": [
+      1993,
+      340,
+      0
+     ],
+     "9105": [
+      14,
+      20,
+      0
+     ],
+     "8014": [
+      1563,
+      0,
+      0
+     ],
+     "8321": [
+      915,
+      0,
+      0
+     ],
+     "8410": [
+      90,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      24,
+      24
+     ],
+     "5": [
+      36,
+      40
+     ],
+     "8": [
+      48,
+      60
+     ],
+     "10": [
+      64,
+      74
+     ]
+    },
+    "jungle_cs_10": 64,
+    "enemy_jungle_kills": 12,
+    "first_dragon": "them",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5660181311",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791991657829,
+    "duration_s": 1700,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 14,
+    "deaths": 5,
+    "assists": 10,
+    "cs": 206,
+    "allies": {
+     "TOP": "MonkeyKing",
+     "MIDDLE": "Aurora",
+     "BOTTOM": "Twitch",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Jax",
+     "JUNGLE": "FiddleSticks",
+     "MIDDLE": "Diana",
+     "BOTTOM": "Tristana",
+     "UTILITY": "Nautilus"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633,
+     8010,
+     3065
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      736,
+      0,
+      0
+     ],
+     "9111": [
+      1895,
+      480,
+      0
+     ],
+     "9105": [
+      10,
+      40,
+      0
+     ],
+     "8014": [
+      1196,
+      0,
+      0
+     ],
+     "8321": [
+      877,
+      0,
+      0
+     ],
+     "8410": [
+      74,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      16
+     ],
+     "5": [
+      32,
+      32
+     ],
+     "8": [
+      52,
+      52
+     ],
+     "10": [
+      66,
+      76
+     ]
+    },
+    "jungle_cs_10": 66,
+    "enemy_jungle_kills": 26,
+    "first_dragon": "them",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5659899182",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791943249051,
+    "duration_s": 1548,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 1,
+    "deaths": 3,
+    "assists": 4,
+    "cs": 172,
+    "allies": {
+     "TOP": "Yorick",
+     "MIDDLE": "Akshan",
+     "BOTTOM": "Kaisa",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Swain",
+     "JUNGLE": "LeeSin",
+     "MIDDLE": "Syndra",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Soraka"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      48,
+      0,
+      0
+     ],
+     "9111": [
+      198,
+      100,
+      0
+     ],
+     "9105": [
+      12,
+      0,
+      0
+     ],
+     "8014": [
+      122,
+      0,
+      0
+     ],
+     "8321": [
+      457,
+      0,
+      0
+     ],
+     "8410": [
+      32,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      12,
+      16
+     ],
+     "5": [
+      27,
+      32
+     ],
+     "8": [
+      47,
+      60
+     ],
+     "10": [
+      67,
+      80
+     ]
+    },
+    "jungle_cs_10": 67,
+    "enemy_jungle_kills": 15,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5659865163",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791940904814,
+    "duration_s": 2069,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 5,
+    "deaths": 6,
+    "assists": 14,
+    "cs": 221,
+    "allies": {
+     "TOP": "Tryndamere",
+     "MIDDLE": "Ahri",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Kayle",
+     "JUNGLE": "Nunu",
+     "MIDDLE": "Veigar",
+     "BOTTOM": "Draven",
+     "UTILITY": "Milio"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     6665,
+     8010
+    ],
+    "boots": 3020,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      202,
+      0,
+      0
+     ],
+     "9111": [
+      1572,
+      380,
+      0
+     ],
+     "9105": [
+      13,
+      20,
+      0
+     ],
+     "8014": [
+      587,
+      0,
+      0
+     ],
+     "8321": [
+      915,
+      0,
+      0
+     ],
+     "8410": [
+      70,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      17,
+      12
+     ],
+     "5": [
+      36,
+      24
+     ],
+     "8": [
+      60,
+      43
+     ],
+     "10": [
+      68,
+      57
+     ]
+    },
+    "jungle_cs_10": 68,
+    "enemy_jungle_kills": 34,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5659844139",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791938859360,
+    "duration_s": 1738,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 5,
+    "deaths": 9,
+    "assists": 5,
+    "cs": 170,
+    "allies": {
+     "TOP": "Teemo",
+     "MIDDLE": "Ahri",
+     "BOTTOM": "Lucian",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Garen",
+     "JUNGLE": "XinZhao",
+     "MIDDLE": "Zoe",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Seraphine"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     3116,
+     4633
+    ],
+    "boots": 3020,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      108,
+      0,
+      0
+     ],
+     "9111": [
+      424,
+      200,
+      0
+     ],
+     "9105": [
+      9,
+      0,
+      0
+     ],
+     "8014": [
+      504,
+      0,
+      0
+     ],
+     "8321": [
+      652,
+      0,
+      0
+     ],
+     "8410": [
+      73,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      12
+     ],
+     "5": [
+      30,
+      28
+     ],
+     "8": [
+      54,
+      40
+     ],
+     "10": [
+      65,
+      56
+     ]
+    },
+    "jungle_cs_10": 65,
+    "enemy_jungle_kills": 16,
+    "first_dragon": "them",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5659700343",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791924053965,
+    "duration_s": 1940,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 9,
+    "deaths": 2,
+    "assists": 14,
+    "cs": 250,
+    "allies": {
+     "TOP": "Yorick",
+     "MIDDLE": "Viktor",
+     "BOTTOM": "Vayne",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Chogath",
+     "JUNGLE": "Talon",
+     "MIDDLE": "Hwei",
+     "BOTTOM": "Yunara",
+     "UTILITY": "Soraka"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     6665,
+     3089
+    ],
+    "boots": 3020,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      401,
+      0,
+      0
+     ],
+     "9111": [
+      2592,
+      460,
+      0
+     ],
+     "9105": [
+      10,
+      0,
+      0
+     ],
+     "8014": [
+      1429,
+      0,
+      0
+     ],
+     "8321": [
+      960,
+      0,
+      0
+     ],
+     "8410": [
+      71,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      16
+     ],
+     "5": [
+      28,
+      36
+     ],
+     "8": [
+      52,
+      60
+     ],
+     "10": [
+      68,
+      76
+     ]
+    },
+    "jungle_cs_10": 68,
+    "enemy_jungle_kills": 34,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5659680831",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791919198637,
+    "duration_s": 1897,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 11,
+    "deaths": 4,
+    "assists": 17,
+    "cs": 229,
+    "allies": {
+     "TOP": "Nasus",
+     "MIDDLE": "Ahri",
+     "BOTTOM": "Yasuo",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "KSante",
+     "JUNGLE": "Olaf",
+     "MIDDLE": "Locke",
+     "BOTTOM": "Tristana",
+     "UTILITY": "Yuumi"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     3089,
+     8010
+    ],
+    "boots": 3020,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      524,
+      0,
+      0
+     ],
+     "9111": [
+      2967,
+      560,
+      0
+     ],
+     "9105": [
+      10,
+      30,
+      0
+     ],
+     "8014": [
+      1154,
+      0,
+      0
+     ],
+     "8321": [
+      937,
+      0,
+      0
+     ],
+     "8410": [
+      75,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      4,
+      12
+     ],
+     "5": [
+      18,
+      32
+     ],
+     "8": [
+      40,
+      52
+     ],
+     "10": [
+      58,
+      76
+     ]
+    },
+    "jungle_cs_10": 58,
+    "enemy_jungle_kills": 28,
+    "first_dragon": "them",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5659108033",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791837617850,
+    "duration_s": 2254,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 1,
+    "deaths": 8,
+    "assists": 9,
+    "cs": 247,
+    "allies": {
+     "TOP": "Garen",
+     "MIDDLE": "Malzahar",
+     "BOTTOM": "Lucian",
+     "UTILITY": "Lux"
+    },
+    "enemies": {
+     "TOP": "Mordekaiser",
+     "JUNGLE": "Tryndamere",
+     "MIDDLE": "Syndra",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Nautilus"
+    },
+    "length": "35+",
+    "items": [
+     6653,
+     3116,
+     4633,
+     3065
+    ],
+    "boots": 3047,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      590,
+      0,
+      0
+     ],
+     "9111": [
+      501,
+      200,
+      0
+     ],
+     "9105": [
+      11,
+      50,
+      0
+     ],
+     "8014": [
+      884,
+      0,
+      0
+     ],
+     "8321": [
+      855,
+      0,
+      0
+     ],
+     "8410": [
+      64,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      24
+     ],
+     "5": [
+      32,
+      40
+     ],
+     "8": [
+      48,
+      72
+     ],
+     "10": [
+      60,
+      94
+     ]
+    },
+    "jungle_cs_10": 60,
+    "enemy_jungle_kills": 16,
+    "first_dragon": "us",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5659095077",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791835928814,
+    "duration_s": 1262,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 7,
+    "deaths": 3,
+    "assists": 11,
+    "cs": 151,
+    "allies": {
+     "TOP": "MonkeyKing",
+     "MIDDLE": "Ahri",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Yasuo",
+     "JUNGLE": "Shen",
+     "MIDDLE": "Orianna",
+     "BOTTOM": "Aphelios",
+     "UTILITY": "Thresh"
+    },
+    "length": "<25",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      522,
+      0,
+      0
+     ],
+     "9111": [
+      1066,
+      360,
+      0
+     ],
+     "9105": [
+      9,
+      40,
+      0
+     ],
+     "8014": [
+      725,
+      0,
+      0
+     ],
+     "8321": [
+      457,
+      0,
+      0
+     ],
+     "8410": [
+      48,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      12
+     ],
+     "5": [
+      32,
+      24
+     ],
+     "8": [
+      56,
+      48
+     ],
+     "10": [
+      68,
+      54
+     ]
+    },
+    "jungle_cs_10": 68,
+    "enemy_jungle_kills": 28,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5659077800",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791833504757,
+    "duration_s": 1962,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 1,
+    "deaths": 10,
+    "assists": 12,
+    "cs": 195,
+    "allies": {
+     "TOP": "Mordekaiser",
+     "MIDDLE": "Annie",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Ornn",
+     "JUNGLE": "Kindred",
+     "MIDDLE": "Zed",
+     "BOTTOM": "Tristana",
+     "UTILITY": "Soraka"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      450,
+      0,
+      0
+     ],
+     "9111": [
+      1010,
+      260,
+      0
+     ],
+     "9105": [
+      11,
+      40,
+      0
+     ],
+     "8014": [
+      512,
+      0,
+      0
+     ],
+     "8321": [
+      457,
+      0,
+      0
+     ],
+     "8410": [
+      54,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      20
+     ],
+     "5": [
+      32,
+      32
+     ],
+     "8": [
+      50,
+      53
+     ],
+     "10": [
+      72,
+      65
+     ]
+    },
+    "jungle_cs_10": 72,
+    "enemy_jungle_kills": 23,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5659063822",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791831618738,
+    "duration_s": 1462,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 4,
+    "deaths": 1,
+    "assists": 10,
+    "cs": 191,
+    "allies": {
+     "TOP": "Akali",
+     "MIDDLE": "Zed",
+     "BOTTOM": "Yunara",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Mordekaiser",
+     "JUNGLE": "Sylas",
+     "MIDDLE": "Aurora",
+     "BOTTOM": "Ezreal",
+     "UTILITY": "Sona"
+    },
+    "length": "<25",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      235,
+      0,
+      0
+     ],
+     "9111": [
+      1092,
+      280,
+      0
+     ],
+     "9105": [
+      10,
+      50,
+      0
+     ],
+     "8014": [
+      441,
+      0,
+      0
+     ],
+     "8321": [
+      457,
+      0,
+      0
+     ],
+     "8410": [
+      37,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      24,
+      24
+     ],
+     "5": [
+      38,
+      36
+     ],
+     "8": [
+      55,
+      52
+     ],
+     "10": [
+      77,
+      63
+     ]
+    },
+    "jungle_cs_10": 76,
+    "enemy_jungle_kills": 24,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5659043971",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791829182346,
+    "duration_s": 1994,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 7,
+    "deaths": 4,
+    "assists": 12,
+    "cs": 229,
+    "allies": {
+     "TOP": "Camille",
+     "MIDDLE": "Zed",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Olaf",
+     "JUNGLE": "JarvanIV",
+     "MIDDLE": "Zilean",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Renata"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     6665,
+     3110
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      760,
+      0,
+      0
+     ],
+     "9111": [
+      1838,
+      380,
+      0
+     ],
+     "9105": [
+      10,
+      0,
+      0
+     ],
+     "8014": [
+      1046,
+      0,
+      0
+     ],
+     "8321": [
+      885,
+      0,
+      0
+     ],
+     "8410": [
+      85,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      18,
+      20
+     ],
+     "5": [
+      32,
+      28
+     ],
+     "8": [
+      52,
+      48
+     ],
+     "10": [
+      72,
+      64
+     ]
+    },
+    "jungle_cs_10": 72,
+    "enemy_jungle_kills": 36,
+    "first_dragon": "us",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5659032766",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791826920621,
+    "duration_s": 1792,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 1,
+    "deaths": 6,
+    "assists": 5,
+    "cs": 179,
+    "allies": {
+     "TOP": "Teemo",
+     "MIDDLE": "Syndra",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Shen"
+    },
+    "enemies": {
+     "TOP": "Yorick",
+     "JUNGLE": "Viego",
+     "MIDDLE": "Lux",
+     "BOTTOM": "Smolder",
+     "UTILITY": "Karma"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3020,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      253,
+      0,
+      0
+     ],
+     "9111": [
+      381,
+      120,
+      0
+     ],
+     "9105": [
+      16,
+      10,
+      0
+     ],
+     "8014": [
+      266,
+      0,
+      0
+     ],
+     "8321": [
+      457,
+      0,
+      0
+     ],
+     "8410": [
+      36,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      24
+     ],
+     "5": [
+      32,
+      40
+     ],
+     "8": [
+      52,
+      56
+     ],
+     "10": [
+      64,
+      76
+     ]
+    },
+    "jungle_cs_10": 64,
+    "enemy_jungle_kills": 8,
+    "first_dragon": "them",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5659017847",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791824420455,
+    "duration_s": 2048,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 12,
+    "deaths": 8,
+    "assists": 7,
+    "cs": 186,
+    "allies": {
+     "TOP": "Yorick",
+     "MIDDLE": "Nasus",
+     "BOTTOM": "Lucian",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Mordekaiser",
+     "JUNGLE": "Shaco",
+     "MIDDLE": "Tristana",
+     "BOTTOM": "Velkoz",
+     "UTILITY": "Zoe"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     3065,
+     3157,
+     3089
+    ],
+    "boots": 3020,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8321,
+     8410
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8321-8410-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      677,
+      0,
+      0
+     ],
+     "9111": [
+      1562,
+      380,
+      0
+     ],
+     "9105": [
+      9,
+      50,
+      0
+     ],
+     "8014": [
+      1016,
+      0,
+      0
+     ],
+     "8321": [
+      1166,
+      0,
+      0
+     ],
+     "8410": [
+      68,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      12,
+      23
+     ],
+     "5": [
+      24,
+      35
+     ],
+     "8": [
+      44,
+      47
+     ],
+     "10": [
+      52,
+      71
+     ]
+    },
+    "jungle_cs_10": 52,
+    "enemy_jungle_kills": 13,
+    "first_dragon": "them",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5657339586",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791597584179,
+    "duration_s": 1852,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 6,
+    "deaths": 4,
+    "assists": 8,
+    "cs": 193,
+    "allies": {
+     "TOP": "Pantheon",
+     "MIDDLE": "Tristana",
+     "BOTTOM": "Kaisa",
+     "UTILITY": "Teemo"
+    },
+    "enemies": {
+     "TOP": "Malphite",
+     "JUNGLE": "Qiyana",
+     "MIDDLE": "Yone",
+     "BOTTOM": "Xerath",
+     "UTILITY": "Senna"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     6665
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8400,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8473,
+     8453
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8473-8453-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      110,
+      0,
+      0
+     ],
+     "9111": [
+      714,
+      280,
+      0
+     ],
+     "9105": [
+      10,
+      40,
+      0
+     ],
+     "8014": [
+      493,
+      0,
+      0
+     ],
+     "8473": [
+      960,
+      0,
+      0
+     ],
+     "8453": [
+      1540,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      16
+     ],
+     "5": [
+      32,
+      36
+     ],
+     "8": [
+      48,
+      60
+     ],
+     "10": [
+      62,
+      76
+     ]
+    },
+    "jungle_cs_10": 62,
+    "enemy_jungle_kills": 14,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5657317051",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791595075554,
+    "duration_s": 2030,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 3,
+    "deaths": 6,
+    "assists": 13,
+    "cs": 255,
+    "allies": {
+     "TOP": "Kaisa",
+     "MIDDLE": "Leblanc",
+     "BOTTOM": "Lucian",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Sett",
+     "JUNGLE": "Viego",
+     "MIDDLE": "Viktor",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Sona"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     3089
+    ],
+    "boots": 3008,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8400,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8473,
+     8453
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8473-8453-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      96,
+      0,
+      0
+     ],
+     "9111": [
+      1236,
+      320,
+      0
+     ],
+     "9105": [
+      10,
+      20,
+      0
+     ],
+     "8014": [
+      534,
+      0,
+      0
+     ],
+     "8473": [
+      835,
+      0,
+      0
+     ],
+     "8453": [
+      2540,
+      108,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      20
+     ],
+     "5": [
+      32,
+      40
+     ],
+     "8": [
+      56,
+      56
+     ],
+     "10": [
+      62,
+      78
+     ]
+    },
+    "jungle_cs_10": 62,
+    "enemy_jungle_kills": 14,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5657158748",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791577768168,
+    "duration_s": 2047,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 5,
+    "deaths": 10,
+    "assists": 10,
+    "cs": 192,
+    "allies": {
+     "TOP": "Anivia",
+     "MIDDLE": "Yone",
+     "BOTTOM": "Smolder",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Chogath",
+     "JUNGLE": "Graves",
+     "MIDDLE": "Viktor",
+     "BOTTOM": "Yunara",
+     "UTILITY": "Thresh"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     3116
+    ],
+    "boots": 3008,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8400,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8429,
+     8242
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8429-8242-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      613,
+      0,
+      0
+     ],
+     "9111": [
+      1212,
+      300,
+      0
+     ],
+     "9105": [
+      12,
+      0,
+      0
+     ],
+     "8014": [
+      929,
+      0,
+      0
+     ],
+     "8429": [
+      64,
+      11,
+      9
+     ],
+     "8242": [
+      176,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      9,
+      20
+     ],
+     "5": [
+      30,
+      34
+     ],
+     "8": [
+      48,
+      54
+     ],
+     "10": [
+      60,
+      64
+     ]
+    },
+    "jungle_cs_10": 60,
+    "enemy_jungle_kills": 20,
+    "first_dragon": "us",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5657047819",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791556610190,
+    "duration_s": 1577,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 4,
+    "deaths": 6,
+    "assists": 5,
+    "cs": 187,
+    "allies": {
+     "TOP": "Malphite",
+     "MIDDLE": "Fizz",
+     "BOTTOM": "Caitlyn",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Singed",
+     "JUNGLE": "Kayn",
+     "MIDDLE": "KogMaw",
+     "BOTTOM": "Nilah",
+     "UTILITY": "Lulu"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3008,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8400,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8429,
+     8242
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8429-8242-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      165,
+      0,
+      0
+     ],
+     "9111": [
+      599,
+      180,
+      0
+     ],
+     "9105": [
+      12,
+      50,
+      0
+     ],
+     "8014": [
+      430,
+      0,
+      0
+     ],
+     "8429": [
+      54,
+      12,
+      11
+     ],
+     "8242": [
+      101,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      14,
+      12
+     ],
+     "5": [
+      34,
+      30
+     ],
+     "8": [
+      50,
+      50
+     ],
+     "10": [
+      66,
+      72
+     ]
+    },
+    "jungle_cs_10": 66,
+    "enemy_jungle_kills": 6,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5656558023",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791488738410,
+    "duration_s": 2304,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 6,
+    "deaths": 6,
+    "assists": 5,
+    "cs": 280,
+    "allies": {
+     "TOP": "Teemo",
+     "MIDDLE": "TwistedFate",
+     "BOTTOM": "Smolder",
+     "UTILITY": "Nami"
+    },
+    "enemies": {
+     "TOP": "Gangplank",
+     "JUNGLE": "Warwick",
+     "MIDDLE": "Leblanc",
+     "BOTTOM": "Aphelios",
+     "UTILITY": "Hwei"
+    },
+    "length": "35+",
+    "items": [
+     6653,
+     4633,
+     3116,
+     6665
+    ],
+    "boots": 3008,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8400,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8429,
+     8242
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8429-8242-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      203,
+      0,
+      0
+     ],
+     "9111": [
+      1133,
+      220,
+      0
+     ],
+     "9105": [
+      11,
+      10,
+      0
+     ],
+     "8014": [
+      665,
+      0,
+      0
+     ],
+     "8429": [
+      68,
+      12,
+      11
+     ],
+     "8242": [
+      94,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      24
+     ],
+     "5": [
+      36,
+      36
+     ],
+     "8": [
+      60,
+      44
+     ],
+     "10": [
+      78,
+      60
+     ]
+    },
+    "jungle_cs_10": 78,
+    "enemy_jungle_kills": 24,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5656550841",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791486279920,
+    "duration_s": 1593,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 12,
+    "deaths": 2,
+    "assists": 14,
+    "cs": 183,
+    "allies": {
+     "TOP": "MissFortune",
+     "MIDDLE": "Viktor",
+     "BOTTOM": "Kalista",
+     "UTILITY": "Soraka"
+    },
+    "enemies": {
+     "TOP": "Malphite",
+     "JUNGLE": "Ekko",
+     "MIDDLE": "Lucian",
+     "BOTTOM": "Tristana",
+     "UTILITY": "Leona"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633,
+     3116
+    ],
+    "boots": 3008,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8400,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8429,
+     8242
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8429-8242-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      686,
+      0,
+      0
+     ],
+     "9111": [
+      1776,
+      520,
+      0
+     ],
+     "9105": [
+      11,
+      0,
+      0
+     ],
+     "8014": [
+      986,
+      0,
+      0
+     ],
+     "8429": [
+      54,
+      12,
+      9
+     ],
+     "8242": [
+      112,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      24,
+      16
+     ],
+     "5": [
+      28,
+      28
+     ],
+     "8": [
+      52,
+      44
+     ],
+     "10": [
+      72,
+      60
+     ]
+    },
+    "jungle_cs_10": 72,
+    "enemy_jungle_kills": 28,
+    "first_dragon": "us",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5656163061",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791420383066,
+    "duration_s": 1413,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 4,
+    "deaths": 3,
+    "assists": 14,
+    "cs": 167,
+    "allies": {
+     "TOP": "Irelia",
+     "MIDDLE": "Yone",
+     "BOTTOM": "Zeri",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Sylas",
+     "JUNGLE": "Hecarim",
+     "MIDDLE": "Zed",
+     "BOTTOM": "Lucian",
+     "UTILITY": "Nami"
+    },
+    "length": "<25",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8400,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8429,
+     8242
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8429-8242-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      106,
+      0,
+      0
+     ],
+     "9111": [
+      1397,
+      360,
+      0
+     ],
+     "9105": [
+      8,
+      30,
+      0
+     ],
+     "8014": [
+      400,
+      0,
+      0
+     ],
+     "8429": [
+      49,
+      11,
+      9
+     ],
+     "8242": [
+      64,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      24,
+      20
+     ],
+     "5": [
+      28,
+      35
+     ],
+     "8": [
+      44,
+      55
+     ],
+     "10": [
+      62,
+      73
+     ]
+    },
+    "jungle_cs_10": 63,
+    "enemy_jungle_kills": 8,
+    "first_dragon": "them",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5656134535",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791418319966,
+    "duration_s": 1459,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 4,
+    "deaths": 5,
+    "assists": 5,
+    "cs": 153,
+    "allies": {
+     "TOP": "Mordekaiser",
+     "MIDDLE": "XinZhao",
+     "BOTTOM": "Vayne",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Quinn",
+     "JUNGLE": "Zyra",
+     "MIDDLE": "Aurora",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Shen"
+    },
+    "length": "<25",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3008,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8400,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8429,
+     8242
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8429-8242-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      201,
+      0,
+      0
+     ],
+     "9111": [
+      673,
+      180,
+      0
+     ],
+     "9105": [
+      12,
+      30,
+      0
+     ],
+     "8014": [
+      300,
+      0,
+      0
+     ],
+     "8429": [
+      50,
+      10,
+      10
+     ],
+     "8242": [
+      65,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      24
+     ],
+     "5": [
+      30,
+      40
+     ],
+     "8": [
+      48,
+      64
+     ],
+     "10": [
+      56,
+      72
+     ]
+    },
+    "jungle_cs_10": 56,
+    "enemy_jungle_kills": 0,
+    "first_dragon": "them",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5656037034",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791406290949,
+    "duration_s": 1990,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 4,
+    "deaths": 7,
+    "assists": 8,
+    "cs": 176,
+    "allies": {
+     "TOP": "Fiora",
+     "MIDDLE": "Nasus",
+     "BOTTOM": "Kaisa",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Sett",
+     "JUNGLE": "Hecarim",
+     "MIDDLE": "Anivia",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Janna"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     3116
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8400,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8429,
+     8242
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8429-8242-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      432,
+      0,
+      0
+     ],
+     "9111": [
+      642,
+      240,
+      0
+     ],
+     "9105": [
+      19,
+      40,
+      0
+     ],
+     "8014": [
+      1113,
+      0,
+      0
+     ],
+     "8429": [
+      63,
+      11,
+      9
+     ],
+     "8242": [
+      133,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      20
+     ],
+     "5": [
+      26,
+      38
+     ],
+     "8": [
+      42,
+      60
+     ],
+     "10": [
+      52,
+      86
+     ]
+    },
+    "jungle_cs_10": 52,
+    "enemy_jungle_kills": 14,
+    "first_dragon": "them",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5656020067",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791404156136,
+    "duration_s": 1915,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 5,
+    "deaths": 5,
+    "assists": 11,
+    "cs": 208,
+    "allies": {
+     "TOP": "Jax",
+     "MIDDLE": "Malphite",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Trundle",
+     "JUNGLE": "Ekko",
+     "MIDDLE": "Ahri",
+     "BOTTOM": "Smolder",
+     "UTILITY": "Braum"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     3065
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8400,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8429,
+     8242
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8429-8242-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      408,
+      0,
+      0
+     ],
+     "9111": [
+      852,
+      320,
+      0
+     ],
+     "9105": [
+      13,
+      10,
+      0
+     ],
+     "8014": [
+      545,
+      0,
+      0
+     ],
+     "8429": [
+      62,
+      12,
+      11
+     ],
+     "8242": [
+      102,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      23,
+      20
+     ],
+     "5": [
+      36,
+      32
+     ],
+     "8": [
+      52,
+      56
+     ],
+     "10": [
+      56,
+      66
+     ]
+    },
+    "jungle_cs_10": 56,
+    "enemy_jungle_kills": 8,
+    "first_dragon": "us",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5655938229",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791385368700,
+    "duration_s": 2451,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 8,
+    "deaths": 11,
+    "assists": 18,
+    "cs": 255,
+    "allies": {
+     "TOP": "Garen",
+     "MIDDLE": "Malzahar",
+     "BOTTOM": "Tristana",
+     "UTILITY": "TahmKench"
+    },
+    "enemies": {
+     "TOP": "Riven",
+     "JUNGLE": "LeeSin",
+     "MIDDLE": "TwistedFate",
+     "BOTTOM": "Smolder",
+     "UTILITY": "Braum"
+    },
+    "length": "35+",
+    "items": [
+     6653,
+     4633,
+     8010,
+     3116,
+     3065
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8992,
+    "primary_tree": 8200,
+    "secondary_tree": 8000,
+    "runes": [
+     8992,
+     8224,
+     8210,
+     8236,
+     8009,
+     8299
+    ],
+    "shards": [
+     5008,
+     5008,
+     5011
+    ],
+    "page": "8992-8224-8210-8236-8009-8299-5008-5008-5011",
+    "rune_values": {
+     "8992": [
+      2045,
+      0,
+      0
+     ],
+     "8224": [
+      70,
+      271,
+      0
+     ],
+     "8210": [
+      21,
+      0,
+      0
+     ],
+     "8236": [
+      80,
+      0,
+      0
+     ],
+     "8009": [
+      3453,
+      0,
+      0
+     ],
+     "8299": [
+      2320,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      12
+     ],
+     "5": [
+      30,
+      24
+     ],
+     "8": [
+      52,
+      48
+     ],
+     "10": [
+      63,
+      60
+     ]
+    },
+    "jungle_cs_10": 64,
+    "enemy_jungle_kills": 8,
+    "first_dragon": "them",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5655911924",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791375697075,
+    "duration_s": 1855,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 2,
+    "deaths": 6,
+    "assists": 9,
+    "cs": 223,
+    "allies": {
+     "TOP": "Smolder",
+     "MIDDLE": "Orianna",
+     "BOTTOM": "Yunara",
+     "UTILITY": "Twitch"
+    },
+    "enemies": {
+     "TOP": "Darius",
+     "JUNGLE": "MasterYi",
+     "MIDDLE": "Aurora",
+     "BOTTOM": "Kaisa",
+     "UTILITY": "Leona"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     3116
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8236
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8236-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      148,
+      0,
+      0
+     ],
+     "9111": [
+      579,
+      220,
+      0
+     ],
+     "9105": [
+      14,
+      20,
+      0
+     ],
+     "8014": [
+      602,
+      0,
+      0
+     ],
+     "8234": [
+      15351,
+      0,
+      0
+     ],
+     "8236": [
+      48,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      24
+     ],
+     "5": [
+      36,
+      36
+     ],
+     "8": [
+      56,
+      52
+     ],
+     "10": [
+      76,
+      66
+     ]
+    },
+    "jungle_cs_10": 76,
+    "enemy_jungle_kills": 17,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5655923766",
+    "patch": "16.20",
+    "queue": 420,
+    "start": 1791373309419,
+    "duration_s": 1695,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 6,
+    "deaths": 7,
+    "assists": 9,
+    "cs": 158,
+    "allies": {
+     "TOP": "Urgot",
+     "MIDDLE": "Chogath",
+     "BOTTOM": "Yasuo",
+     "UTILITY": "LeeSin"
+    },
+    "enemies": {
+     "TOP": "Kennen",
+     "JUNGLE": "Elise",
+     "MIDDLE": "Naafiri",
+     "BOTTOM": "Jinx",
+     "UTILITY": "TahmKench"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4629,
+     4633
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8236
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8236-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      317,
+      0,
+      0
+     ],
+     "9111": [
+      1134,
+      300,
+      0
+     ],
+     "9105": [
+      10,
+      30,
+      0
+     ],
+     "8014": [
+      633,
+      0,
+      0
+     ],
+     "8234": [
+      12989,
+      0,
+      0
+     ],
+     "8236": [
+      24,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      8,
+      12
+     ],
+     "5": [
+      20,
+      24
+     ],
+     "8": [
+      32,
+      48
+     ],
+     "10": [
+      44,
+      64
+     ]
+    },
+    "jungle_cs_10": 44,
+    "enemy_jungle_kills": 12,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5655703642",
+    "patch": "16.19",
+    "queue": 420,
+    "start": 1791340542621,
+    "duration_s": 1660,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 4,
+    "deaths": 3,
+    "assists": 12,
+    "cs": 170,
+    "allies": {
+     "TOP": "Fiora",
+     "MIDDLE": "Locke",
+     "BOTTOM": "Yunara",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Yorick",
+     "JUNGLE": "Aatrox",
+     "MIDDLE": "Zed",
+     "BOTTOM": "Kaisa",
+     "UTILITY": "Lulu"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     3116,
+     4633
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8234,
+     8236
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8234-8236-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      151,
+      0,
+      0
+     ],
+     "9111": [
+      1324,
+      320,
+      0
+     ],
+     "9105": [
+      8,
+      50,
+      0
+     ],
+     "8014": [
+      461,
+      0,
+      0
+     ],
+     "8234": [
+      13947,
+      0,
+      0
+     ],
+     "8236": [
+      24,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      16
+     ],
+     "5": [
+      32,
+      32
+     ],
+     "8": [
+      44,
+      52
+     ],
+     "10": [
+      62,
+      68
+     ]
+    },
+    "jungle_cs_10": 62,
+    "enemy_jungle_kills": 30,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5655674345",
+    "patch": "16.19",
+    "queue": 420,
+    "start": 1791337958559,
+    "duration_s": 2185,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 7,
+    "deaths": 10,
+    "assists": 12,
+    "cs": 232,
+    "allies": {
+     "TOP": "Tryndamere",
+     "MIDDLE": "Vex",
+     "BOTTOM": "Zeri",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Diana",
+     "JUNGLE": "Shen",
+     "MIDDLE": "Locke",
+     "BOTTOM": "Yunara",
+     "UTILITY": "Zilean"
+    },
+    "length": "35+",
+    "items": [
+     6653,
+     4629,
+     4633,
+     3065
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8224,
+     8234
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8224-8234-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      444,
+      0,
+      0
+     ],
+     "9111": [
+      1541,
+      380,
+      0
+     ],
+     "9105": [
+      13,
+      20,
+      0
+     ],
+     "8014": [
+      1006,
+      0,
+      0
+     ],
+     "8224": [
+      74,
+      304,
+      0
+     ],
+     "8234": [
+      21850,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      20
+     ],
+     "5": [
+      40,
+      32
+     ],
+     "8": [
+      56,
+      52
+     ],
+     "10": [
+      64,
+      68
+     ]
+    },
+    "jungle_cs_10": 64,
+    "enemy_jungle_kills": 18,
+    "first_dragon": "them",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5655498493",
+    "patch": "16.19",
+    "queue": 420,
+    "start": 1791319600227,
+    "duration_s": 1865,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 2,
+    "deaths": 7,
+    "assists": 8,
+    "cs": 179,
+    "allies": {
+     "TOP": "Gnar",
+     "MIDDLE": "Malzahar",
+     "BOTTOM": "Caitlyn",
+     "UTILITY": "Lux"
+    },
+    "enemies": {
+     "TOP": "Sett",
+     "JUNGLE": "Karthus",
+     "MIDDLE": "Zed",
+     "BOTTOM": "Sivir",
+     "UTILITY": "Nami"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     3065
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8224,
+     8234
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8224-8234-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      24,
+      0,
+      0
+     ],
+     "9111": [
+      646,
+      200,
+      0
+     ],
+     "9105": [
+      16,
+      20,
+      0
+     ],
+     "8014": [
+      527,
+      0,
+      0
+     ],
+     "8224": [
+      58,
+      70,
+      0
+     ],
+     "8234": [
+      14596,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      23
+     ],
+     "5": [
+      36,
+      37
+     ],
+     "8": [
+      52,
+      55
+     ],
+     "10": [
+      72,
+      77
+     ]
+    },
+    "jungle_cs_10": 72,
+    "enemy_jungle_kills": 4,
+    "first_dragon": "us",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5655442579",
+    "patch": "16.19",
+    "queue": 420,
+    "start": 1791309447431,
+    "duration_s": 1714,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 4,
+    "deaths": 4,
+    "assists": 9,
+    "cs": 205,
+    "allies": {
+     "TOP": "Darius",
+     "MIDDLE": "Diana",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Sett",
+     "JUNGLE": "Shen",
+     "MIDDLE": "Akali",
+     "BOTTOM": "Yunara",
+     "UTILITY": "Milio"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8224,
+     8234
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8224-8234-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      650,
+      0,
+      0
+     ],
+     "9111": [
+      1059,
+      260,
+      0
+     ],
+     "9105": [
+      13,
+      0,
+      0
+     ],
+     "8014": [
+      536,
+      0,
+      0
+     ],
+     "8224": [
+      42,
+      130,
+      0
+     ],
+     "8234": [
+      13522,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      20
+     ],
+     "5": [
+      32,
+      30
+     ],
+     "8": [
+      52,
+      52
+     ],
+     "10": [
+      63,
+      60
+     ]
+    },
+    "jungle_cs_10": 64,
+    "enemy_jungle_kills": 18,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5655432105",
+    "patch": "16.19",
+    "queue": 420,
+    "start": 1791305180156,
+    "duration_s": 1799,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 9,
+    "deaths": 1,
+    "assists": 13,
+    "cs": 221,
+    "allies": {
+     "TOP": "Yasuo",
+     "MIDDLE": "Yone",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Riven",
+     "JUNGLE": "Sylas",
+     "MIDDLE": "Viktor",
+     "BOTTOM": "Kaisa",
+     "UTILITY": "Blitzcrank"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633,
+     3065,
+     4629
+    ],
+    "boots": 3158,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8224,
+     8234
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8224-8234-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      487,
+      0,
+      0
+     ],
+     "9111": [
+      2387,
+      440,
+      0
+     ],
+     "9105": [
+      13,
+      20,
+      0
+     ],
+     "8014": [
+      970,
+      0,
+      0
+     ],
+     "8224": [
+      109,
+      226,
+      0
+     ],
+     "8234": [
+      16915,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      8,
+      12
+     ],
+     "5": [
+      28,
+      32
+     ],
+     "8": [
+      44,
+      40
+     ],
+     "10": [
+      66,
+      54
+     ]
+    },
+    "jungle_cs_10": 66,
+    "enemy_jungle_kills": 38,
+    "first_dragon": "us",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5655422148",
+    "patch": "16.19",
+    "queue": 420,
+    "start": 1791303402073,
+    "duration_s": 1491,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 9,
+    "deaths": 1,
+    "assists": 9,
+    "cs": 156,
+    "allies": {
+     "TOP": "Malphite",
+     "MIDDLE": "Vi",
+     "BOTTOM": "Nilah",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Teemo",
+     "JUNGLE": "Hecarim",
+     "MIDDLE": "Nasus",
+     "BOTTOM": "Twitch",
+     "UTILITY": "Milio"
+    },
+    "length": "<25",
+    "items": [
+     6653,
+     4633,
+     4629
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8224,
+     8234
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8224-8234-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      585,
+      0,
+      0
+     ],
+     "9111": [
+      1219,
+      360,
+      0
+     ],
+     "9105": [
+      10,
+      10,
+      0
+     ],
+     "8014": [
+      676,
+      0,
+      0
+     ],
+     "8224": [
+      61,
+      113,
+      0
+     ],
+     "8234": [
+      13184,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      18,
+      20
+     ],
+     "5": [
+      32,
+      32
+     ],
+     "8": [
+      48,
+      51
+     ],
+     "10": [
+      62,
+      63
+     ]
+    },
+    "jungle_cs_10": 62,
+    "enemy_jungle_kills": 16,
+    "first_dragon": "us",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5654957161",
+    "patch": "16.19",
+    "queue": 420,
+    "start": 1791233245186,
+    "duration_s": 2303,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 8,
+    "deaths": 2,
+    "assists": 7,
+    "cs": 292,
+    "allies": {
+     "TOP": "Darius",
+     "MIDDLE": "Aurora",
+     "BOTTOM": "Yunara",
+     "UTILITY": "Milio"
+    },
+    "enemies": {
+     "TOP": "Mordekaiser",
+     "JUNGLE": "Kayn",
+     "MIDDLE": "Syndra",
+     "BOTTOM": "Ezreal",
+     "UTILITY": "Karma"
+    },
+    "length": "35+",
+    "items": [
+     6653,
+     4629,
+     4633,
+     8010,
+     3065
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8224,
+     8234
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8224-8234-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      425,
+      0,
+      0
+     ],
+     "9111": [
+      2054,
+      300,
+      0
+     ],
+     "9105": [
+      12,
+      20,
+      0
+     ],
+     "8014": [
+      1229,
+      0,
+      0
+     ],
+     "8224": [
+      67,
+      184,
+      0
+     ],
+     "8234": [
+      27013,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      20
+     ],
+     "5": [
+      36,
+      36
+     ],
+     "8": [
+      60,
+      52
+     ],
+     "10": [
+      74,
+      66
+     ]
+    },
+    "jungle_cs_10": 74,
+    "enemy_jungle_kills": 26,
+    "first_dragon": "them",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5654945880",
+    "patch": "16.19",
+    "queue": 420,
+    "start": 1791230980480,
+    "duration_s": 2002,
+    "win": true,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 9,
+    "deaths": 5,
+    "assists": 5,
+    "cs": 253,
+    "allies": {
+     "TOP": "Trundle",
+     "MIDDLE": "Syndra",
+     "BOTTOM": "Smolder",
+     "UTILITY": "Nidalee"
+    },
+    "enemies": {
+     "TOP": "Gwen",
+     "JUNGLE": "Belveth",
+     "MIDDLE": "Ambessa",
+     "BOTTOM": "Xerath",
+     "UTILITY": "Neeko"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4629,
+     4633,
+     8010
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8224,
+     8234
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8224-8234-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      232,
+      0,
+      0
+     ],
+     "9111": [
+      994,
+      280,
+      0
+     ],
+     "9105": [
+      12,
+      30,
+      0
+     ],
+     "8014": [
+      814,
+      0,
+      0
+     ],
+     "8224": [
+      49,
+      207,
+      0
+     ],
+     "8234": [
+      20395,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      16,
+      24
+     ],
+     "5": [
+      32,
+      40
+     ],
+     "8": [
+      56,
+      60
+     ],
+     "10": [
+      70,
+      76
+     ]
+    },
+    "jungle_cs_10": 70,
+    "enemy_jungle_kills": 23,
+    "first_dragon": "them",
+    "first_herald": "us"
+   },
+   {
+    "match_id": "NA1_5654920676",
+    "patch": "16.19",
+    "queue": 420,
+    "start": 1791228681402,
+    "duration_s": 1941,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 4,
+    "deaths": 8,
+    "assists": 5,
+    "cs": 179,
+    "allies": {
+     "TOP": "Urgot",
+     "MIDDLE": "Locke",
+     "BOTTOM": "Twitch",
+     "UTILITY": "Nami"
+    },
+    "enemies": {
+     "TOP": "Sett",
+     "JUNGLE": "Qiyana",
+     "MIDDLE": "Sylas",
+     "BOTTOM": "Kaisa",
+     "UTILITY": "Seraphine"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     4633,
+     4629
+    ],
+    "boots": 3047,
+    "pet": 1103,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8224,
+     8234
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8224-8234-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      459,
+      0,
+      0
+     ],
+     "9111": [
+      476,
+      180,
+      0
+     ],
+     "9105": [
+      13,
+      20,
+      0
+     ],
+     "8014": [
+      629,
+      0,
+      0
+     ],
+     "8224": [
+      31,
+      119,
+      0
+     ],
+     "8234": [
+      15314,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      14,
+      20
+     ],
+     "5": [
+      28,
+      32
+     ],
+     "8": [
+      48,
+      48
+     ],
+     "10": [
+      70,
+      56
+     ]
+    },
+    "jungle_cs_10": 70,
+    "enemy_jungle_kills": 16,
+    "first_dragon": "us",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5654900351",
+    "patch": "16.19",
+    "queue": 420,
+    "start": 1791224449056,
+    "duration_s": 1718,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 5,
+    "deaths": 7,
+    "assists": 6,
+    "cs": 181,
+    "allies": {
+     "TOP": "Yorick",
+     "MIDDLE": "AurelionSol",
+     "BOTTOM": "Yunara",
+     "UTILITY": "Janna"
+    },
+    "enemies": {
+     "TOP": "Briar",
+     "JUNGLE": "Talon",
+     "MIDDLE": "Kassadin",
+     "BOTTOM": "Heimerdinger",
+     "UTILITY": "Malphite"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3111,
+    "pet": 1102,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8200,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8224,
+     8234
+    ],
+    "shards": [
+     5007,
+     5008,
+     5013
+    ],
+    "page": "8010-9111-9105-8014-8224-8234-5007-5008-5013",
+    "rune_values": {
+     "8010": [
+      380,
+      0,
+      0
+     ],
+     "9111": [
+      904,
+      220,
+      0
+     ],
+     "9105": [
+      10,
+      50,
+      0
+     ],
+     "8014": [
+      885,
+      0,
+      0
+     ],
+     "8224": [
+      57,
+      126,
+      0
+     ],
+     "8234": [
+      14860,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      24,
+      24
+     ],
+     "5": [
+      28,
+      32
+     ],
+     "8": [
+      56,
+      58
+     ],
+     "10": [
+      62,
+      76
+     ]
+    },
+    "jungle_cs_10": 62,
+    "enemy_jungle_kills": 0,
+    "first_dragon": "them",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5620991185",
+    "patch": "16.16",
+    "queue": 420,
+    "start": 1786674264102,
+    "duration_s": 1991,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 3,
+    "deaths": 13,
+    "assists": 8,
+    "cs": 158,
+    "allies": {
+     "TOP": "Nasus",
+     "MIDDLE": "Ahri",
+     "BOTTOM": "Jhin",
+     "UTILITY": "Mel"
+    },
+    "enemies": {
+     "TOP": "Olaf",
+     "JUNGLE": "Viego",
+     "MIDDLE": "Syndra",
+     "BOTTOM": "Kassadin",
+     "UTILITY": "Senna"
+    },
+    "length": "30–35",
+    "items": [
+     6653,
+     3116,
+     4633
+    ],
+    "boots": 3047,
+    "pet": 1101,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8017,
+     8347,
+     8321
+    ],
+    "shards": [
+     5007,
+     5008,
+     5001
+    ],
+    "page": "8010-9111-9105-8017-8347-8321-5007-5008-5001",
+    "rune_values": {
+     "8010": [
+      130,
+      0,
+      0
+     ],
+     "9111": [
+      697,
+      220,
+      0
+     ],
+     "9105": [
+      11,
+      30,
+      0
+     ],
+     "8017": [
+      775,
+      0,
+      0
+     ],
+     "8347": [
+      0,
+      0,
+      0
+     ],
+     "8321": [
+      652,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      20,
+      20
+     ],
+     "5": [
+      28,
+      40
+     ],
+     "8": [
+      44,
+      60
+     ],
+     "10": [
+      56,
+      78
+     ]
+    },
+    "jungle_cs_10": 56,
+    "enemy_jungle_kills": 2,
+    "first_dragon": "us",
+    "first_herald": "them"
+   },
+   {
+    "match_id": "NA1_5620128775",
+    "patch": "16.16",
+    "queue": 420,
+    "start": 1786557389150,
+    "duration_s": 1638,
+    "win": false,
+    "champion": "Lillia",
+    "role": "JUNGLE",
+    "kills": 5,
+    "deaths": 9,
+    "assists": 10,
+    "cs": 129,
+    "allies": {
+     "TOP": "Rumble",
+     "MIDDLE": "Katarina",
+     "BOTTOM": "Jinx",
+     "UTILITY": "Leona"
+    },
+    "enemies": {
+     "TOP": "Ambessa",
+     "JUNGLE": "Darius",
+     "MIDDLE": "Taliyah",
+     "BOTTOM": "Lucian",
+     "UTILITY": "Maokai"
+    },
+    "length": "25–30",
+    "items": [
+     6653,
+     4633
+    ],
+    "boots": 3020,
+    "pet": 1103,
+    "keystone": 8010,
+    "primary_tree": 8000,
+    "secondary_tree": 8300,
+    "runes": [
+     8010,
+     9111,
+     9105,
+     8014,
+     8347,
+     8304
+    ],
+    "shards": [
+     5008,
+     5008,
+     5001
+    ],
+    "page": "8010-9111-9105-8014-8347-8304-5008-5008-5001",
+    "rune_values": {
+     "8010": [
+      358,
+      0,
+      0
+     ],
+     "9111": [
+      1009,
+      300,
+      0
+     ],
+     "9105": [
+      13,
+      0,
+      0
+     ],
+     "8014": [
+      678,
+      0,
+      0
+     ],
+     "8347": [
+      0,
+      0,
+      0
+     ],
+     "8304": [
+      9,
+      0,
+      0
+     ]
+    },
+    "pace": {
+     "3": [
+      23,
+      24
+     ],
+     "5": [
+      28,
+      36
+     ],
+     "8": [
+      52,
+      56
+     ],
+     "10": [
+      64,
+      72
+     ]
+    },
+    "jungle_cs_10": 64,
+    "enemy_jungle_kills": 6,
+    "first_dragon": "us",
+    "first_herald": "them"
+   }
+  ],
+  "names": {
+   "items": {
+    "6665": "Jak'Sho, The Protean",
+    "3089": "Rabadon's Deathcap",
+    "4629": "Cosmic Drive",
+    "4633": "Riftmaker",
+    "3110": "Frozen Heart",
+    "3111": "Mercury's Treads",
+    "3116": "Rylai's Crystal Scepter",
+    "3008": "Gluttonous Greaves",
+    "3009": "Boots of Swiftness",
+    "3143": "Randuin's Omen",
+    "8010": "Bloodletter's Curse",
+    "3020": "Sorcerer's Shoes",
+    "1101": "Scorchclaw Pup",
+    "1102": "Gustwalker Hatchling",
+    "1103": "Mosstomper Seedling",
+    "3157": "Zhonya's Hourglass",
+    "3158": "Ionian Boots of Lucidity",
+    "3047": "Plated Steelcaps",
+    "3065": "Spirit Visage",
+    "6653": "Liandry's Torment"
+   },
+   "runes": {
+    "8321": "Cash Back",
+    "8453": "Revitalize",
+    "9105": "Legend: Haste",
+    "8210": "Transcendence",
+    "9111": "Triumph",
+    "8473": "Bone Plating",
+    "8347": "Cosmic Insight",
+    "8992": "Deathfire Touch",
+    "8224": "Axiom Arcanist",
+    "8232": "Waterwalking",
+    "8234": "Celerity",
+    "8236": "Gathering Storm",
+    "8242": "Unflinching",
+    "8009": "Presence of Mind",
+    "8010": "Conqueror",
+    "8014": "Coup de Grace",
+    "8017": "Cut Down",
+    "8410": "Approach Velocity",
+    "8299": "Last Stand",
+    "8429": "Conditioning",
+    "8304": "Magical Footwear"
+   },
+   "trees": {
+    "8000": "Precision",
+    "8200": "Sorcery",
+    "8300": "Inspiration",
+    "8400": "Resolve"
+   },
+   "shards": {
+    "5008": "Adaptive Force",
+    "5005": "Attack Speed",
+    "5007": "Ability Haste",
+    "5010": "Move Speed",
+    "5001": "Health Scaling",
+    "5011": "Health",
+    "5013": "Tenacity and Slow Resist",
+    "5002": "Armor",
+    "5003": "Magic Resist"
+   },
+   "rune_labels": {
+    "8321": [
+     "Gold gained",
+     null,
+     null
+    ],
+    "8453": [
+     "Bonus healing",
+     "Bonus shielding",
+     null
+    ],
+    "9105": [
+     "Stacks",
+     null,
+     null
+    ],
+    "8210": [
+     "Cooldown refunded (s)",
+     null,
+     null
+    ],
+    "9111": [
+     "Total healing",
+     "Bonus gold",
+     null
+    ],
+    "8473": [
+     "Total damage blocked",
+     null,
+     null
+    ],
+    "8347": [
+     "Ability haste gained",
+     null,
+     null
+    ],
+    "8224": [
+     "Total shield",
+     null,
+     null
+    ],
+    "8232": [
+     "Bonus adaptive force",
+     null,
+     null
+    ],
+    "8234": [
+     "Extra distance moved",
+     null,
+     null
+    ],
+    "8236": [
+     "Bonus adaptive force",
+     null,
+     null
+    ],
+    "8242": [
+     "Total bonus resists",
+     null,
+     null
+    ],
+    "8009": [
+     "Total mana restored",
+     null,
+     null
+    ],
+    "8010": [
+     "Total healing",
+     null,
+     null
+    ],
+    "8014": [
+     "Total bonus damage",
+     null,
+     null
+    ],
+    "8017": [
+     "Total bonus damage",
+     null,
+     null
+    ],
+    "8410": [
+     "Time with bonus speed (s)",
+     null,
+     null
+    ],
+    "8299": [
+     "Total bonus damage",
+     null,
+     null
+    ],
+    "8429": [
+     "Total bonus resists",
+     null,
+     null
+    ],
+    "8304": [
+     "Boots arrival time (s)",
+     null,
+     null
+    ]
+   },
+   "rune_labels_verified": [
+    8236,
+    8321,
+    9111
+   ]
+  }
+ },
+ "champions": {
+  "Aatrox": "Aatrox",
+  "Ahri": "Ahri",
+  "Akali": "Akali",
+  "Akshan": "Akshan",
+  "Alistar": "Alistar",
+  "Ambessa": "Ambessa",
+  "Amumu": "Amumu",
+  "Anivia": "Anivia",
+  "Annie": "Annie",
+  "Aphelios": "Aphelios",
+  "Ashe": "Ashe",
+  "AurelionSol": "Aurelion Sol",
+  "Aurora": "Aurora",
+  "Azir": "Azir",
+  "Bard": "Bard",
+  "Belveth": "Bel'Veth",
+  "Blitzcrank": "Blitzcrank",
+  "Brand": "Brand",
+  "Braum": "Braum",
+  "Briar": "Briar",
+  "Caitlyn": "Caitlyn",
+  "Camille": "Camille",
+  "Cassiopeia": "Cassiopeia",
+  "Chogath": "Cho'Gath",
+  "Corki": "Corki",
+  "Darius": "Darius",
+  "Diana": "Diana",
+  "Draven": "Draven",
+  "DrMundo": "Dr. Mundo",
+  "Ekko": "Ekko",
+  "Elise": "Elise",
+  "Evelynn": "Evelynn",
+  "Ezreal": "Ezreal",
+  "Fiddlesticks": "Fiddlesticks",
+  "Fiora": "Fiora",
+  "Fizz": "Fizz",
+  "Galio": "Galio",
+  "Gangplank": "Gangplank",
+  "Garen": "Garen",
+  "Gnar": "Gnar",
+  "Gragas": "Gragas",
+  "Graves": "Graves",
+  "Gwen": "Gwen",
+  "Hecarim": "Hecarim",
+  "Heimerdinger": "Heimerdinger",
+  "Hwei": "Hwei",
+  "Illaoi": "Illaoi",
+  "Irelia": "Irelia",
+  "Ivern": "Ivern",
+  "Janna": "Janna",
+  "JarvanIV": "Jarvan IV",
+  "Jax": "Jax",
+  "Jayce": "Jayce",
+  "Jhin": "Jhin",
+  "Jinx": "Jinx",
+  "Kaisa": "Kai'Sa",
+  "Kalista": "Kalista",
+  "Karma": "Karma",
+  "Karthus": "Karthus",
+  "Kassadin": "Kassadin",
+  "Katarina": "Katarina",
+  "Kayle": "Kayle",
+  "Kayn": "Kayn",
+  "Kennen": "Kennen",
+  "Khazix": "Kha'Zix",
+  "Kindred": "Kindred",
+  "Kled": "Kled",
+  "KogMaw": "Kog'Maw",
+  "KSante": "K'Sante",
+  "Leblanc": "LeBlanc",
+  "LeeSin": "Lee Sin",
+  "Leona": "Leona",
+  "Lillia": "Lillia",
+  "Lissandra": "Lissandra",
+  "Locke": "Locke",
+  "Lucian": "Lucian",
+  "Lulu": "Lulu",
+  "Lux": "Lux",
+  "Malphite": "Malphite",
+  "Malzahar": "Malzahar",
+  "Maokai": "Maokai",
+  "MasterYi": "Master Yi",
+  "Mel": "Mel",
+  "Milio": "Milio",
+  "MissFortune": "Miss Fortune",
+  "MonkeyKing": "Wukong",
+  "Mordekaiser": "Mordekaiser",
+  "Morgana": "Morgana",
+  "Naafiri": "Naafiri",
+  "Nami": "Nami",
+  "Nasus": "Nasus",
+  "Nautilus": "Nautilus",
+  "Neeko": "Neeko",
+  "Nidalee": "Nidalee",
+  "Nilah": "Nilah",
+  "Nocturne": "Nocturne",
+  "Nunu": "Nunu & Willump",
+  "Olaf": "Olaf",
+  "Orianna": "Orianna",
+  "Ornn": "Ornn",
+  "Pantheon": "Pantheon",
+  "Poppy": "Poppy",
+  "Pyke": "Pyke",
+  "Qiyana": "Qiyana",
+  "Quinn": "Quinn",
+  "Rakan": "Rakan",
+  "Rammus": "Rammus",
+  "RekSai": "Rek'Sai",
+  "Rell": "Rell",
+  "Renata": "Renata Glasc",
+  "Renekton": "Renekton",
+  "Rengar": "Rengar",
+  "Riven": "Riven",
+  "Rumble": "Rumble",
+  "Ryze": "Ryze",
+  "Samira": "Samira",
+  "Sejuani": "Sejuani",
+  "Senna": "Senna",
+  "Seraphine": "Seraphine",
+  "Sett": "Sett",
+  "Shaco": "Shaco",
+  "Shen": "Shen",
+  "Shyvana": "Shyvana",
+  "Singed": "Singed",
+  "Sion": "Sion",
+  "Sivir": "Sivir",
+  "Skarner": "Skarner",
+  "Smolder": "Smolder",
+  "Sona": "Sona",
+  "Soraka": "Soraka",
+  "Swain": "Swain",
+  "Sylas": "Sylas",
+  "Syndra": "Syndra",
+  "TahmKench": "Tahm Kench",
+  "Taliyah": "Taliyah",
+  "Talon": "Talon",
+  "Taric": "Taric",
+  "Teemo": "Teemo",
+  "Thresh": "Thresh",
+  "Tristana": "Tristana",
+  "Trundle": "Trundle",
+  "Tryndamere": "Tryndamere",
+  "TwistedFate": "Twisted Fate",
+  "Twitch": "Twitch",
+  "Udyr": "Udyr",
+  "Urgot": "Urgot",
+  "Varus": "Varus",
+  "Vayne": "Vayne",
+  "Veigar": "Veigar",
+  "Velkoz": "Vel'Koz",
+  "Vex": "Vex",
+  "Vi": "Vi",
+  "Viego": "Viego",
+  "Viktor": "Viktor",
+  "Vladimir": "Vladimir",
+  "Volibear": "Volibear",
+  "Warwick": "Warwick",
+  "Xayah": "Xayah",
+  "Xerath": "Xerath",
+  "XinZhao": "Xin Zhao",
+  "Yasuo": "Yasuo",
+  "Yone": "Yone",
+  "Yorick": "Yorick",
+  "Yunara": "Yunara",
+  "Yuumi": "Yuumi",
+  "Zaahen": "Zaahen",
+  "Zac": "Zac",
+  "Zed": "Zed",
+  "Zeri": "Zeri",
+  "Ziggs": "Ziggs",
+  "Zilean": "Zilean",
+  "Zoe": "Zoe",
+  "Zyra": "Zyra"
+ },
+ "exported_at": 1792963481.4386365
+}
